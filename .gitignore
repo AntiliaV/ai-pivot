@@ -1,0 +1,29 @@
+# macOS and editor clutter
+.DS_Store
+**/.DS_Store
+~$*
+*.tmp
+
+# R and Python clutter
+.Rhistory
+.RData
+.Rproj.user/
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+# Audio and video (large, and can be downloaded again)
+*.mp3
+*.m4a
+*.wav
+*.mov
+*.MOV
+*.mp4
+*.MP4
+
+# Generated results in own projects (recreated by running the code)
+3. Own projects/*/3. Results/
+
+# Agreed deletions and files only for reading in the chat
+Archive/_to_delete/
+Archive/Claude outputs/

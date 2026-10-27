@@ -1,0 +1,73 @@
+# Introduction
+
+In this supplement I’ll estimate how well each plan does on various intermediate metrics, and its chance of leading to a great future. I discuss quantitative metrics for the sake of concreteness, however I’m very much not confident in my precise estimates. I am confident in the conclusion that Plan A is substantially better than Plans B-D. For plans that I think could be competitive with Plan A, see this table.
+
+I estimate how good each plan would be conditional on the government and/or leading companies attempting to execute it. The below aren’t meant to be an exhaustive taxonomy; I am considering what would happen if roughly the described plan is attempted, rather than bucketing every possible future into the plan it is closest to. For more detail on how I classify trajectories into plans, see below.
+
+The plans I consider are:
+
+1. **Plan A (as implemented specifically in the scenario): Verified slowdown + total research transparency.** A verified international slowdown deal coupled with complete transparency of AI research. AI capabilities are scaled up while maintaining high confidence in safety but balancing risks from deal decline and covert projects.
+
+2. **Plan A: Verified slowdown + substantial transparency.** To be more generally classified as Plan A, the implementation must involve a substantial verified slowdown which involves continued AI scaling, as opposed to an indefinite halt. It must involve transparency at least as strong as embedded auditors from foreign governments which publish reports to governments (and for which redacted versions are made public), as described in our filtered transparency proposal. Other aspects of the plan, such as mutually assured compute destruction, are not required.
+
+3. **Plan B-kinetic: Sabotage China kinetically and burn some lead.** Sabotaging China in order to get more of a lead to burn on safety, with the willingness to escalate to large-scale kinetic attacks such as by drones or conventional missile strikes. To be classified as Plan B the US must have the intention to use their lead over China for safety purposes, and must in practice slow takeoff by at least 3 months.
+
+4. **Plan B-cyber: Sabotage China non-kinetically and burn some lead.** The same as Plan B-kinetic, but without willingness to escalate to large-scale kinetic attacks. This could include cyber and supply chain attacks.
+
+5. **Plan C+: Domestic regulation and slow China without sabotage.** The US buys substantial time via domestic regulation, without sabotaging China. They instead aim to slow down China via non-sabotage measures such as export controls and giving green cards to Chinese talent. Requires at least a 2 month slowdown.
+
+6. **Plan C: Leading project burns some lead.** The leading AI project burns some of its lead on safety, and potentially coordinates with other frontier projects for a further slowdown without domestic regulation. Requires at least a 1 month slowdown.
+
+7. **Plan D: Race.** Frontier AI projects race through the intelligence explosion at nearly max speed, devoting a nonzero but small percentage of resources to safety (at least 1%; lower would count as Plan E).
+
+There are also other plans that the government could attempt to implement. Some of these are discussed below.
+
+---
+
+# Other plans
+
+There are many other possible plans that the government could follow. Below we catalog some of the ones that we find to be most promising and/or likely. 
+
+## Plans that might be competitive with Plan A
+
+### Plan S: Indefinite halt
+
+A halt on all frontier AI capabilities progress, intended to last at least a few years. Different variants of Plan S have different conditions for resumption of AI progress; for example it could be alignment progress, lie detectors, human uploads, or intelligence enhancement.
+
+**Advantages (relative to A):** A longer expected slowdown and more margin for error regarding scaling too fast. Potentially simpler.
+
+**Disadvantages (relative to A):** Scaling to controllable AIs within the human range is helpful for accelerating alignment/control, epistemics, verification, and general understanding of AI. 
+
+### Domestic-first Plan A
+
+Regulate AI domestically enough to reduce AI takeover risk to acceptable levels, which will require a long slowdown. It’s possible other countries will also regulate domestically and something like Plan A won’t be needed; otherwise, transition to Plan A later.
+
+**Advantages (relative to A):** Initial steps are achievable by the US and very helpful even if the international stage isn’t viable because it massively extends the timeline. Proactively builds trust with China.
+
+**Disadvantages (relative to A):** Worse for covert projects and setting up verification than negotiating Plan A at the same time. May not be politically feasible due to race dynamics. 
+
+### GPU arms control
+
+International agreements for countries to limit their GPU stock or flow, analogous to historical arms reduction agreements.
+
+**Advantages (relative to A):** Much simpler to enforce, and more historical precedent. Can achieve substantial slowdown.
+
+**Disadvantages (relative to A):** Less slowdown, less ability to pay safety taxes, ongoing race dynamics mean no ability to coordinate towards safer paths through the tech tree. 
+
+### CERN for AI
+
+An international project to develop frontier AI, with all other projects regulated to be substantially behind in capabilities.
+
+**Advantages (relative to A):** Easier to defend against algorithmic leakage and distillation to covert projects. Less actors at the frontier might make it easier to enforce.
+
+**Disadvantages (relative to A):** Worse decisions (including worse decisions on technical safety) due to less transparency and less broad deployment. More concentration of power risk. 
+
+## Plans that we think are clearly worse than Plan A
+
+1. **Repurpose the GPUs:** Like GPU arms control, except they are now required to be used for existentially useful applications rather than being destroyed. See this comment for a more specific proposal in which GPUs are required to be used for giving inference capacity to external safety organizations or to do publicly transparent safety research. In theory this plan should be better than GPU arms control, but it’s more easily reversible and harder to enforce.
+
+2. **Plan B-but-don’t-slowdown, aka D-war:** Like Plan B except that you don’t slow down, i.e. you don’t burn ~any of the lead that you increased by sabotaging China. (Currently classified as a variant of Plan D when making the above estimates.)
+
+3. **Weaker deals with China.** For example, the US could offer: “You get access to more chips for AI inference, and a non-binding or non-majority say in our safety requirements, if you give us full transparency into what you’re up to.”
+
+4. **Plan E:** Like Plan D but even less safety investment, i.e. less than 1% of resources. 
