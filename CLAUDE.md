@@ -21,6 +21,7 @@ Antilia's move into AI safety work after her DPhil in Economics at Oxford, which
 2. **Build a record that shows she fits it.** Courses and reading, intermediate fellowships and programmes, networking, and her own projects:
    - **The pacing project** (her most significant involvement): with Ernest Lo and Charles Dillon, a guide to the trade-offs between verification and invasiveness for mechanisms that verify, monitor or enforce agreements to pace frontier-AI development (question 12 of the pacing.tech appendices). **She has committed to work on it at least one day a week.**
    - **The AI character evaluation project**: an evaluation of altruism in AI agents (how much they trade their own payoff for others', and towards whom), adapting experimental-economics designs such as the dictator game.
+   - **The ecosystem map**: a map of the AI safety landscape (organisations working on AI and on AI safety) with her own considered views on each.
 3. **Apply.** Fellowships and programmes through 2026–27, then jobs around the end of the DPhil. The timing is in `Live transition plan.png` and will move with the demands of the DPhil.
 
 **The DPhil comes first.** Time spent here is time not spent on the thesis, so the trackers should make it easy to see what is worth doing now and what can wait.
@@ -31,10 +32,11 @@ The root holds `README.md`, `CLAUDE.md`, `Backlog.md`, `Decisions.md`, `Contacts
 
 - `Quick notes to organise/`: **the inbox.** Antilia drops notes here from her notes app. A session that processes a note moves each piece to its canonical place (to-dos and deadlines to `Backlog.md`, people to `Contacts.md`, decisions to `Decisions.md`, call notes to `3. Talks & conversations/`, project notes to the project folder) and then, with her agreement, moves the note itself to its home or to `Archive/`. The inbox is empty when everything in it has been filed.
 - `0. Inputs & context/`: material she **consults but does not action**. Never put outstanding work or decisions here.
-  - `1. Career paths/`: one folder per path (`1. AI safety grantmaking/`, `2. EU policy & governance/`, `3. AI econ research/`, `4. Model evaluation/`), each holding `Advice & reviews/` and `Postings/`.
-  - `2. Courses & reading lists/`
-  - `3. Talks & conversations/`: one folder per occasion, `YYYY-MM-DD — who/what`.
-  - `4. About me/`: the writing-style profile and anything else that describes her rather than the field.
+  - `1. Career paths/`: `0. General/` for advice that cuts across paths, then one folder per path (`1. AI safety grantmaking/`, `2. EU policy & governance/`, `3. AI econ research/`, `4. Model evaluation/`), each holding `Background/` (career reviews, advice, organisations, funds) and `Postings/` (jobs; `[CLOSED]` at the start of the name once closed). Her own groupings inside them (`External affairs/`, `Realistic first jobs/`) are kept.
+  - `2. Programmes & fellowships/`: fellowships, bootcamps and research programmes, which cut across paths, plus notes on what each application asks for (e.g. `MATS Residency — application requirements (checked 2026-10-27).md`).
+  - `3. Courses & reading lists/`: course pages, BlueDot course materials, and loose readings in `Readings/`.
+  - `4. Talks & conversations/`: one folder per occasion, `YYYY-MM-DD — who/what`.
+  - `5. About me/`: the writing-style profile and anything else that describes her rather than the field.
 - `1. Learning/`: courses she is doing or has done, with her notes and answers, and her own running notes on AI (the thoughts log, ideas).
 - `2. Applications/`: one folder per application, `YYYY-MM-DD — Organisation — Programme or role`, where the date is the deadline. Created when she decides to apply, not when she finishes. Holds the saved posting, drafts and a frozen copy of what was submitted (below).
 - `3. Own projects/`: one folder per project, all with the same layout (below).
@@ -84,7 +86,7 @@ When an application is submitted, keep a frozen, dated copy of exactly what was 
 
 The thesis keeps a file of material cut from each section that an examiner might still ask about. The career equivalent is `4. Application bank/`: her answers to recurring application questions ("Why AI safety?", "What skills will you contribute?", "Tell us about something you've built"), concrete examples from her work that can be reused, and feedback she has received on applications. It starts from `Previous answers to applications.md`, her answers to the BlueDot, Future of AGI and FLock.io applications. Further files are added with her agreement as material accumulates.
 
-One post she saved (`What the field needs.png`) argues that job-seekers in this field trip up less on having good judgement and context than on being able to show they have them. The bank is where the evidence for each claim is kept.
+One post she saved (`0. Inputs & context/1. Career paths/0. General/What the field needs — Sudhanshu Kasewa, EA Forum.png`) argues that job-seekers in this field trip up less on having good judgement and context than on being able to show they have them. The bank is where the evidence for each claim is kept.
 
 ### Archiving and deleting
 
@@ -135,7 +137,7 @@ When Antilia approves, declines or materially reshapes a proposal (a path, an ap
 
 Applications, cover letters, fellowship essays, emails she sends and posts she publishes are written as Antilia. Before drafting any of these, ask one question: **default style or Antilia style?** If the request already names the style, don't ask; once chosen, keep it for that piece of work.
 
-Antilia style draws on two sources. The style profile and the writing sample in `0. Inputs & context/4. About me/Writing style/` were copied on 27 October 2026 from her DPhil project (where the canonical copy lives; recopy if it changes there). They describe her academic prose. For applications and posts, her own previous answers in `4. Application bank/` are the closer sample: use the profile for her habits of reasoning and phrasing, and the answers for length and register. Tell her where both leave a question open. Some programmes reject AI-written applications (ML4Good's form says so): for those, help her plan, review and edit her own text rather than drafting it.
+Antilia style draws on two sources. The style profile and the writing sample in `0. Inputs & context/5. About me/Writing style/` were copied on 27 October 2026 from her DPhil project (where the canonical copy lives; recopy if it changes there). They describe her academic prose. For applications and posts, her own previous answers in `4. Application bank/` are the closer sample: use the profile for her habits of reasoning and phrasing, and the answers for length and register. Tell her where both leave a question open. Some programmes reject AI-written applications (ML4Good's form says so): for those, help her plan, review and edit her own text rather than drafting it.
 
 **Never correct her slips without asking.** In text she wrote, list any typos or grammar slips you notice in the chat and change them only with her agreement; some may be deliberate. Flag each slip once; if she doesn't react, it stays.
 

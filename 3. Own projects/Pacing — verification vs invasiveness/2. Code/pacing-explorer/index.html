@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Pacing explorer</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <a class="site-title" href="#map">Pacing explorer</a>
+      <span class="site-sub">Ways to verify agreements that pace AI development</span>
+    </div>
+    <nav aria-label="Main">
+      <ul class="nav">
+        <li><a href="#map" data-nav="map">Trade-off map</a></li>
+        <li><a href="#builder" data-nav="builder">Build a package</a></li>
+        <li><a href="#tool" data-nav="tool">The tools</a></li>
+        <li><a href="#guide" data-nav="guide">How to read this</a></li>
+        <li><a href="#glossary" data-nav="glossary">Glossary</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div id="view" class="wrap view">
+    <noscript>
+      <p>This page needs JavaScript to draw the map and the package builder. Everything runs on your own device. Nothing is sent anywhere.</p>
+    </noscript>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Draft — prepared for the pacing.tech project. Scores are judgements and will be revised.</p>
+  </div>
+</footer>
+
+<div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+
+<!-- Data first, then logic. Plain scripts, so the page works when opened from a folder (file://). -->
+<script src="data/interventions.js"></script>
+<script src="data/glossary.js"></script>
+<script src="data/method.js"></script>
+<script src="js/builder.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

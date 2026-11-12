@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pacing explorer: builder self-checks</title>
+<style>
+  body { font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; margin: 2rem auto; max-width: 52rem; padding: 0 1rem; color: #1b1c1d; }
+  h1 { font-size: 1.4rem; }
+  #summary { font-weight: 600; padding: .6rem .8rem; border: 2px solid #1b1c1d; display: inline-block; }
+  ul { list-style: none; padding: 0; }
+  li { padding: .3rem 0; border-bottom: 1px solid #d9dbde; }
+  .tag { display: inline-block; min-width: 3.2rem; font-weight: 700; }
+  .fail { background: #fbe9e7; }
+  .detail { color: #50545a; font-size: .9rem; }
+</style>
+</head>
+<body>
+<h1>Package builder: self-checks</h1>
+<p>These checks run the rules in <code>js/builder.js</code> against the data. They include the four required cases, (a) to (d). Nothing is sent anywhere.</p>
+<p id="summary" role="status">Running…</p>
+<ul id="results"></ul>
+<script src="data/interventions.js"></script>
+<script src="data/method.js"></script>
+<script src="js/builder.js"></script>
+<script src="js/builder.tests.js"></script>
+<script>
+  (function () {
+    var results = window.PACING_TEST_RESULTS || [];
+    var failed = results.filter(function (r) { return !r.pass; }).length;
+    var list = document.getElementById("results");
+    results.forEach(function (r) {
+      var li = document.createElement("li");
+      if (!r.pass) { li.className = "fail"; }
+      var tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = r.pass ? "PASS" : "FAIL";
+      li.appendChild(tag);
+      li.appendChild(document.createTextNode(" " + r.name));
+      if (!r.pass && r.detail) {
+        var d = document.createElement("div");
+        d.className = "detail";
+        d.textContent = r.detail;
+        li.appendChild(d);
+      }
+      list.appendChild(li);
+    });
+    document.getElementById("summary").textContent = results.length
+      ? (results.length - failed) + " of " + results.length + " checks passed" + (failed ? ". " + failed + " failed." : ".")
+      : "The checks did not run. Open the browser console for the error.";
+  })();
+</script>
+</body>
+</html>
