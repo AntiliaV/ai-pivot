@@ -27,3 +27,4 @@ __pycache__/
 # Agreed deletions and files only for reading in the chat
 Archive/_to_delete/
 Archive/Claude outputs/
+/Claude outputs/

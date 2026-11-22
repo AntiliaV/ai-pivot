@@ -62,7 +62,7 @@ Each marker represents one tool, or several tools with the same scores. Tools fu
 
 Choose what matters most to you, and the tool suggests a combination of verification tools, explaining the reasoning behind it.
 
-**Dependencies.** Some tools only work alongside another, which the package then adds as a foundation. The reason shown for each:
+**Dependencies** (each reason is shown in the package's explanation when a tool is added as a foundation):
 
 - Physical chip inspection needs the chip production ledger: inspectors check the chips on site against the ledger's record of which chips should be there.
 - Interconnect bandwidth cap needs physical chip inspection: physical caps must be checked on site, so that cables are not reconnected after a visit.
