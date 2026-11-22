@@ -47,7 +47,7 @@ window.PACING_METHOD = {
     "yAxis": "Catches cheating"
   },
   "howWeScore": {
-    "intro": "Each tool is scored by the authors on six criteria, shown as five dots. Effectiveness (\"Slows AI development\") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.",
+    "intro": "Each tool is scored by the authors on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). Effectiveness (\"Slows AI development\") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.",
     "table": {
       "header": [
         "Shown as",

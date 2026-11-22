@@ -1,11 +1,11 @@
 // Pacing explorer: glossary.
 // Each entry: term (shown in the glossary), match (the exact words in the text that
-// should show a tooltip, upper or lower case), definition (one or two plain sentences).
-// A term is underlined the first time it appears on each page.
-// Definitions of the terms listed under "New glossary terms" in "Website text.md" are
-// checked by tools/validate_data.py. Definitions of the other terms were kept from
-// version 1 of the site and are not checked.
-// To add a term, add one entry. Must stay valid JSON after "window.PACING_GLOSSARY =".
+// should show a tooltip, upper or lower case), definition (copied word for word from
+// "Glossary" in section 8 of "Website text.md"; tools/validate_data.py checks every one).
+// A term is underlined the first time it appears on each page. The site lists the terms
+// in alphabetical order, whatever order they have here.
+// To add a term, add it to "Website text.md" first, then add one entry here.
+// Must stay valid JSON after "window.PACING_GLOSSARY =".
 
 window.PACING_GLOSSARY = [
   {
@@ -16,7 +16,7 @@ window.PACING_GLOSSARY = [
       "coordinated pacing",
       "pacing"
     ],
-    "definition": "Deliberately managing the speed of frontier AI development, for example through caps or pauses that states agree between them."
+    "definition": "Deliberately slowing parts of frontier AI development – for example through caps or pauses agreed between companies or states – so that safety work can keep up."
   },
   {
     "term": "Compute",
@@ -24,14 +24,14 @@ window.PACING_GLOSSARY = [
       "compute",
       "computing power"
     ],
-    "definition": "Computing power: the chips and processing capacity used to train and run AI models. It is the AI input that is easiest to count and verify."
+    "definition": "Computing power, i.e. the chips and processing capacity used to train and run AI models. It is the input to AI that is easiest to count and verify."
   },
   {
     "term": "FLOP",
     "match": [
       "FLOP"
     ],
-    "definition": "Floating-point operation: one basic arithmetic step by a computer. The total number of FLOP measures how much computation went into training a model."
+    "definition": "Floating-point operation, one basic arithmetic step by a computer. The total number of FLOP measures how much computation went into training a model."
   },
   {
     "term": "H100-equivalent",
@@ -59,7 +59,7 @@ window.PACING_GLOSSARY = [
       "training run",
       "training"
     ],
-    "definition": "Building an AI model by running very large computations over data. Training frontier models needs very large numbers of chips. A training run is one such computation."
+    "definition": "Building an AI model by running very large computations over data. A training run is one such computation, and training frontier models requires very large numbers of chips."
   },
   {
     "term": "Inference",
@@ -67,7 +67,7 @@ window.PACING_GLOSSARY = [
       "inference-only",
       "inference"
     ],
-    "definition": "Running an AI model that has already been trained, to answer requests. Inference-only chips or data centres can run models but cannot train new ones."
+    "definition": "Running an AI model that has already been trained, for example to answer requests. Data centres limited to inference can run existing models but cannot train new ones."
   },
   {
     "term": "AI chip",
@@ -125,7 +125,7 @@ window.PACING_GLOSSARY = [
       "export controls",
       "export-control"
     ],
-    "definition": "Government rules that restrict which goods, such as advanced chips, can be sold to which countries."
+    "definition": "Government rules restricting which goods, such as advanced chips, can be sold to which countries."
   },
   {
     "term": "Census",
@@ -157,43 +157,7 @@ window.PACING_GLOSSARY = [
       "leading state",
       "trailing state"
     ],
-    "definition": "A leading state is ahead in frontier AI. A trailing state is behind and trying to catch up."
-  },
-  {
-    "term": "MIRI agreement",
-    "match": [
-      "MIRI agreement"
-    ],
-    "definition": "A proposed treaty led by the US and China. Training above 10²⁴ FLOP is banned, and training above 10²² FLOP is monitored."
-  },
-  {
-    "term": "AI 2040: Plan A",
-    "match": [
-      "AI 2040: Plan A"
-    ],
-    "definition": "A scenario for a slowdown agreed between the US and China, with a pause on training."
-  },
-  {
-    "term": "Building the Pause Button",
-    "match": [
-      "Building the Pause Button"
-    ],
-    "definition": "A proposal for the infrastructure needed for an enforceable global pause on compute."
-  },
-  {
-    "term": "Hardwired Pause",
-    "match": [
-      "Hardwired Pause"
-    ],
-    "definition": "A proposal for a pause of at least ten years. Chips that can train models stop being made and are replaced by inference-only chips."
-  },
-  {
-    "term": "Pacing proposal",
-    "match": [
-      "pacing proposals",
-      "pacing proposal"
-    ],
-    "definition": "a published plan for slowing or pausing parts of AI development, including how compliance would be checked."
+    "definition": "A leading state is ahead in frontier AI, while a trailing state is behind and trying to catch up."
   },
   {
     "term": "Route to capability",
@@ -201,28 +165,7 @@ window.PACING_GLOSSARY = [
       "routes",
       "route"
     ],
-    "definition": "one of the ways AI becomes more capable: more computing power, better algorithms, more post-training, or better elicitation."
-  },
-  {
-    "term": "Post-training",
-    "match": [
-      "post-training"
-    ],
-    "definition": "training a model further after its main training run, for example to follow instructions or use tools."
-  },
-  {
-    "term": "Elicitation",
-    "match": [
-      "elicitation"
-    ],
-    "definition": "drawing out capabilities a model already has, for example through better prompts or tools."
-  },
-  {
-    "term": "Sandbagging",
-    "match": [
-      "sandbagging"
-    ],
-    "definition": "a model, or its developer, deliberately underperforming in a test."
+    "definition": "One of the ways AI becomes more capable: more computing power, better algorithms, more training after the main run, or better ways of drawing out what a model can already do."
   },
   {
     "term": "AI safety institute",
@@ -231,14 +174,14 @@ window.PACING_GLOSSARY = [
       "AI safety institute",
       "AI Security Institute"
     ],
-    "definition": "a government body that tests AI models, such as the UK AI Security Institute."
+    "definition": "A government body that tests AI models, such as the UK AI Security Institute."
   },
   {
     "term": "Bandwidth",
     "match": [
       "bandwidth"
     ],
-    "definition": "how fast data can move between chips."
+    "definition": "How fast data can move between chips."
   },
   {
     "term": "Pod",
@@ -246,7 +189,7 @@ window.PACING_GLOSSARY = [
       "pods",
       "pod"
     ],
-    "definition": "a group of chips linked by very fast connections, inside which training can continue under a bandwidth cap."
+    "definition": "A group of chips linked by very fast connections, inside which training can continue under a bandwidth cap."
   },
   {
     "term": "Network tap",
@@ -254,23 +197,35 @@ window.PACING_GLOSSARY = [
       "network taps",
       "network tap"
     ],
-    "definition": "a device that copies the data passing through a network link so that it can be checked."
+    "definition": "A device that copies the data passing through a network link so that it can be checked."
   },
   {
-    "term": "Know your customer",
+    "term": "MIRI agreement",
     "match": [
-      "know-your-customer",
-      "know your customer"
+      "MIRI agreement"
     ],
-    "definition": "checks a provider makes to verify who its customers are, borrowed from banking."
+    "definition": "A proposed international treaty to stop the development of superintelligent AI until it can be done safely. Training above 10²⁴ FLOP is banned, and training above 10²² FLOP requires approval."
   },
   {
-    "term": "Embedded evaluator",
+    "term": "AI 2040: Plan A",
     "match": [
-      "embedded evaluators",
-      "embedded evaluator"
+      "AI 2040: Plan A"
     ],
-    "definition": "an independent evaluator working inside an AI company with employee-like access."
+    "definition": "A proposed US–China deal to pause frontier AI training, verified by tracking chips and by converting data centres to run existing models only."
+  },
+  {
+    "term": "Building the Pause Button",
+    "match": [
+      "Building the Pause Button"
+    ],
+    "definition": "A proposal to build, in advance, the infrastructure for an enforceable global pause, triggered by a computing-power threshold."
+  },
+  {
+    "term": "Hardwired Pause",
+    "match": [
+      "Hardwired Pause"
+    ],
+    "definition": "A proposal to make a pause enforceable by the hardware itself: chips able to train frontier models are counted and licensed, and approved models run on chips that cannot train."
   },
   {
     "term": "We Must Pace the Frontier",

@@ -34,9 +34,9 @@ window.PACING_DATA = {
       "Tool",
       "MIRI agreement",
       "AI 2040: Plan A",
+      "Building the Pause Button",
       "Hardwired Pause",
-      "Amodei",
-      "Building the Pause Button"
+      "Amodei"
     ],
     "rows": [
       [
@@ -45,49 +45,49 @@ window.PACING_DATA = {
         "Core",
         "Core",
         "Core",
-        "—",
-        "Core"
+        "Core",
+        "—"
       ],
       [
         "2",
         "Physical chip inspection",
         "Core",
         "Core",
+        "Option",
         "Core",
-        "—",
-        "Option"
+        "—"
       ],
       [
         "3",
         "Interconnect bandwidth cap",
         "Option",
         "Core",
+        "Core",
         "Partial",
-        "—",
-        "Core"
+        "—"
       ],
       [
         "4",
         "Independent capability evaluation",
         "Partial",
         "Partial",
+        "Partial",
         "Core",
-        "Option",
-        "Partial"
+        "Option"
       ],
       [
         "5",
         "Cloud workload metering",
         "Partial",
         "Partial",
+        "Option",
         "Partial",
-        "—",
-        "Option"
+        "—"
       ]
     ],
     "legend": "**Core:** central or required. **Partial:** a broader or closely related check is discussed. **Option:** described as a possibility, without commitment. **—:** not discussed."
   },
-  "caption": "Each dot represents one tool. Tools further right are more invasive for AI labs, while tools higher up are better at catching cheating; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.",
+  "caption": "Each marker represents one tool, or several tools with the same scores. Tools further right are more invasive for AI labs, while tools higher up are better at catching cheating; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.",
   "builderIntro": "Choose what matters most to you, and the tool suggests a combination of verification tools, explaining the reasoning behind it.",
   "interventions": [
     {

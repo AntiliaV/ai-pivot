@@ -24,18 +24,18 @@ All files below are in `4. Drafting/` of the pacing project, and the site copies
 
 | On the site | Source |
 |---|---|
-| Wording: introduction, proposals, ranking, tool descriptions, map caption, builder intro, each tool's introduction, expected-behaviour reasons, contribution to pacing, failure scenarios, regulatory burden, appendix, new glossary terms | `Website text.md` |
+| Wording: introduction, proposals, ranking, tool descriptions, map caption, builder intro, each tool's introduction, expected-behaviour reasons, contribution to pacing, failure scenarios, regulatory burden, the reason for each dependency, appendix, glossary | `Website text.md` |
 | Scores, stances, readiness, the "Where it acts" tag | the "Step 1" scores table (and the "Lifecycle stage" bullet) of each `Background mapping of … .md` |
 | The sentence shown when you click a score | the bullet under that table, without its bold label |
 | Sources list on each tool page | the "# Sources" list of the mapping |
 | Rules for scoring | `Scoring method.md` |
 
-Three things come from neither: the interface labels (for example "What it achieves", "Learn more →", "Previous"), the one-line reasons for each dependency between tools (`dependsOnWhy`, used by the package builder), and the definitions of glossary terms kept from version 1. The validator does not check these.
+Only the interface labels (for example "What it achieves", "Learn more →", "Previous") come from neither. The validator does not check them.
 
 ## How to change the text
 
 1. Edit `Website text.md` (not the site's code).
-2. Copy the change into the matching place in `data/interventions.js` (or `data/method.js` for the appendix, `data/glossary.js` for new glossary terms). The data files are plain JSON, so keep the quotes and commas intact. Text may use `**bold**` and `*italic*` as in `Website text.md`.
+2. Copy the change into the matching place in `data/interventions.js` (or `data/method.js` for the appendix, `data/glossary.js` for glossary terms). The data files are plain JSON, so keep the quotes and commas intact. Text may use `**bold**` and `*italic*` as in `Website text.md`.
 3. Run `python3 tools/validate_data.py` from this folder. It prints `RESULT: PASSED` when everything matches and `RESULT: FAILED` with the first difference otherwise. It changes no files.
 
 ## How to change a score, stance or readiness
