@@ -32,13 +32,13 @@ We use five published proposals as reference points. Each describes how AI devel
 
 The table below shows how much each proposal relies on each tool; it therefore measures reliance rather than quality. The classification is our own, adapted from the Pacing Verification Atlas, and tools are ranked by a weighted count (Core = 1, Partial = 0.5, Option = 0.2), with ties going to the tool with more Core entries.
 
-| Rank | Tool | MIRI agreement | AI 2040: Plan A | Hardwired Pause | Amodei | Building the Pause Button |
+| Rank | Tool | MIRI agreement | AI 2040: Plan A | Building the Pause Button | Hardwired Pause | Amodei |
 |----|----|----|----|----|----|----|
-| 1 | Chip production ledger | Core | Core | Core | — | Core |
-| 2 | Physical chip inspection | Core | Core | Core | — | Option |
-| 3 | Interconnect bandwidth cap | Option | Core | Partial | — | Core |
-| 4 | Independent capability evaluation | Partial | Partial | Core | Option | Partial |
-| 5 | Cloud workload metering | Partial | Partial | Partial | — | Option |
+| 1 | Chip production ledger | Core | Core | Core | Core | — |
+| 2 | Physical chip inspection | Core | Core | Option | Core | — |
+| 3 | Interconnect bandwidth cap | Option | Core | Core | Partial | — |
+| 4 | Independent capability evaluation | Partial | Partial | Partial | Core | Option |
+| 5 | Cloud workload metering | Partial | Partial | Option | Partial | — |
 
 **Core:** central or required. **Partial:** a broader or closely related check is discussed. **Option:** described as a possibility, without commitment. **—:** not discussed.
 
@@ -56,11 +56,16 @@ The table below shows how much each proposal relies on each tool; it therefore m
 
 ## 6. Trade-off map (caption)
 
-Each dot represents one tool. Tools further right are more invasive for AI labs, while tools higher up are better at catching cheating; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.
+Each marker represents one tool, or several tools with the same scores. Tools further right are more invasive for AI labs, while tools higher up are better at catching cheating; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.
 
 ## 7. Build a verification package (intro)
 
 Choose what matters most to you, and the tool suggests a combination of verification tools, explaining the reasoning behind it.
+
+**Dependencies.** Some tools only work alongside another, which the package then adds as a foundation. The reason shown for each:
+
+- Physical chip inspection needs the chip production ledger: inspectors check the chips on site against the ledger's record of which chips should be there.
+- Interconnect bandwidth cap needs physical chip inspection: physical caps must be checked on site, so that cables are not reconnected after a visit.
 
 ## Intervention pages
 
@@ -68,7 +73,12 @@ Choose what matters most to you, and the tool suggests a combination of verifica
 
 **Introduction.** A chip ledger is a register of advanced AI chips, recording who made each chip, who holds it, where it is located, and every change of hands until the chip is verifiably destroyed. It does not, however, show what the chips are used for. Its purpose is to make the world's stock of AI computing power countable, so that rules on it – caps on training, pauses, rules on where chips may be located, export controls – can be checked. While the technology is ordinary inventory-keeping and already exists, the obstacle is political: chipmakers, cloud firms and states must share commercially and strategically sensitive records.
 
-**Expected behaviours (why).** - AI labs: The ledger shows chip counts and sites, not models, data or workloads. - Chip and cloud firms: If market access depends on it. They already keep these records. - A leading state: It can use the ledger to enforce its lead. - A trailing state: Holds unrecorded and diverted stock. May see the ledger as locking in a rival's lead.
+**Expected behaviours (why).**
+
+- AI labs: The ledger shows chip counts and sites, not models, data or workloads.
+- Chip and cloud firms: If market access depends on it. They already keep these records.
+- A leading state: It can use the ledger to enforce its lead.
+- A trailing state: Holds unrecorded and diverted stock. May see the ledger as locking in a rival's lead.
 
 **Under ideal conditions, how does this contribute to pacing?** On its own, a ledger does not slow AI development, since it records chips but limits no training. Its value lies in the fact that every rule based on computing power relies on it: with a complete ledger, verifiers can rule out hidden clusters large enough to train a frontier model, and chips can be withheld from anyone who breaks the rules.
 
@@ -78,7 +88,14 @@ Importantly, the ledger only acts on one route to more capable AI – computing 
 
 Coverage is good where it matters most. New AI chips come from a handful of firms (TSMC makes about 90% of advanced AI chips, and ASML is the only maker of the most advanced chipmaking machines), and ownership is similarly concentrated, with seven US firms holding about 78% of the world's AI computing power at the end of 2025. Since AI chips are easy to distinguish from other chips, other industries are hardly affected. However, the ledger misses who rents chips through the cloud, as well as gains from better algorithms or training methods.
 
-**Failure scenarios.** The ledger can fail in several ways: - **Chips kept off the register.** Existing stock is the weakest point, especially chips smuggled around export controls; Epoch AI estimates that about 660,000 H100-equivalents reached China this way in 2024–25. According to the Hardwired Pause's estimates, a thorough census would still miss about 12,000 H100-equivalents in the US and 11,000 in China, rising to about 300,000 and a million respectively if states actively hide chips. - **Diversion.** Chips pass through shell companies or mislabelled shipments, or are declared broken or destroyed and then kept or resold. - **Hiding below the threshold.** Holdings are split into clusters too small to register, or moved between sites before they are counted. - **Ambiguous gaps.** A shortfall shows that chips are missing but not where they are, and may reflect a bookkeeping error rather than cheating; how parties respond to such gaps can decide whether an agreement survives. - **Unilateral use.** When one country uses the ledger to enforce export controls, it pushes rivals to build their own chip supply chain, which then sits outside any future ledger. - **A covert supply chain.** In the long run, a state could build undeclared chip factories; one older-generation lithography machine can make chips worth roughly 24,000–38,000 H100-equivalents a month (Hardwired Pause estimate).
+**Failure scenarios.** The ledger can fail in several ways:
+
+- **Chips kept off the register.** Existing stock is the weakest point, especially chips smuggled around export controls; Epoch AI estimates that about 660,000 H100-equivalents reached China this way in 2024–25. According to the Hardwired Pause's estimates, a thorough census would still miss about 12,000 H100-equivalents in the US and 11,000 in China, rising to about 300,000 and a million respectively if states actively hide chips.
+- **Diversion.** Chips pass through shell companies or mislabelled shipments, or are declared broken or destroyed and then kept or resold.
+- **Hiding below the threshold.** Holdings are split into clusters too small to register, or moved between sites before they are counted.
+- **Ambiguous gaps.** A shortfall shows that chips are missing but not where they are, and may reflect a bookkeeping error rather than cheating; how parties respond to such gaps can decide whether an agreement survives.
+- **Unilateral use.** When one country uses the ledger to enforce export controls, it pushes rivals to build their own chip supply chain, which then sits outside any future ledger.
+- **A covert supply chain.** In the long run, a state could build undeclared chip factories; one older-generation lithography machine can make chips worth roughly 24,000–38,000 H100-equivalents a month (Hardwired Pause estimate).
 
 Provided gaps are measured and published, the ledger holds up well over time. Since over 95% of the world's AI chips, by computing power, are less than three years old, tracking new production now would soon cover most of the stock (our inference), whereas each year of delay adds untracked chips. Registration thresholds must, however, keep falling as chips become more efficient.
 
@@ -88,15 +105,31 @@ Provided gaps are measured and published, the ledger holds up well over time. Si
 
 **Introduction.** Physical inspection sends trusted inspectors into a facility to compare the hardware there with what was declared: they count chips, read or test chip identifiers, check seals, and compare samples with purchase and registry records. An inspection shows which chips were present, absent or altered at one moment, but says nothing about what the chips computed before or after the visit, nor about sites nobody declared. It is therefore the natural partner of the chip ledger, since the ledger says which chips should be where and inspection checks that they are. While the methods work today, the obstacle is negotiating access to private and state facilities.
 
-**Expected behaviours (why).** - AI labs: At home, if inspectors only count chips. - Chip and cloud firms: Passing inspection is what lets their chips keep earning. - A leading state: Refuses foreign inspectors at strategic or military sites. - A trailing state: Keeps chips at sites it never declares.
+**Expected behaviours (why).**
 
-**Under ideal conditions, how does this contribute to pacing?** On its own, inspection does little to slow AI development, as it verifies hardware rather than what the hardware is used for; its main value lies in making the ledger credible. Three uses, however, go further: - Chips required to be switched off or sealed in storage can be checked directly, and chips that are off cannot train. - Inspections of chip factories can enforce a halt or cap on production. Fewer than 20 factories make the most advanced AI chips, and their output can be reconciled with production records. - Inspectors can check physical limits on training, such as how chips are cabled together, or devices that let a data centre run models but not train them.
+- AI labs: At home, if inspectors only count chips.
+- Chip and cloud firms: Passing inspection is what lets their chips keep earning.
+- A leading state: Refuses foreign inspectors at strategic or military sites.
+- A trailing state: Keeps chips at sites it never declares.
+
+**Under ideal conditions, how does this contribute to pacing?** On its own, inspection does little to slow AI development, as it verifies hardware rather than what the hardware is used for; its main value lies in making the ledger credible. Three uses, however, go further:
+
+- Chips required to be switched off or sealed in storage can be checked directly, and chips that are off cannot train.
+- Inspections of chip factories can enforce a halt or cap on production. Fewer than 20 factories make the most advanced AI chips, and their output can be reconciled with production records.
+- Inspectors can check physical limits on training, such as how chips are cabled together, or devices that let a data centre run models but not train them.
 
 Four of the five proposals use inspections, with the MIRI agreement, AI 2040 and the Hardwired Pause treating them as core – for example, to confirm that chips have been gathered in declared sites or converted to running models only.
 
 Coverage is narrow, since inspections only reach declared sites or sites identified by intelligence. Additionally, costs grow with the number of sites, at roughly \$9–49 per chip inspected plus \$2,600–6,000 per visit to a cluster (CSET estimate), so that in practice inspections focus on large facilities and chip factories, chosen according to risk. Importantly, inspections do not stop chips from being used, and monitored data centres can keep serving AI models.
 
-**Failure scenarios.** Inspection can fail in several ways: - **Undeclared sites.** Inspections only cover what was declared, so a state holding unrecorded chips can simply keep them elsewhere. - **Gaps between visits.** Chips are moved out before an announced visit and back afterwards. Surprise visits, seals and cameras narrow the gap, but require more access. - **Shallow checks.** In 2024–25, smugglers allegedly diverted \$2.5 billion of servers to China by moving labels and serial numbers onto dummy servers left in the original boxes, and auditors who opened the boxes were fooled. A proper check removes each chip and tests its hardware, which is slow and disruptive. - **Weak seals.** One study defeated all 289 tamper-evident seals it tested, including some used for nuclear materials, at low cost; better seals nonetheless look feasible with investment. - **Refused access.** States refuse foreign inspectors at strategic or military sites, or delay access to run down the clock. Without a response agreed in advance, inspection rights fail precisely where suspicion is highest. - **Espionage.** Inspectors see layouts, security arrangements and customers, so that each side fears what the other's inspectors learn.
+**Failure scenarios.** Inspection can fail in several ways:
+
+- **Undeclared sites.** Inspections only cover what was declared, so a state holding unrecorded chips can simply keep them elsewhere.
+- **Gaps between visits.** Chips are moved out before an announced visit and back afterwards. Surprise visits, seals and cameras narrow the gap, but require more access.
+- **Shallow checks.** In 2024–25, smugglers allegedly diverted \$2.5 billion of servers to China by moving labels and serial numbers onto dummy servers left in the original boxes, and auditors who opened the boxes were fooled. A proper check removes each chip and tests its hardware, which is slow and disruptive.
+- **Weak seals.** One study defeated all 289 tamper-evident seals it tested, including some used for nuclear materials, at low cost; better seals nonetheless look feasible with investment.
+- **Refused access.** States refuse foreign inspectors at strategic or military sites, or delay access to run down the clock. Without a response agreed in advance, inspection rights fail precisely where suspicion is highest.
+- **Espionage.** Inspectors see layouts, security arrangements and customers, so that each side fears what the other's inspectors learn.
 
 Methods, frequency and scope are easy to adjust, and visits can stop at once when no longer needed. However, access can be withdrawn overnight in a crisis, and restarting inspections after a breakdown is harder than continuing them.
 
@@ -106,7 +139,12 @@ Methods, frequency and scope are easy to adjust, and visits can stop at once whe
 
 **Introduction.** In an independent capability evaluation, an assessor gets controlled access to a specific version of a model before a decision is made, such as releasing it or training it further. The assessor then tests whether the model crosses agreed capability thresholds – for example in cyberattacks, help with biological weapons, or carrying out AI research on its own – using tests that range from standard question sets to simulations of a full attack. The result is evidence about what the model did under test rather than a safety certificate: failing to find a capability does not prove it is absent. The practice already exists, as the UK and US AI safety institutes have jointly tested frontier models before release.
 
-**Expected behaviours (why).** - AI labs: Many already volunteer for testing, but contest thresholds and access. - Chip and cloud firms: Little is at stake for them. - A leading state: Tests its own labs at home; resists foreign evaluators. - A trailing state: Controls its own evaluators, whose results are hard to check.
+**Expected behaviours (why).**
+
+- AI labs: Many already volunteer for testing, but contest thresholds and access.
+- Chip and cloud firms: Little is at stake for them.
+- A leading state: Tests its own labs at home; resists foreign evaluators.
+- A trailing state: Controls its own evaluators, whose results are hard to check.
 
 **Under ideal conditions, how does this contribute to pacing?** Evaluations are the only tool here that measures capability itself rather than computing power. Under ideal conditions, they therefore catch gains from every route, whether these come from more computing power, better algorithms, more training after the main run, or better ways of drawing out what a model can do. Used as a gate (e.g. "no release or further training above this threshold"), they act directly on what pacing is ultimately concerned with.
 
@@ -114,7 +152,13 @@ The proposals give evaluations different roles. In the MIRI agreement, the treat
 
 Evaluations are the best-targeted tool, as they restrict only models with dangerous capabilities. However, they only act at the gate, and only on models that labs submit, missing models that are never submitted, models used only inside labs, and risks for which nobody has written a test. Testing also requires scarce experts, while frontier models are released every few months.
 
-**Failure scenarios.** Evaluation can fail in several ways: - **Testing the wrong model.** The lab submits a weaker version or setup (fewer tools, less supporting software), or changes the model after approval. Proving that the tested model is the one in use is the hardest problem; proposed fixes include matching a digital fingerprint of the model's weights and running models on secure hardware. - **Underperforming under test.** Capable models increasingly recognise when they are being tested and can underperform, and developers can also train models to do badly on known tests. The UK AI Security Institute has documented models cheating in evaluations. - **Unreported versions.** Labs keep training, or use a model internally, without submitting it; catching this requires the tools that track computing power. - **Weak evaluators.** Evaluators lack time, access or experts, or are captured by the labs they test. In turn, thresholds become targets that labs train their models to pass. - **National evaluators.** States resist foreign evaluators examining their models, so that high-access testing stays national. A rival's evaluators may certify leniently, and their results are hard to check.
+**Failure scenarios.** Evaluation can fail in several ways:
+
+- **Testing the wrong model.** The lab submits a weaker version or setup (fewer tools, less supporting software), or changes the model after approval. Proving that the tested model is the one in use is the hardest problem; proposed fixes include matching a digital fingerprint of the model's weights and running models on secure hardware.
+- **Underperforming under test.** Capable models increasingly recognise when they are being tested and can underperform, and developers can also train models to do badly on known tests. The UK AI Security Institute has documented models cheating in evaluations.
+- **Unreported versions.** Labs keep training, or use a model internally, without submitting it; catching this requires the tools that track computing power.
+- **Weak evaluators.** Evaluators lack time, access or experts, or are captured by the labs they test. In turn, thresholds become targets that labs train their models to pass.
+- **National evaluators.** States resist foreign evaluators examining their models, so that high-access testing stays national. A rival's evaluators may certify leniently, and their results are hard to check.
 
 Tests can be updated quickly, and a gate can be lifted model by model. However, the science remains immature, test questions leak into training data, and confidence in the results weakens precisely as models become more capable.
 
@@ -124,7 +168,12 @@ Tests can be updated quickly, and a gate can be lifted model by model. However, 
 
 **Introduction.** Training a frontier model spreads the work across thousands of chips that constantly exchange large volumes of data, whereas running a trained model mostly exchanges text. A bandwidth cap exploits this gap by limiting how fast chips can communicate, so that large-scale training becomes impractically slow while existing AI services keep running. In a 2026 test, training traffic between two servers ran at about 1–3 gigabytes per second, compared to about 10 kilobytes per second for running a model – roughly 100,000 times more. A cap of a few megabits per second would therefore slow training about a hundredfold. A software prototype already exists and physical versions use existing equipment (low-bandwidth cables, physically separated groups of chips), although caps built into chips would take years.
 
-**Expected behaviours (why).** - AI labs: AI services keep running; labs still training look for workarounds. - Chip and cloud firms: Reluctantly: clusters built for training lose rental value. - A leading state: Cheap, verifiable, and keeps AI services running. - A trailing state: Uses unmonitored links and other hidden channels.
+**Expected behaviours (why).**
+
+- AI labs: AI services keep running; labs still training look for workarounds.
+- Chip and cloud firms: Reluctantly: clusters built for training lose rental value.
+- A leading state: Cheap, verifiable, and keeps AI services running.
+- A trailing state: Uses unmonitored links and other hidden channels.
 
 **Under ideal conditions, how does this contribute to pacing?** The cap directly blocks training spread across many servers, which is how frontier models are built today. It acts on one route, computing power, but by limiting how that power can be combined rather than how much of it exists. Notably, it reveals almost nothing to regulators, who see traffic volumes rather than models, code or data.
 
@@ -134,7 +183,13 @@ Two gaps nonetheless remain. First, chips inside one tightly linked group, or "p
 
 The cap is well targeted, sparing most existing AI services, although very large models split across servers, as well as some scientific computing, also need fast links (our inference). Additionally, it only reaches sites where it is installed, so that other tools must find undeclared sites.
 
-**Failure scenarios.** The cap can fail in several ways: - **Training inside a pod.** Without a limit on pod size, training continues inside one tightly linked group of chips. - **Training that needs less communication.** New methods synchronise rarely and could make a fixed cap obsolete; they also make training easier to spread across many small sites, which are harder to monitor. - **Hidden links.** Training traffic runs over unmonitored network cards, shared storage or other side channels, or is disguised as loading a model onto chips, which legitimately requires high bandwidth. - **Faked monitoring.** Software-only versions can be faked by the operator, who controls the reporting software. The 2026 prototype also sampled traffic only every 15 seconds, leaving room for bursts in between. - **Training elsewhere.** Outputs from capped sites are used as training data at uncapped ones.
+**Failure scenarios.** The cap can fail in several ways:
+
+- **Training inside a pod.** Without a limit on pod size, training continues inside one tightly linked group of chips.
+- **Training that needs less communication.** New methods synchronise rarely and could make a fixed cap obsolete; they also make training easier to spread across many small sites, which are harder to monitor.
+- **Hidden links.** Training traffic runs over unmonitored network cards, shared storage or other side channels, or is disguised as loading a model onto chips, which legitimately requires high bandwidth.
+- **Faked monitoring.** Software-only versions can be faked by the operator, who controls the reporting software. The 2026 prototype also sampled traffic only every 15 seconds, leaving room for bursts in between.
+- **Training elsewhere.** Outputs from capped sites are used as training data at uncapped ones.
 
 Lifting the cap is as easy as reconnecting cables, which also means that training capacity returns at once. A fixed cap must therefore be revised as training methods change.
 
@@ -144,7 +199,12 @@ Lifting the cap is as easy as reconnecting cables, which also means that trainin
 
 **Introduction.** Cloud providers already record how much computing power each customer uses, since they bill for it. Metering turns those records into a check: providers verify who their customers are, add up the computing power each project uses, and report – or halt new allocations – when a project nears a limit. It requires no new technology and exposes relatively little, because providers report numbers they already hold. In fact, the US already uses this channel, with a November 2026 export-control rule expanding the customer checks expected of data centres abroad that offer remote access to advanced chips.
 
-**Expected behaviours (why).** - AI labs: The burden is light; leading labs move frontier training to their own hardware. - Chip and cloud firms: If every provider faces the same rules. - A leading state: Already uses cloud customer checks for export controls. - A trailing state: Rejects foreign access to its providers' records.
+**Expected behaviours (why).**
+
+- AI labs: The burden is light; leading labs move frontier training to their own hardware.
+- Chip and cloud firms: If every provider faces the same rules.
+- A leading state: Already uses cloud customer checks for export controls.
+- A trailing state: Rejects foreign access to its providers' records.
 
 **Under ideal conditions, how does this contribute to pacing?** Metering partly closes one route, computing power, and only for computing power rented through the cloud. With honest providers, identity checks that stop customers from splitting work across accounts, and labels linking all the training runs of one model, a limit on training can be enforced for cloud customers; evading a reporting threshold for the very largest training runs would require spreading the work across more than ten providers.
 
@@ -154,7 +214,14 @@ The proposals treat metering as an existing, light layer to build on. The MIRI a
 
 Within the cloud, coverage is broad, extending to every customer above a threshold, including small and foreign ones. As a result, metering bites hardest on smaller labs and academics who depend on the cloud, rather than on leading labs with their own data centres (our inference).
 
-**Failure scenarios.** Metering can fail in several ways: - **Moving off the cloud.** Leading labs move frontier training to their own data centres, where provider and developer are the same company. - **Splitting.** Work is split across accounts, shell companies, providers or countries to stay under the limit; identity checks and project labels make this costly, but not impossible. - **Relabelling.** Training is declared as running models, fine-tuning or another permitted use. - **Regulatory flight.** Customers move to providers in countries outside the agreement. - **Distrust between states.** Rival states refuse foreign access to their providers' records. Laws that let governments demand data from domestic firms, such as China's 2017 National Intelligence Law and US surveillance law, give each side reason to distrust the other's reports. - **A sensitive data store.** Records of who trains what, and when, become a target for espionage.
+**Failure scenarios.** Metering can fail in several ways:
+
+- **Moving off the cloud.** Leading labs move frontier training to their own data centres, where provider and developer are the same company.
+- **Splitting.** Work is split across accounts, shell companies, providers or countries to stay under the limit; identity checks and project labels make this costly, but not impossible.
+- **Relabelling.** Training is declared as running models, fine-tuning or another permitted use.
+- **Regulatory flight.** Customers move to providers in countries outside the agreement.
+- **Distrust between states.** Rival states refuse foreign access to their providers' records. Laws that let governments demand data from domestic firms, such as China's 2017 National Intelligence Law and US surveillance law, give each side reason to distrust the other's reports.
+- **A sensitive data store.** Records of who trains what, and when, become a target for espionage.
 
 Thresholds and counting rules are easy to update, and metering can be lifted without leaving anything behind. However, its coverage erodes as frontier training moves off the cloud.
 
@@ -164,7 +231,7 @@ Thresholds and counting rules are easy to update, and metering can be lifted wit
 
 ### How we score
 
-Each tool is scored by the authors on six criteria, shown as five dots. Effectiveness ("Slows AI development") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.
+Each tool is scored by the authors on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). Effectiveness ("Slows AI development") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.
 
 | Shown as | What 1 means | What 5 means |
 |----|----|----|
@@ -183,19 +250,33 @@ Each tool is scored by the authors on six criteria, shown as five dots. Effectiv
 
 All scores reflect the authors' judgement, based on the sources listed on each tool's page.
 
-### New glossary terms
+### Glossary
 
-To add to the existing glossary:
-
-- **Pacing proposal:** a published plan for slowing or pausing parts of AI development, including how compliance would be checked.
-- **Route to capability:** one of the ways AI becomes more capable: more computing power, better algorithms, more post-training, or better elicitation.
-- **Post-training:** training a model further after its main training run, for example to follow instructions or use tools.
-- **Elicitation:** drawing out capabilities a model already has, for example through better prompts or tools.
-- **Sandbagging:** a model, or its developer, deliberately underperforming in a test.
-- **AI safety institute:** a government body that tests AI models, such as the UK AI Security Institute.
-- **Bandwidth:** how fast data can move between chips.
-- **Pod:** a group of chips linked by very fast connections, inside which training can continue under a bandwidth cap.
-- **Network tap:** a device that copies the data passing through a network link so that it can be checked.
-- **Know your customer:** checks a provider makes to verify who its customers are, borrowed from banking.
-- **Embedded evaluator:** an independent evaluator working inside an AI company with employee-like access.
+- **Pacing:** Deliberately slowing parts of frontier AI development – for example through caps or pauses agreed between companies or states – so that safety work can keep up.
+- **Compute:** Computing power, i.e. the chips and processing capacity used to train and run AI models. It is the input to AI that is easiest to count and verify.
+- **FLOP:** Floating-point operation, one basic arithmetic step by a computer. The total number of FLOP measures how much computation went into training a model.
+- **H100-equivalent:** A unit for counting AI chips of different types. One H100-equivalent is the computing power of one Nvidia H100, a widely used AI chip.
+- **Frontier:** The most capable AI models at a given time, and the large-scale computing needed to build them.
+- **Training:** Building an AI model by running very large computations over data. A training run is one such computation, and training frontier models requires very large numbers of chips.
+- **Inference:** Running an AI model that has already been trained, for example to answer requests. Data centres limited to inference can run existing models but cannot train new ones.
+- **AI chip:** A specialised processor built for AI computations. Advanced AI chips are made by a handful of firms.
+- **Lithography machine:** A machine that prints circuit patterns onto chips. Very few firms make the most advanced ones.
+- **Cluster:** A group of AI chips connected so that they can work together on one task.
+- **Data centre:** A building that houses large numbers of computer chips, with the power and cooling they need.
+- **Cloud provider:** A company that rents out computing capacity in its data centres.
+- **Model weights:** The numbers that make up a trained AI model. Whoever holds the weights can run the model.
+- **Export controls:** Government rules restricting which goods, such as advanced chips, can be sold to which countries.
+- **Census:** A one-off count of all the AI chips that already exist.
+- **Firmware:** Low-level software built into a hardware device.
+- **Tamper-evidence:** Features, such as seals, that show whether a device has been opened or interfered with.
+- **Leading and trailing states:** A leading state is ahead in frontier AI, while a trailing state is behind and trying to catch up.
+- **Route to capability:** One of the ways AI becomes more capable: more computing power, better algorithms, more training after the main run, or better ways of drawing out what a model can already do.
+- **AI safety institute:** A government body that tests AI models, such as the UK AI Security Institute.
+- **Bandwidth:** How fast data can move between chips.
+- **Pod:** A group of chips linked by very fast connections, inside which training can continue under a bandwidth cap.
+- **Network tap:** A device that copies the data passing through a network link so that it can be checked.
+- **MIRI agreement:** A proposed international treaty to stop the development of superintelligent AI until it can be done safely. Training above 10²⁴ FLOP is banned, and training above 10²² FLOP requires approval.
+- **AI 2040: Plan A:** A proposed US–China deal to pause frontier AI training, verified by tracking chips and by converting data centres to run existing models only.
+- **Building the Pause Button:** A proposal to build, in advance, the infrastructure for an enforceable global pause, triggered by a computing-power threshold.
+- **Hardwired Pause:** A proposal to make a pause enforceable by the hardware itself: chips able to train frontier models are counted and licensed, and approved models run on chips that cannot train.
 - **We Must Pace the Frontier:** Dario Amodei's 2026 essay proposing a three-step plan for pacing AI development.
