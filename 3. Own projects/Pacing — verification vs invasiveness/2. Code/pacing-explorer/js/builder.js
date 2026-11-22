@@ -17,6 +17,8 @@
 //   7. Layout       layers are ordered by readiness, foundations first.
 //   8. Setting      domestic: first steps. Allies: first and later steps.
 //                   Rival powers: both, plus the trailing state's stance.
+//                   (First and later steps are optional fields. The current data has
+//                   none, so only the trailing-state note for rival powers appears.)
 //   9. Wording      the explanation is generated from templates and the scores only.
 //
 // The numbers (1, 3, 3.0, the invasiveness limits) live in data/method.js.
@@ -47,7 +49,8 @@
     return items.slice(0, -1).join(", ") + " and " + items[items.length - 1];
   }
 
-  function inText(iv) { return iv.nameInText || iv.name; }
+  // "Chip production ledger" -> "the chip production ledger", for use inside a sentence.
+  function inText(iv) { return "the " + iv.name.charAt(0).toLowerCase() + iv.name.slice(1); }
 
   function formatFit(fit) { return fit.value.toFixed(2); }
 
@@ -224,8 +227,8 @@
     var rivalNotes = [];
     if (choices.setting === "rivals") {
       rivalNotes = layers.map(function (layer) {
-        var t = map[layer.id].incentives.trailingState;
-        return { id: layer.id, stance: t.stance, note: t.note };
+        var t = map[layer.id].stances.trailingState;
+        return { id: layer.id, stances: t, note: map[layer.id].why.trailingState };
       });
     }
 
@@ -395,9 +398,6 @@
         var level = method.readiness.filter(function (r) { return r.id === iv.readiness; })[0];
         out.notes.push(iv.name + ": not available yet (" + (iv.readinessNote || (level ? level.column.toLowerCase() : iv.readiness)) +
           "), so shown under “Start preparing now” with first steps.");
-      }
-      if (iv.today) {
-        out.notes.push(iv.name + ": the scores used here assume a mature version. Today's versions would score lower.");
       }
     });
     result.excluded.forEach(function (ex) {

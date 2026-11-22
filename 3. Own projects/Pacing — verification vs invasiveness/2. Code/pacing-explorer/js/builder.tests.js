@@ -40,19 +40,35 @@
   function layer(result, id) { return result.layers.filter(function (l) { return l.id === id; })[0]; }
   function approx(a, b) { return Math.abs(a - b) < 1e-9; }
 
+  function row(r, id) { return r.rows.filter(function (x) { return x.id === id; })[0]; }
+  function tool(data, id) { return data.interventions.filter(function (i) { return i.id === id; })[0]; }
+
+  // ---------- the five tools and their dependencies (real data) ----------
+  (function () {
+    check("(0) the data holds the five tools, in card order",
+      DATA.interventions.map(function (i) { return i.id; }).join(",") === "ledger,inspections,evaluations,bandwidth,metering",
+      DATA.interventions.map(function (i) { return i.id; }).join(","));
+    var deps = DATA.interventions.map(function (i) { return i.id + ">" + i.dependsOn.join("+"); }).join(" ");
+    check("(0) dependencies: inspections need the ledger, bandwidth caps need inspections, the rest none",
+      deps === "ledger> inspections>ledger evaluations> bandwidth>inspections metering>", deps);
+  })();
+
   // ---------- (a) no priorities chosen. Real data. ----------
   (function () {
     var r = B.buildPackage(DATA, METHOD, {});
     var allOne = METHOD.criteria.every(function (c) { return r.weights[c.id] === 1; });
     check("(a) no priorities: every weight is 1", allOne);
-    var fits = {};
-    r.rows.forEach(function (row) { fits[row.id] = row.fit; });
-    check("(a) no priorities: ledger fit is 20/6", fits.ledger.num === 20 && fits.ledger.den === 6, fits.ledger.num + "/" + fits.ledger.den);
-    check("(a) no priorities: inspections fit is 14/6", fits.inspections.num === 14 && fits.inspections.den === 6, fits.inspections.num + "/" + fits.inspections.den);
-    check("(a) no priorities: FlexHEGs fit is 19/6", fits.flexhegs.num === 19 && fits.flexhegs.den === 6, fits.flexhegs.num + "/" + fits.flexhegs.den);
-    check("(a) no priorities: ledger and FlexHEGs are selected on fit", r.selected.join(",") === "ledger,flexhegs", r.selected.join(","));
+    var expected = { ledger: 20, inspections: 14, evaluations: 17, bandwidth: 18, metering: 19 };
+    Object.keys(expected).forEach(function (id) {
+      var f = row(r, id).fit;
+      check("(a) no priorities: " + id + " fit is " + expected[id] + "/6", f.num === expected[id] && f.den === 6, f.num + "/" + f.den);
+    });
+    check("(a) no priorities: ledger, bandwidth cap and metering are selected on fit (the cap at exactly 3.0)",
+      r.selected.join(",") === "ledger,bandwidth,metering" && row(r, "bandwidth").meetsThreshold, r.selected.join(","));
     check("(a) no priorities: inspections come in as a foundation only", layer(r, "inspections") && layer(r, "inspections").role === "foundation");
-    check("(a) no priorities: layers run ledger, inspections, FlexHEGs", ids(r.layers).join(",") === "ledger,inspections,flexhegs", ids(r.layers).join(","));
+    check("(a) no priorities: evaluations are left out on fit",
+      !layer(r, "evaluations") && r.excluded.filter(function (e) { return e.id === "evaluations" && e.reason === "fit"; }).length === 1);
+    check("(a) no priorities: layers run ledger, metering, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,metering,inspections,bandwidth", ids(r.layers).join(","));
     check("(a) no priorities: nothing sits in the prepare lane", r.layers.every(function (l) { return l.lane === "timeline"; }));
     var text = B.explain(r, DATA, METHOD);
     check("(a) no priorities: the explanation says every criterion counts equally", /every criterion counts equally/.test(text.priorities), text.priorities);
@@ -62,56 +78,74 @@
   (function () {
     var r = B.buildPackage(DATA, METHOD, { priorities: ["invasiveness"], maxInvasiveness: "low" });
     check("(b) light on labs + low limit: invasiveness has weight 3", r.weights.invasiveness === 3);
-    check("(b) light on labs + low limit: the ledger is kept", ids(r.layers).indexOf("ledger") !== -1);
-    check("(b) light on labs + low limit: inspections are excluded", ids(r.layers).indexOf("inspections") === -1);
-    var ex = r.excluded.filter(function (e) { return e.id === "inspections"; })[0];
-    check("(b) light on labs + low limit: inspections are excluded for invasiveness", ex && ex.reason === "invasiveness");
-    check("(b) light on labs + low limit: the package is the ledger alone", ids(r.layers).join(",") === "ledger", ids(r.layers).join(","));
-    var row = r.rows.filter(function (x) { return x.id === "ledger"; })[0];
-    check("(b) light on labs + low limit: ledger fit is 28/8 = 3.5", row.fit.num === 28 && row.fit.den === 8 && approx(row.fit.value, 3.5));
+    check("(b) light on labs + low limit: ledger, bandwidth cap and metering are selected", r.selected.join(",") === "ledger,bandwidth,metering", r.selected.join(","));
+    var ev = r.excluded.filter(function (e) { return e.id === "evaluations"; })[0];
+    check("(b) light on labs + low limit: evaluations are excluded for invasiveness", ev && ev.reason === "invasiveness" && ids(r.layers).indexOf("evaluations") === -1);
+    var insp = layer(r, "inspections");
+    check("(b) light on labs + low limit: inspections exceed the limit but return as a foundation for the bandwidth cap",
+      insp && insp.role === "foundation" && insp.withinLimit === false && insp.foundationFor.join(",") === "bandwidth");
+    check("(b) light on labs + low limit: layers run ledger, metering, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,metering,inspections,bandwidth", ids(r.layers).join(","));
+    var f = row(r, "ledger").fit;
+    check("(b) light on labs + low limit: ledger fit is 28/8 = 3.5", f.num === 28 && f.den === 8 && approx(f.value, 3.5));
+    var notes = B.explain(r, DATA, METHOD).notes.join(" ");
+    check("(b) light on labs + low limit: the explanation says inspections are above the limit but still needed",
+      /Physical chip inspection: above your limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
   })();
 
-  // ---------- (c) "Actually slows AI development" plus must be available now. Real data. ----------
+  // ---------- (c) "Actually slows AI development" plus must be available now ----------
   (function () {
+    // Real data: all five tools are available now, so nothing moves to the prepare lane.
     var r = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness"], availableNow: true });
-    var flex = layer(r, "flexhegs");
-    check("(c) slows AI + available now: FlexHEGs are not removed", !!flex);
-    check("(c) slows AI + available now: FlexHEGs sit in the 'Start preparing now' lane", flex && flex.lane === "prepare");
-    check("(c) slows AI + available now: FlexHEGs carry their first steps",
-      flex && flex.steps.first.length > 0 && flex.steps.first.join("|") === DATA.interventions.filter(function (i) { return i.id === "flexhegs"; })[0].firstSteps.join("|"));
-    check("(c) slows AI + available now: the ledger stays on the timeline", layer(r, "ledger") && layer(r, "ledger").lane === "timeline");
-    var ledgerRow = r.rows.filter(function (x) { return x.id === "ledger"; })[0];
-    check("(c) slows AI + available now: ledger fit is exactly 3.0 and counts as 'at least 3.0'",
-      ledgerRow.fit.num === 24 && ledgerRow.fit.den === 8 && ledgerRow.meetsThreshold);
-    var chain = B.describeChain(r, DATA);
-    var flexChain = chain.filter(function (c) { return c.id === "flexhegs"; })[0];
-    check("(c) slows AI + available now: the chain labels FlexHEGs 'Start preparing now'", flexChain && flexChain.label === "Start preparing now");
+    check("(c) slows AI + available now (real data): every tool stays on the timeline", r.layers.every(function (l) { return l.lane === "timeline"; }));
+    var f = row(r, "ledger");
+    check("(c) slows AI + available now: ledger fit is exactly 3.0 and counts as 'at least 3.0'", f.fit.num === 24 && f.fit.den === 8 && f.meetsThreshold);
+    check("(c) slows AI + available now: evaluations (fit 25/8) are selected", row(r, "evaluations").fit.num === 25 && ids(r.layers).indexOf("evaluations") !== -1);
+
+    // Synthetic: evaluations made "not yet available". They must not be removed.
+    var altered = clone(DATA);
+    var ev = tool(altered, "evaluations");
+    ev.readiness = "1-3y";
+    ev.firstSteps = ["Step one", "Step two"];
+    var s = B.buildPackage(altered, METHOD, { priorities: ["effectiveness"], availableNow: true });
+    var layerEv = layer(s, "evaluations");
+    check("(c) synthetic: a tool that is not available yet is not removed", !!layerEv);
+    check("(c) synthetic: it sits in the 'Start preparing now' lane", layerEv && layerEv.lane === "prepare");
+    check("(c) synthetic: it carries its first steps", layerEv && layerEv.steps.first.join("|") === "Step one|Step two");
+    check("(c) synthetic: the ledger stays on the timeline", layer(s, "ledger") && layer(s, "ledger").lane === "timeline");
+    var chain = B.describeChain(s, altered).filter(function (c) { return c.id === "evaluations"; })[0];
+    check("(c) synthetic: the chain labels it 'Start preparing now'", chain && chain.label === "Start preparing now");
+    var notes = B.explain(s, altered, METHOD).notes.join(" ");
+    check("(c) synthetic: the explanation says it is not available yet", /Independent capability evaluation: not available yet/.test(notes), notes);
   })();
 
-  // ---------- (d) choosing FlexHEGs pulls in the ledger as a foundation ----------
+  // ---------- (d) choosing the bandwidth cap pulls in inspections, and through them the ledger ----------
   (function () {
     // Real data, dependency rule on its own.
-    var resolved = B.resolveDependencies(["flexhegs"], DATA.interventions);
-    check("(d) FlexHEGs alone pull in the ledger", resolved.ids.indexOf("ledger") !== -1, resolved.ids.join(","));
-    check("(d) FlexHEGs alone pull in inspections", resolved.ids.indexOf("inspections") !== -1);
-    check("(d) the ledger is recorded as a foundation for FlexHEGs", resolved.foundationFor.ledger.indexOf("flexhegs") !== -1);
+    var resolved = B.resolveDependencies(["bandwidth"], DATA.interventions);
+    check("(d) the bandwidth cap alone pulls in inspections", resolved.ids.indexOf("inspections") !== -1, resolved.ids.join(","));
+    check("(d) the bandwidth cap alone pulls in the ledger too (through inspections)", resolved.ids.indexOf("ledger") !== -1);
+    check("(d) the ledger is recorded as a foundation for inspections", resolved.foundationFor.ledger.indexOf("inspections") !== -1);
+    check("(d) inspections are recorded as a foundation for the bandwidth cap", resolved.foundationFor.inspections.indexOf("bandwidth") !== -1);
+    var alone = B.resolveDependencies(["metering", "evaluations"], DATA.interventions);
+    check("(d) metering and evaluations pull in nothing", alone.ids.join(",") === "metering,evaluations", alone.ids.join(","));
 
-    // Real data, full package: wherever FlexHEGs appear, the ledger does too, placed first.
+    // Real data, full package: the foundations come first.
     var r = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness", "verifiability"] });
-    check("(d) a package with FlexHEGs has the ledger first", ids(r.layers)[0] === "ledger" && ids(r.layers).indexOf("flexhegs") !== -1, ids(r.layers).join(","));
-    check("(d) the ledger layer lists FlexHEGs among what it supports", layer(r, "ledger").foundationFor.indexOf("flexhegs") !== -1);
+    check("(d) a package with the bandwidth cap runs ledger, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,inspections,bandwidth", ids(r.layers).join(","));
+    check("(d) the ledger layer lists inspections among what it supports", layer(r, "ledger").foundationFor.indexOf("inspections") !== -1);
     check("(d) the chain labels the ledger 'Foundation'", B.describeChain(r, DATA)[0].label === "Foundation");
 
     // Synthetic: lower the ledger's scores so that it no longer qualifies on fit.
     // It must still come in, with the role "foundation" and a note saying why.
     var altered = clone(DATA);
-    var ledger = altered.interventions.filter(function (i) { return i.id === "ledger"; })[0];
+    var ledger = tool(altered, "ledger");
     ["effectiveness", "coverage", "verifiability", "robustness"].forEach(function (k) { ledger.scores[k].score = 1; });
     var s = B.buildPackage(altered, METHOD, { priorities: ["effectiveness"] });
     check("(d) synthetic: a ledger that fails on fit is still added, as a foundation",
       layer(s, "ledger") && layer(s, "ledger").role === "foundation" && s.selected.indexOf("ledger") === -1);
     var notes = B.explain(s, altered, METHOD).notes.join(" ");
-    check("(d) synthetic: the note says the ledger is needed as a foundation", /Chip ledger: not selected on fit, but needed as a foundation/.test(notes), notes);
+    check("(d) synthetic: the note says the ledger is needed as a foundation", /Chip production ledger: not selected on fit, but needed as a foundation/.test(notes), notes);
+    check("(d) synthetic: the note gives the reason from the data", notes.indexOf(tool(DATA, "inspections").dependsOnWhy.ledger) !== -1, notes);
   })();
 
   // ---------- further checks ----------
@@ -120,25 +154,35 @@
   (function () {
     var r = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness"], maxInvasiveness: "medium" });
     var insp = layer(r, "inspections");
-    check("(e) medium limit: inspections exceed the limit but return as a foundation for FlexHEGs",
+    check("(e) medium limit: inspections exceed the limit but return as a foundation for the bandwidth cap",
       insp && insp.role === "foundation" && insp.withinLimit === false);
+    check("(e) medium limit: evaluations are left out for invasiveness",
+      r.excluded.filter(function (e) { return e.id === "evaluations" && e.reason === "invasiveness"; }).length === 1);
     var notes = B.explain(r, DATA, METHOD).notes.join(" ");
     check("(e) medium limit: the explanation says so explicitly", /above your limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
   })();
 
-  // Settings. Real data.
+  // Settings. Real data has no first or later steps, so only the rival-powers note shows.
   (function () {
     var d = B.buildPackage(DATA, METHOD, { setting: "domestic" });
     var a = B.buildPackage(DATA, METHOD, { setting: "allies" });
     var v = B.buildPackage(DATA, METHOD, { setting: "rivals" });
-    check("(f) domestic: first steps only", d.layers.every(function (l) { return l.steps.first.length > 0 && l.steps.later.length === 0; }));
-    check("(f) allies: first and later steps", a.layers.every(function (l) { return l.steps.first.length > 0 && l.steps.later.length > 0; }));
-    check("(f) allies: no note on the other side", a.rivalNotes.length === 0);
-    check("(f) rivals: later steps and one trailing-state note per layer",
-      v.layers.every(function (l) { return l.steps.later.length > 0; }) && v.rivalNotes.length === v.layers.length);
+    check("(f) real data: no first or later steps in any setting",
+      [d, a, v].every(function (x) { return x.layers.every(function (l) { return l.steps.first.length === 0 && l.steps.later.length === 0; }); }));
+    check("(f) domestic and allies: no note on the other side", d.rivalNotes.length === 0 && a.rivalNotes.length === 0);
+    check("(f) rivals: one trailing-state note per layer", v.rivalNotes.length === v.layers.length);
     var ledgerNote = v.rivalNotes.filter(function (n) { return n.id === "ledger"; })[0];
-    var ledgerData = DATA.interventions.filter(function (i) { return i.id === "ledger"; })[0];
-    check("(f) rivals: the note repeats the data's trailing-state stance", ledgerNote && ledgerNote.stance === ledgerData.incentives.trailingState.stance);
+    var ledgerData = tool(DATA, "ledger");
+    check("(f) rivals: the note repeats the data's trailing-state stance and reason",
+      ledgerNote && ledgerNote.stances.join(",") === ledgerData.stances.trailingState.join(",") && ledgerNote.note === ledgerData.why.trailingState);
+
+    // Synthetic: give every tool first and later steps. Domestic shows first steps only.
+    var altered = clone(DATA);
+    altered.interventions.forEach(function (iv) { iv.firstSteps = ["First"]; iv.laterSteps = ["Later"]; });
+    var d2 = B.buildPackage(altered, METHOD, { setting: "domestic" });
+    var a2 = B.buildPackage(altered, METHOD, { setting: "allies" });
+    check("(f) synthetic: domestic shows first steps only", d2.layers.every(function (l) { return l.steps.first.length > 0 && l.steps.later.length === 0; }));
+    check("(f) synthetic: allies show first and later steps", a2.layers.every(function (l) { return l.steps.first.length > 0 && l.steps.later.length > 0; }));
   })();
 
   // Orientation and input handling.
