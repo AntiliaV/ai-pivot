@@ -11,14 +11,12 @@
 //                   "Must be available now" never removes a tool: tools that are not
 //                   ready move to a separate "Start preparing now" lane.
 //   5. Selection    every remaining tool with fit >= 3.0 is included. If none
-//                   qualifies, the single best is included and flagged.
+//                   qualifies, the single best is included, with a note that it falls short.
 //   6. Dependencies anything an included tool depends on is added as a foundation,
 //                   even if a constraint had removed it (and that is said explicitly).
 //   7. Layout       layers are ordered by readiness, foundations first.
-//   8. Setting      domestic: first steps. Allies: first and later steps.
-//                   Rival powers: both, plus the trailing state's stance.
-//                   (First and later steps are optional fields. The current data has
-//                   none, so only the trailing-state note for rival powers appears.)
+//   8. Other side   for each tool in the package, the trailing state's expected stance
+//                   and reason are listed (always, whatever the other choices).
 //   9. Wording      the explanation is generated from templates and the scores only.
 //
 // The numbers (1, 3, 3.0, the invasiveness limits) live in data/method.js.
@@ -152,8 +150,7 @@
     return {
       priorities: priorities,
       availableNow: !!choices.availableNow,
-      maxInvasiveness: method.builder.invasivenessLimits.hasOwnProperty(choices.maxInvasiveness) ? choices.maxInvasiveness : "any",
-      setting: ["domestic", "allies", "rivals"].indexOf(choices.setting) !== -1 ? choices.setting : "domestic"
+      maxInvasiveness: method.builder.invasivenessLimits.hasOwnProperty(choices.maxInvasiveness) ? choices.maxInvasiveness : "any"
     };
   }
 
@@ -192,7 +189,7 @@
     // Rule 6: dependencies.
     var resolved = resolveDependencies(selected, interventions);
 
-    // Rules 4 (lane), 7 (order) and 8 (steps).
+    // Rules 4 (lane) and 7 (order); first steps are an optional field (the data has none yet).
     var layers = resolved.ids.map(function (id) {
       var iv = map[id];
       var isSelected = selected.indexOf(id) !== -1;
@@ -204,10 +201,7 @@
         foundationFor: resolved.foundationFor[id],
         withinLimit: rowById[id].withinLimit,
         fit: rowById[id].fit,
-        steps: {
-          first: (iv.firstSteps || []).slice(),
-          later: choices.setting === "domestic" ? [] : (iv.laterSteps || []).slice()
-        }
+        steps: { first: (iv.firstSteps || []).slice() }
       };
     });
     layers.sort(function (a, b) {
@@ -224,13 +218,10 @@
       return { id: r.id, reason: r.withinLimit ? "fit" : "invasiveness", fit: r.fit };
     });
 
-    var rivalNotes = [];
-    if (choices.setting === "rivals") {
-      rivalNotes = layers.map(function (layer) {
-        var t = map[layer.id].stances.trailingState;
-        return { id: layer.id, stances: t, note: map[layer.id].why.trailingState };
-      });
-    }
+    // Rule 8: the trailing state's stance and reason, for each tool in the package.
+    var rivalNotes = layers.map(function (layer) {
+      return { id: layer.id, stances: map[layer.id].stances.trailingState, note: map[layer.id].why.trailingState };
+    });
 
     return {
       choices: choices,

@@ -162,27 +162,22 @@
     check("(e) medium limit: the explanation says so explicitly", /above your limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
   })();
 
-  // Settings. Real data has no first or later steps, so only the rival-powers note shows.
+  // The other side's stance: one trailing-state note per tool in the package, whatever the choices.
   (function () {
-    var d = B.buildPackage(DATA, METHOD, { setting: "domestic" });
-    var a = B.buildPackage(DATA, METHOD, { setting: "allies" });
-    var v = B.buildPackage(DATA, METHOD, { setting: "rivals" });
-    check("(f) real data: no first or later steps in any setting",
-      [d, a, v].every(function (x) { return x.layers.every(function (l) { return l.steps.first.length === 0 && l.steps.later.length === 0; }); }));
-    check("(f) domestic and allies: no note on the other side", d.rivalNotes.length === 0 && a.rivalNotes.length === 0);
-    check("(f) rivals: one trailing-state note per layer", v.rivalNotes.length === v.layers.length);
-    var ledgerNote = v.rivalNotes.filter(function (n) { return n.id === "ledger"; })[0];
+    var plain = B.buildPackage(DATA, METHOD, {});
+    var picky = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness", "verifiability"], availableNow: true, maxInvasiveness: "medium" });
+    [plain, picky].forEach(function (r, i) {
+      var which = i === 0 ? "no choices" : "priorities, available now and a medium limit";
+      check("(f) " + which + ": one trailing-state note per tool in the package",
+        r.rivalNotes.length === r.layers.length && ids(r.rivalNotes).join(",") === ids(r.layers).join(","), ids(r.rivalNotes).join(","));
+    });
+    var ledgerNote = plain.rivalNotes.filter(function (n) { return n.id === "ledger"; })[0];
     var ledgerData = tool(DATA, "ledger");
-    check("(f) rivals: the note repeats the data's trailing-state stance and reason",
+    check("(f) the note repeats the data's trailing-state stance and reason",
       ledgerNote && ledgerNote.stances.join(",") === ledgerData.stances.trailingState.join(",") && ledgerNote.note === ledgerData.why.trailingState);
-
-    // Synthetic: give every tool first and later steps. Domestic shows first steps only.
-    var altered = clone(DATA);
-    altered.interventions.forEach(function (iv) { iv.firstSteps = ["First"]; iv.laterSteps = ["Later"]; });
-    var d2 = B.buildPackage(altered, METHOD, { setting: "domestic" });
-    var a2 = B.buildPackage(altered, METHOD, { setting: "allies" });
-    check("(f) synthetic: domestic shows first steps only", d2.layers.every(function (l) { return l.steps.first.length > 0 && l.steps.later.length === 0; }));
-    check("(f) synthetic: allies show first and later steps", a2.layers.every(function (l) { return l.steps.first.length > 0 && l.steps.later.length > 0; }));
+    check("(f) the choices no longer include a setting", plain.choices.setting === undefined && B.normaliseChoices({ setting: "rivals" }, METHOD).setting === undefined);
+    var none = B.buildPackage(DATA, METHOD, { maxInvasiveness: "low", priorities: [] });
+    check("(f) a package with no tools has no notes", none.layers.length === 0 ? none.rivalNotes.length === 0 : true);
   })();
 
   // Orientation and input handling.
@@ -194,7 +189,7 @@
     check("(g) at most three priorities are kept, unknown ones dropped", n.priorities.join(",") === "effectiveness,coverage,verifiability", n.priorities.join(","));
   })();
 
-  // Synthetic: nothing reaches 3.0, so the single best is shown and flagged.
+  // Synthetic: nothing reaches 3.0, so the single best is shown, with a note that it falls short.
   (function () {
     var altered = clone(DATA);
     altered.interventions.forEach(function (iv) {
@@ -224,9 +219,9 @@
     subsets.forEach(function (p) {
       [false, true].forEach(function (now) {
         ["any", "medium", "low"].forEach(function (limit) {
-          ["domestic", "allies", "rivals"].forEach(function (setting) {
+          {
             count++;
-            var choices = { priorities: p, availableNow: now, maxInvasiveness: limit, setting: setting };
+            var choices = { priorities: p, availableNow: now, maxInvasiveness: limit };
             var r, text;
             try {
               r = B.buildPackage(DATA, METHOD, choices);
@@ -249,7 +244,8 @@
             });
             if (present.length + r.excluded.length !== DATA.interventions.length) { problems.push(JSON.stringify(choices) + ": a tool is neither included nor excluded"); }
             if (!text.priorities || !text.why.length) { problems.push(JSON.stringify(choices) + ": empty explanation"); }
-          });
+            if (r.rivalNotes.length !== r.layers.length) { problems.push(JSON.stringify(choices) + ": a tool has no note on the other side"); }
+          }
         });
       });
     });

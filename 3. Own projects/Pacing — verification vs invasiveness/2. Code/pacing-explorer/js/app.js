@@ -498,7 +498,7 @@
   // THE PACKAGE BUILDER
   // =====================================================================
 
-  var builderState = { priorities: [], availableNow: false, maxInvasiveness: "any", setting: "domestic" };
+  var builderState = { priorities: [], availableNow: false, maxInvasiveness: "any" };
   var builderBox = null;
 
   function radioGroup(legend, name, options, current, onChange) {
@@ -511,10 +511,6 @@
         return h("label", { class: "choice" }, [input, h("span", null, o.label)]);
       })
     ]);
-  }
-
-  function numbered(items, ctx) {
-    return h("ol", { class: "plain-list" }, items.map(function (item) { return h("li", null, rich(item, ctx)); }));
   }
 
   function layerCard(layer, result) {
@@ -599,7 +595,7 @@
           h("li", null, "Fit is the sum of score × weight, divided by the sum of the weights. It stays on the 1 to 5 scale."),
           h("li", null, "A tool is included if its fit is at least " + threshold + " and its invasiveness score is within your limit (" +
             (limit >= 5 ? "you set no limit" : "you allowed scores up to " + limit + " out of 5") + ")."),
-          h("li", null, "If no tool qualifies, the single best is shown and flagged."),
+          h("li", null, "If no tool qualifies, the single best is shown, with a note that it falls short."),
           h("li", null, "Anything an included tool depends on is added as a foundation, even if it did not qualify by itself."),
           h("li", null, "If you asked for tools that are available now, tools still in development are not removed. They move to “Start preparing now”.")
         ]),
@@ -665,8 +661,7 @@
       box.appendChild(h("section", { class: "steps-block" }, [
         h("h5", null, [h("a", { href: toolHref(layer.id) }, byId[layer.id].name)]),
         h("p", { class: "field-hint" }, "First steps"),
-        numbered(layer.steps.first, ctx),
-        layer.steps.later.length ? [h("p", { class: "field-hint" }, "Later steps"), numbered(layer.steps.later, ctx)] : null
+        h("ol", { class: "plain-list" }, layer.steps.first.map(function (item) { return h("li", null, rich(item, ctx)); }))
       ]));
     });
 
@@ -734,11 +729,8 @@
       radioGroup("Maximum acceptable invasiveness for AI labs", "limit",
         [{ value: "any", label: "Any" }, { value: "medium", label: "Medium" }, { value: "low", label: "Low" }],
         builderState.maxInvasiveness, function (v) { builderState.maxInvasiveness = v; refresh(); }),
-      radioGroup("Setting", "setting",
-        [{ value: "domestic", label: "Domestic only" }, { value: "allies", label: "With allies" }, { value: "rivals", label: "An agreement between rival powers (US–China)" }],
-        builderState.setting, function (v) { builderState.setting = v; refresh(); }),
       h("button", { type: "button", class: "btn", onclick: function () {
-        builderState = { priorities: [], availableNow: false, maxInvasiveness: "any", setting: "domestic" };
+        builderState = { priorities: [], availableNow: false, maxInvasiveness: "any" };
         var fresh = renderBuilder(pageCtx);
         s.parentNode.replaceChild(fresh, s);
       } }, "Reset choices")
