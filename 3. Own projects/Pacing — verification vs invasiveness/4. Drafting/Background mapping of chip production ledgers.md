@@ -155,8 +155,9 @@ E.g. for chip ledgers:
 |----|----|----|----|----|----|----|----|----|
 | chip ledgers | 2 | 4 | Labs: cooperate. Chip and cloud firms: cooperate if market access depends on it. Leading state: cooperate (it enforces the lead). Trailing state: circumvent (unrecorded and diverted stock) | 3 | 3 | 4 | 2 | Now |
 
-*Our assessment. Scored against a common yardstick, a coordinated cap on frontier training compute (the Agenda's Case A), using the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** the ledger restricts nothing by itself; it lets a compute cap be checked for undeclared stock, but the cap constrains a proxy that erodes with efficiency gains.\
+*Our assessment. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** closes no route by itself; it lets a cap on the compute route be checked for undeclared stock and lets chips be withheld from non-compliant actors. Algorithms, post-training and elicitation stay open.\
+- **Lifecycle stage:** inputs and infrastructure.\
 - **Coverage:** new production and large holdings well covered; legacy stock, small clusters and non-parties are the gaps.\
 - **Verifiability:** concentrated supply chain and rich paper trails; weak against state concealment and small clusters.\
 - **Regulatory burden:** reporting, audits and customs checks; serial-level lifecycle tracking of millions of chips a year must be automated [Pause Button]. Consolidation and inspections raise it further.\

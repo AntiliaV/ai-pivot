@@ -155,8 +155,9 @@ E.g. for interconnect bandwidth caps:
 |----|----|----|----|----|----|----|----|----|
 | interconnect bandwidth caps | 3 | 3 | Labs: cooperate at inference sites, circumvent where they still want to train (pods, low-communication methods). Chip and cloud firms: cooperate reluctantly (lost utilisation). Leading state: cooperate (cheap, verifiable, preserves inference). Trailing state: circumvent (unmonitored links, side channels) | 3 | 3 | 2 | 2 | Now |
 
-*Our assessment. Scored as the proposals use it: a physical cap on bandwidth between servers at declared sites, paired with other tools. Scored against a common yardstick, a coordinated cap on frontier training compute (the Agenda's Case A), using the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** blocks training across servers directly, but not training within pods, and it erodes as low-communication methods improve.\
+*Our assessment. Scored as the proposals use it: a physical cap on bandwidth between servers at declared sites, paired with other tools. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** directly closes the compute route for training across servers; developers can substitute training within pods and low-communication methods.\
+- **Lifecycle stage:** inputs and infrastructure.\
 - **Coverage:** well targeted at training; reaches only capped sites.\
 - **Verifiability:** physical caps can be inspected without secrets; software-only versions can be spoofed; every pathway must be covered.\
 - **Regulatory burden:** facility audits, inspections and topology reviews.\

@@ -163,8 +163,9 @@ E.g. for physical chip inspections:
 |--------|--------|--------|--------|--------|--------|--------|--------|--------|
 | physical chip inspections | 2 | 2 | Labs: cooperate domestically. Chip and cloud firms: cooperate if operation depends on it. Leading state: undermine (refuses foreign inspectors). Trailing state: circumvent (undeclared sites) | 3 | 4 | 3 | 4 | Now |
 
-*Our assessment. Scored as periodic inspections of declared sites, backed by the ledger, with seals or cameras between visits. Scored against a common yardstick, a coordinated cap on frontier training compute (the Agenda's Case A), using the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** verifies hardware, not use; only switched-off or sealed chips are directly prevented from training.\
+*Our assessment. Scored as periodic inspections of declared sites, backed by the ledger, with seals or cameras between visits. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** verifies hardware, not use; it partly closes the compute route, since only switched-off or sealed chips are directly prevented from training.\
+- **Lifecycle stage:** inputs and infrastructure.\
 - **Coverage:** declared sites only; reach grows with the ledger and intelligence.\
 - **Verifiability:** strong snapshot of declared sites; weak between visits and blind to undeclared sites unless continuous monitoring and intelligence are added.\
 - **Regulatory burden:** a trained, vetted inspectorate, access rights, warrants and dispute procedures; proper checks take chips offline to attest them [CSET]. Continuous monitoring and challenge inspections push it to the maximum.\

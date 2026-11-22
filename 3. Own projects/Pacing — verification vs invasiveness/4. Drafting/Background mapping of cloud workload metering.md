@@ -155,10 +155,11 @@ E.g. for cloud workload metering:
 
 |   | Pacing effectiveness | Coverage and targeting | Incentive compatibility | Verifiability and enforceability | Regulatory burden | Robustness and flexibility | Invasiveness for labs | Readiness |
 |----|----|----|----|----|----|----|----|----|
-| cloud workload metering | 3 | 3 | Labs: cooperate, while leaders shift frontier training to their own hardware. Chip and cloud firms: cooperate if obligations are uniform across providers. Leading state: cooperate (already uses cloud know-your-customer rules through export controls). Trailing state: undermine (rejects foreign access to its providers' records) | 3 | 2 | 3 | 2 | Now |
+| cloud workload metering | 2 | 3 | Labs: cooperate, while leaders shift frontier training to their own hardware. Chip and cloud firms: cooperate if obligations are uniform across providers. Leading state: cooperate (already uses cloud know-your-customer rules through export controls). Trailing state: undermine (rejects foreign access to its providers' records) | 3 | 2 | 3 | 2 | Now |
 
-*Our assessment. Scored as the proposals use it: identity checks plus compute metering by cloud providers, with threshold reporting or alarms. Scored against a common yardstick, a coordinated cap on frontier training compute (the Agenda's Case A), using the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** caps a proxy (compute used) on the cloud share of compute.\
+*Our assessment. Scored as the proposals use it: identity checks plus compute metering by cloud providers, with threshold reporting or alarms. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** partly closes the compute route, for cloud compute only; own data centres and the other routes stay open.\
+- **Lifecycle stage:** inputs and infrastructure.\
 - **Coverage:** all cloud customers above a threshold; blind to own data centres.\
 - **Verifiability:** accurate records and easy account-level enforcement; cannot see what a workload does, or compute outside the cloud.\
 - **Regulatory burden:** builds on billing and existing know-your-customer practice; rises if an international body is added.\

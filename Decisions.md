@@ -6,6 +6,10 @@
 
 ------------------------------------------------------------------------
 
+### 2026-11-22 — Pacing mappings: effectiveness scored by routes closed
+
+Effectiveness is now scored by how many routes to frontier capability progress an intervention closes (Agenda §3.2: training compute, algorithms, post-training, elicitation), net of substitution, replacing the Case A compute-cap yardstick; each intervention also gets a lifecycle-stage tag (Agenda §3.1). *Why:* so that non-compute interventions can be compared, and new interventions or routes added later. Changed scores: capability evaluations 3→4, cloud metering 3→2. Touched: `Scoring method.md` and the six mappings in `4. Drafting/`.
+
 ### 2026-11-12 — Pacing mappings: common scoring method adopted
 
 Adopted one method for all intervention scores: each intervention scored once against a common yardstick (a coordinated cap on frontier training compute, the Agenda's Case A), on anchored 1–5 scales, with invasiveness for labs (1–5) and readiness added. Scores shown to policymakers as meters with words, not raw numbers. *Why:* to make different tools comparable and the scores defensible. Touched: new `4. Drafting/Scoring method.md`; the scores tables in the three mappings.

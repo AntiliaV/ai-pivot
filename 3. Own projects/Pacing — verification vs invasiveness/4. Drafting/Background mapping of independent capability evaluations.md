@@ -2,8 +2,6 @@
 
 **In brief.** An independent assessor gets controlled access to a specific model version before a decision, such as a release or further training. The assessor then runs tests to check whether the model crosses a capability threshold, for example sustained cyber operations, help with dangerous biological work, or autonomous AI research. Tests range from benchmarks to "bottleneck" tests of the hardest step in a threat and full threat simulations. The output is evidence about behaviour under stated test conditions, not a safety certificate: "no success observed" is weaker than "cannot do it". Unlike the compute tools, evaluations look at the thing pacing ultimately cares about, which is capability. But they see only the models submitted to them, and a lab or a model can game them. The practice already exists: the UK and US AI safety institutes have run joint pre-deployment tests of frontier models. Technical and political feasibility are both medium: elicitation, test contamination and validity limit assurance, and labs dispute thresholds and evaluator access.
 
-*Note on the yardstick:* our scoring method judges every intervention against a coordinated cap on frontier training compute (the Agenda's Case A). Evaluations are the core tool for capability-based rules instead, such as the Agenda's Case B (restricting access to dangerous biological capabilities). The note under the scores table gives both.
-
 ++What Pacing Proposals Say about independent capability evaluations++
 
 Every proposal uses evaluations, but none trusts them as the main brake on development. The four pacing proposals make compute the binding rule and use evaluations to keep compute thresholds honest or to gate the release of particular models. The two direct proposals give evaluations more weight: one lets safety institutes pause development, the other requires developers to prove safety.
@@ -26,7 +24,7 @@ Q: Under ideal conditions – do independent capability evaluations actually slo
 - **A lower bound.** Results depend on elicitation skill, scaffolding, tools and time, and models may recognise a test and underperform.
 - **Only submitted models.** The evaluation sees nothing else.
 - **Jagged capabilities.** Test performance often tracks real-world behaviour poorly.
-- **No view of compute.** Under the compute-cap yardstick, evaluations help indirectly: by recalibrating the threshold as algorithms become more efficient, and by catching dangerous capability that appears below the cap.
+- **No view of compute.** Evaluations do not limit training; they catch what training produced. They also keep compute thresholds honest, by lowering them as algorithms become more efficient.
 
 | Specific use of independent capability evaluations | Likelihood of leading to a slow down in capability development on its own | Why? |
 |----|----|----|
@@ -176,10 +174,11 @@ E.g. for independent capability evaluations:
 
 |   | Pacing effectiveness | Coverage and targeting | Incentive compatibility | Verifiability and enforceability | Regulatory burden | Robustness and flexibility | Invasiveness for labs | Readiness |
 |----|----|----|----|----|----|----|----|----|
-| independent capability evaluations | 3 | 3 | Labs: cooperate (many already volunteer for testing), while contesting thresholds and access. Chip and cloud firms: cooperate (little at stake). Leading state: cooperate domestically, but undermine foreign access to its models. Trailing state: circumvent (lenient national evaluators; results hard to check) | 2 | 3 | 3 | 4 | Now |
+| independent capability evaluations | 4 | 3 | Labs: cooperate (many already volunteer for testing), while contesting thresholds and access. Chip and cloud firms: cooperate (little at stake). Leading state: cooperate domestically, but undermine foreign access to its models. Trailing state: circumvent (lenient national evaluators; results hard to check) | 2 | 3 | 3 | 4 | Now |
 
-*Our assessment. Scored as the proposals use evaluations: independent pre-deployment and in-training tests that can gate release or further training. Scored against a common yardstick, a coordinated cap on frontier training compute (the Agenda's Case A), using the anchored 1–5 scales in `Scoring method.md`. Against a capability-based rule such as the Agenda's Case B, effectiveness and coverage would both score 4, because evaluations then measure the regulated hazard directly. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** acts on capability itself, but only as a gate on submitted models, and its results are lower bounds.\
+*Our assessment. Scored as the proposals use evaluations: independent pre-deployment and in-training tests that can gate release or further training. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** under ideal conditions, catches capability gains from every route (compute, algorithms, post-training, elicitation), but only at a gate on submitted models.\
+- **Lifecycle stage:** capability development, and use and distribution (release gate).\
 - **Coverage:** precisely targeted at hazards; misses unsubmitted models, internal use, and risks without tests.\
 - **Verifiability:** hard to prove that the tested model is the deployed one, or that elicitation was complete; says nothing about compute.\
 - **Regulatory burden:** accredited evaluators, scarce experts, secure infrastructure, and mutual recognition between states.\
