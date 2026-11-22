@@ -193,15 +193,15 @@ Strategic consequences and incentive compatibility analysis.\
 
 # Sources
 
-- **Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.\
-- **Atlas 03 / Atlas briefs:** Pacing Verification Atlas, mechanism page "Cloud workload metering" and the four proposal briefs.\
-- **Heim et al.:** Heim, Fist, Egan, Huang, Zekany, Trager, Osborne & Zilberman (2024), *Governing Through the Cloud: The Intermediary Role of Compute Providers in AI Regulation*, arXiv:2403.08501.\
-- **FMF:** Frontier Model Forum (2 May 2024), issue brief on measuring training compute.\
-- **Sastry:** Sastry et al. (2024), *Computing Power and the Governance of Artificial Intelligence*.\
-- **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.\
-- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.\
-- **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.\
-- **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.\
-- **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.\
-- **S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI.\
-- **BIS 2026:** US Bureau of Industry and Security (November 2026), interim final rule "Addressing Remote Access to Advanced Semiconductors" (checked 22 Nov 2026 via law-firm summaries).
+- **Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).\
+- **Atlas 03 / Atlas briefs:** [Pacing Verification Atlas](https://pacing-atlas.acacianimrod.chatgpt.site/), mechanism page "Cloud workload metering" and the four proposal briefs.\
+- **Heim et al.:** Heim, Fist, Egan, Huang, Zekany, Trager, Osborne & Zilberman (2024), [*Governing Through the Cloud: The Intermediary Role of Compute Providers in AI Regulation*](https://arxiv.org/abs/2403.08501), arXiv:2403.08501.\
+- **FMF:** Frontier Model Forum (2 May 2024), [issue brief on measuring training compute](https://www.frontiermodelforum.org/updates/issue-brief-measuring-training-compute/).\
+- **Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797).\
+- **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.\
+- **Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).\
+- **AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.\
+- **Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.\
+- **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).\
+- **S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI.\
+- **BIS 2026:** US Bureau of Industry and Security (November 2026), interim final rule ["Addressing Remote Access to Advanced Semiconductors"](https://bis.gov/press-release/bis-issues-rule-addressing-remote-access-american-super-intelligence-technology) (checked 22 Nov 2026 via law-firm summaries).

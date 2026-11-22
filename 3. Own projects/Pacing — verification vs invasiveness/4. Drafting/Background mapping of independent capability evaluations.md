@@ -212,13 +212,13 @@ Strategic consequences and incentive compatibility analysis.\
 
 # Sources
 
-- **Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.\
-- **Atlas 01 / Atlas briefs:** Pacing Verification Atlas, mechanism page "Independent predeployment capability evaluation" and the four proposal briefs.\
-- **CAST:** Scholefield, Martin & Barten (2025), *International Agreements on AI Safety: Review and Recommendations for a Conditional AI Safety Treaty*, arXiv:2503.18956.\
-- **Taking Control:** Miotti (2023, rev. 2025), *Taking control: Policies to address extinction risks from advanced AI*, arXiv:2310.20563.\
-- **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.\
-- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.\
-- **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.\
-- **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.\
-- **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.\
-- **S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI.
+- **Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).\
+- **Atlas 01 / Atlas briefs:** [Pacing Verification Atlas](https://pacing-atlas.acacianimrod.chatgpt.site/), mechanism page "Independent predeployment capability evaluation" and the four proposal briefs.\
+- **CAST:** Scholefield, Martin & Barten (2025), [*International Agreements on AI Safety: Review and Recommendations for a Conditional AI Safety Treaty*](https://arxiv.org/abs/2503.18956), arXiv:2503.18956.\
+- **Taking Control:** Miotti (2023, rev. 2025), [*Taking control: Policies to address extinction risks from advanced AI*](https://arxiv.org/abs/2310.20563), arXiv:2310.20563.\
+- **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.\
+- **Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).\
+- **AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.\
+- **Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.\
+- **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).\
+- **S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI.

@@ -200,15 +200,15 @@ Strategic consequences and incentive compatibility analysis.
 # Sources  
   
 - **Petrie:** Petrie, Aarne, Ammann & Dalrymple (2025), *Flexible Hardware-Enabled Guarantees for AI Compute*, Part I (page numbers refer to Part I; Parts II and III were not reviewed).  
-- **Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.  
-- **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.  
-- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.  
-- **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*.  
-- **Verification Plan:** Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*, ai-2040.com/supplements/verification-plan (read up to its 2033 section).  
-- **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.  
-- **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.  
-- **S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI.  
-- **Baker:** Baker, Kulp, Marks, Brundage & Heim (2025), *Verifying International Agreements on AI: Six Layers of Verification*, arXiv:2507.15916.  
-- **CNAS:** Aarne, Fist & Withers (2024), *Secure, Governable Chips*, CNAS.  
-- **Sastry:** Sastry et al. (2024), *Computing Power and the Governance of Artificial Intelligence*, arXiv:2402.08797.  
-- **CSET:** Feldgoise, Miller & Dohmen (2026), *Tracking AI Chips: Assessing Location Verification as an Export Control Enforcement Tool*, CSET.  
+- **Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).  
+- **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.  
+- **Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).  
+- **AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/).  
+- **Verification Plan:** Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A* (read up to its 2033 section).  
+- **Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.  
+- **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).  
+- **S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI.  
+- **Baker:** Baker, Kulp, Marks, Brundage & Heim (2025), [*Verifying International Agreements on AI: Six Layers of Verification*](https://arxiv.org/abs/2507.15916), arXiv:2507.15916.  
+- **CNAS:** Aarne, Fist & Withers (2024), [*Secure, Governable Chips*](https://s3.us-east-1.amazonaws.com/files.cnas.org/documents/CNAS-Report-Tech-Secure-Chips-Jan-24-finalb.pdf), CNAS.  
+- **Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797), arXiv:2402.08797.  
+- **CSET:** Feldgoise, Miller & Dohmen (2026), [*Tracking AI Chips: Assessing Location Verification as an Export Control Enforcement Tool*](https://cset.georgetown.edu/publication/tracking-ai-chips/), CSET.  
