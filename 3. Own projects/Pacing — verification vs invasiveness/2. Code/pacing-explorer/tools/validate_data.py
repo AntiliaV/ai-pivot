@@ -14,13 +14,12 @@ Sources it compares against (both in "4. Drafting", next to the site's folder tr
 
 What it checks
   (a) Site text. Every piece of wording in data/interventions.js, data/method.js and
-      data/glossary.js that comes from "Website text.md" is identical to it. Exempt:
-        - interface labels set in the build brief (section titles on tool pages, meter
-          labels, Low/Medium/High and Light/Moderate/Heavy, stance names, readiness
-          labels, "Learn more →", "← All tools", "Sources", "Glossary");
-        - the definitions of glossary terms kept from the first version of the site;
-        - the one-line reasons for each dependency (dependsOnWhy), which the build brief
-          gives and Website text.md does not contain.
+      data/glossary.js that comes from "Website text.md" is identical to it. That covers
+      the one-line reason for each dependency (dependsOnWhy, from the "Dependencies" list in
+      section 7, with its first letter capitalised) and every glossary definition. Exempt:
+      only the interface labels set in the build brief (section titles on tool pages, meter
+      labels, Low/Medium/High and Light/Moderate/Heavy, stance names, readiness labels,
+      "Learn more →", "← All tools", "Sources", "Glossary").
   (b) Every score, stance and readiness value equals the one in the tool's mapping
       ("Step 1" scores table). The same goes for each justification (the bullet under the
       table) and the "Where it acts" tag (the "Lifecycle stage" bullet).
@@ -223,68 +222,70 @@ def parse_website(path):
             web["caption"] = paras[0]
         elif h2.startswith("7."):
             web["builder_intro"] = paras[0]
+            web["dependencies"] = [b[1] for b in blocks if b[0] == "li"]
         elif h2 == "Intervention pages" and h3:
-            web["tools"][h3] = parse_tool(paras)
+            web["tools"][h3] = parse_tool(blocks)
         elif h2.startswith("8.") and h3 == "How we score":
             web["how_we_score"] = {"blocks": blocks}
-        elif h2.startswith("8.") and h3 == "New glossary terms":
+        elif h2.startswith("8.") and h3 == "Glossary":
             terms = []
             for kind, value in blocks:
                 m = re.fullmatch(r"\*\*(.+?):\*\* (.+)", value) if kind == "li" else None
                 if m:
                     terms.append((m.group(1), m.group(2)))
-            web["glossary_new"] = terms
+            web["glossary"] = terms
     return web
 
 
-def split_why(s):
-    spots = list(re.finditer(r"(AI labs|Chip and cloud firms|A leading state|A trailing state): ", s))
+def split_why(items):
+    """The "Expected behaviours (why)" list: one bullet per actor, "AI labs: reason"."""
     out = {}
-    for i, m in enumerate(spots):
-        end = spots[i + 1].start() if i + 1 < len(spots) else len(s)
-        segment = s[m.end():end].strip()
-        segment = re.sub(r"\s+-$", "", segment)
-        out[m.group(1)] = segment
+    for item in items:
+        m = re.match(r"(AI labs|Chip and cloud firms|A leading state|A trailing state): (.+)", item)
+        if m:
+            out[m.group(1)] = m.group(2).strip()
     return out
 
 
-def split_ideal(paragraph):
-    """A paragraph with an inline bullet list ("go further: - A - B - C") becomes text + items."""
-    if " - " not in paragraph:
-        return {"text": paragraph}
-    head, *items = paragraph.split(" - ")
-    return {"text": head.strip(), "items": [i.strip() for i in items]}
-
-
-def split_failures(paragraphs):
-    first = paragraphs[0]
-    pieces = re.split(r"\s-\s(?=\*\*)", first)
-    items = []
-    for piece in pieces[1:]:
-        m = re.fullmatch(r"\*\*(.+?)\*\* (.+)", piece)
-        items.append({"lead": m.group(1), "text": m.group(2)} if m else {"lead": "", "text": piece})
-    return {"intro": pieces[0].strip(), "items": items, "closing": paragraphs[1:]}
-
-
-def parse_tool(paras):
+def parse_tool(blocks):
+    """A tool page: paragraphs and bullet lists under the five bold lead-ins."""
     fields = {}
     current = None
-    for p in paras:
-        for key, lead in (("intro", LEAD_INTRO), ("why", LEAD_WHY), ("ideal", LEAD_IDEAL),
-                          ("fail", LEAD_FAIL), ("burden", LEAD_BURDEN)):
-            if p.startswith(lead):
-                current = key
-                fields[key] = [p[len(lead):]]
-                break
+    for kind, text in blocks:
+        if kind == "p":
+            for key, lead in (("intro", LEAD_INTRO), ("why", LEAD_WHY), ("ideal", LEAD_IDEAL),
+                              ("fail", LEAD_FAIL), ("burden", LEAD_BURDEN)):
+                if text == lead.strip() or text.startswith(lead):
+                    current = key
+                    fields[key] = [("p", text[len(lead):].strip())]
+                    break
+            else:
+                if current:
+                    fields[current].append(("p", text))
+        elif kind == "li" and current:
+            fields[current].append(("li", text))
+
+    contribution = []
+    for kind, text in fields["ideal"]:
+        if kind == "p":
+            contribution.append({"text": text})
         else:
-            if current:
-                fields[current].append(p)
+            contribution[-1].setdefault("items", []).append(text)
+
+    fail = fields["fail"]
+    items, closing = [], []
+    for kind, text in fail[1:]:
+        if kind == "li":
+            m = re.fullmatch(r"\*\*(.+?)\*\* (.+)", text)
+            items.append({"lead": m.group(1), "text": m.group(2)} if m else {"lead": "", "text": text})
+        else:
+            closing.append(text)
     return {
-        "introduction": fields["intro"][0],
-        "why": split_why(fields["why"][0]),
-        "contribution": [split_ideal(p) for p in fields["ideal"]],
-        "failures": split_failures(fields["fail"]),
-        "burden": fields["burden"][0],
+        "introduction": fields["intro"][0][1],
+        "why": split_why([t for k, t in fields["why"] if k == "li"]),
+        "contribution": contribution,
+        "failures": {"intro": fail[0][1], "items": items, "closing": closing},
+        "burden": fields["burden"][0][1],
     }
 
 
@@ -486,6 +487,32 @@ def check_site_text(data, method, glossary, web):
     eq("trade-off map caption", data.get("caption"), web["caption"])
     eq("builder intro", data.get("builderIntro"), web["builder_intro"])
 
+    # Reasons for dependencies: the list in section 7 ("X needs the Y: reason."), first letter capitalised.
+    by_name = {iv.get("name"): iv for iv in data["interventions"]}
+    expected_reasons = {}
+    for line in web.get("dependencies", []):
+        m = re.fullmatch(r"(.+?) needs (?:the )?(.+?): (.+)", line)
+        if not m:
+            error("Website text.md: cannot read the dependency line %r" % line)
+            continue
+        dependent = next((iv for iv in data["interventions"] if iv.get("name") == m.group(1)), None)
+        dep = next((iv for iv in data["interventions"] if iv.get("name", "").lower() == m.group(2).lower()), None)
+        if not dependent or not dep:
+            error("Website text.md: the dependency line %r names a tool that is not on the site" % line)
+            continue
+        reason = m.group(3)
+        expected_reasons[(dependent["id"], dep["id"])] = reason[:1].upper() + reason[1:]
+    for iv in data["interventions"]:
+        for d in iv.get("dependsOn", []):
+            if (iv["id"], d) not in expected_reasons:
+                error("%s depends on %s, but section 7 of Website text.md has no line for it" % (iv["id"], d))
+            else:
+                eq("%s: reason for needing %s (dependsOnWhy)" % (iv["id"], d),
+                   iv.get("dependsOnWhy", {}).get(d), expected_reasons[(iv["id"], d)])
+    for (a, b) in expected_reasons:
+        if b not in next(iv for iv in data["interventions"] if iv["id"] == a).get("dependsOn", []):
+            error("section 7 of Website text.md says %s needs %s, but dependsOn does not list it" % (a, b))
+
     descriptions = tool_descriptions(web)
     names = [iv.get("name") for iv in data["interventions"]]
     eq("tool order on the cards (section 5)", names, list(descriptions.keys()))
@@ -545,22 +572,19 @@ def check_site_text(data, method, glossary, web):
         labels = [c.get("label") for c in method.get("criteria", [])]
         eq("how we score: the 'Shown as' column names the six criteria, in order", [r[0] for r in tables[0][1:]], labels)
 
-    # Glossary: every new term of Website text.md is present with its exact definition.
+    # Glossary: the same terms as Website text.md, with word-for-word definitions.
     by_term = {g.get("term"): g for g in glossary}
-    new_terms = [t for t, _ in web.get("glossary_new", [])]
-    for term, definition in web.get("glossary_new", []):
-        if term not in by_term:
-            error("glossary: the new term %r of Website text.md is missing" % term)
-        else:
+    source_terms = [t for t, _ in web.get("glossary", [])]
+    eq("glossary: the terms (as a sorted list)", sorted(by_term, key=str.lower), sorted(source_terms, key=str.lower))
+    for term, definition in web.get("glossary", []):
+        if term in by_term:
             eq("glossary: definition of %r" % term, by_term[term].get("definition"), definition)
-    kept = [g.get("term") for g in glossary if g.get("term") not in new_terms]
 
     if len(errors) == before:
         ok("%d pieces of wording match Website text.md exactly" % n_compared)
-    return kept
 
 
-def check_glossary(glossary, kept, web, data, method):
+def check_glossary(glossary, web):
     print("\n3. Glossary")
     before = len(errors)
     terms = [g.get("term") for g in glossary]
@@ -582,7 +606,7 @@ def check_glossary(glossary, kept, web, data, method):
         if not found:
             warn("glossary: %r is not matched anywhere in the site's text (it will appear only in the Glossary list)" % g.get("term"))
     if len(errors) == before:
-        ok("%d terms: %d new from Website text.md, %d kept from version 1" % (len(glossary), len(glossary) - len(kept), len(kept)))
+        ok("%d terms, all with the definitions of Website text.md" % len(glossary))
 
 
 def check_mappings(data, docs):
@@ -671,8 +695,8 @@ def main():
 
     check_structure(data, method, glossary)
     if not errors:
-        kept = check_site_text(data, method, glossary, web)
-        check_glossary(glossary, kept, web, data, method)
+        check_site_text(data, method, glossary, web)
+        check_glossary(glossary, web)
         check_mappings(data, DOCS)
     else:
         print("\n  (The other checks are skipped until the structure is fixed.)")
