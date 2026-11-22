@@ -1,17 +1,19 @@
 // Pacing explorer: the trade-off map, drawn as hand-written SVG.
 // No libraries. Colours and type come from css/style.css (classes below).
 //
-// Usage: var chart = PacingChart.create(container, options); chart.update();
+// Usage: var chart = PacingChart.create(container, options); chart.render();
 // options:
 //   interventions   array from data/interventions.js
+//   scoresFor(iv)   the score set to plot (default: iv.scores)
 //   xKey, yKey      which score goes on each axis
-//   xTitle, yTitle, ySubtitle, xWords, yWords (words for scores 1 to 5)
-//   quadrants       { topLeft, topRight, bottomLeft, bottomRight }
-//   scoresFor(iv)   the score set to plot (mature or today)
-//   stateLabel(iv)  optional second label line, e.g. "once mature"
-//   otherScoresFor(iv)  optional: the other score set, drawn as a faint ghost
-//   ariaLabel(iv), href(iv), showNumeric
-//   onEnter(element, iv), onLeave()   for the tooltip
+//   xTitle, yTitle  axis titles
+//   xWords, yWords  words for scores 1 to 5 (shown at 1, 3 and 5)
+//   label           accessible name of the whole map
+//   href(iv)        where a tool's label links to
+//   ariaLabel(iv)   accessible name of a tool's link
+//
+// Tools with the same scores share one marker. Their labels are stacked next to it,
+// each a link of its own. The marker is never moved off its true position.
 
 (function (root) {
   "use strict";
@@ -44,8 +46,7 @@
   }
 
   function create(container, opts) {
-    var refs = {};      // id -> { link, label, mark }
-    var extras = null;  // group holding ghosts and connectors
+    var scoresFor = opts.scoresFor || function (iv) { return iv.scores; };
     var geom = null;
     var lastWidth = 0;
 
@@ -55,13 +56,12 @@
       var g = {
         width: width,
         narrow: narrow,
-        height: narrow ? Math.round(width * 1.0) : Math.round(width * 0.6),
-        left: narrow ? 58 : 76,
+        height: narrow ? Math.round(width * 1.05) : Math.round(width * 0.62),
+        left: narrow ? 62 : 80,
         right: narrow ? 10 : 20,
-        top: 52,
+        top: 34,
         bottom: 58,
-        font: narrow ? 13 : 14,
-        small: 12
+        font: narrow ? 13 : 14
       };
       g.x0 = g.left;
       g.y0 = g.top;
@@ -83,138 +83,111 @@
       }
       frame.appendChild(svg("rect", { x: g.x0, y: g.y0, width: g.w, height: g.h, class: "plot-frame" }));
 
-      // Tick words: always words, numbers only if the display flag is on.
-      [1, 2, 3, 4, 5].forEach(function (t) {
-        var isWordTick = t === 1 || t === 3 || t === 5;
-        var xLabel = isWordTick ? opts.xWords[t - 1] : "";
-        var yLabel = isWordTick ? opts.yWords[t - 1] : "";
-        if (opts.showNumeric) {
-          xLabel = xLabel ? t + " " + xLabel : String(t);
-          yLabel = yLabel ? yLabel + " " + t : String(t);
-        }
-        if (xLabel) { frame.appendChild(svg("text", { x: g.sx(t), y: g.y0 + g.h + 18, class: "tick", "text-anchor": "middle" }, xLabel)); }
-        if (yLabel) { frame.appendChild(svg("text", { x: g.x0 - 8, y: g.sy(t) + 4, class: "tick", "text-anchor": "end" }, yLabel)); }
+      // Tick words at scores 1, 3 and 5.
+      [1, 3, 5].forEach(function (t) {
+        frame.appendChild(svg("text", { x: g.sx(t), y: g.y0 + g.h + 18, class: "tick", "text-anchor": "middle" }, opts.xWords[t - 1]));
+        frame.appendChild(svg("text", { x: g.x0 - 8, y: g.sy(t) + 4, class: "tick", "text-anchor": "end" }, opts.yWords[t - 1]));
       });
 
       // Axis titles, both horizontal so they stay readable on a phone.
       frame.appendChild(svg("text", { x: 2, y: 16, class: "axis-title" }, "↑ " + opts.yTitle));
-      frame.appendChild(svg("text", { x: 2, y: 33, class: "axis-sub" }, opts.ySubtitle));
       frame.appendChild(svg("text", { x: g.x0 + g.w, y: g.y0 + g.h + 42, class: "axis-title", "text-anchor": "end" }, opts.xTitle + " →"));
-
-      // Quiet corner labels.
-      var q = opts.quadrants;
-      frame.appendChild(svg("text", { x: g.x0 + 8, y: g.y0 + 18, class: "quad" }, q.topLeft));
-      frame.appendChild(svg("text", { x: g.x0 + g.w - 8, y: g.y0 + 18, class: "quad", "text-anchor": "end" }, q.topRight));
-      frame.appendChild(svg("text", { x: g.x0 + 8, y: g.y0 + g.h - 9, class: "quad" }, q.bottomLeft));
-      frame.appendChild(svg("text", { x: g.x0 + g.w - 8, y: g.y0 + g.h - 9, class: "quad", "text-anchor": "end" }, q.bottomRight));
       rootSvg.appendChild(frame);
-
-      // Boxes the dot labels must keep clear of.
-      var charW = g.small * 0.56;
-      function box(text, x, y, anchorEnd) {
-        var w = text.length * charW;
-        return anchorEnd ? { x1: x - w, x2: x, y1: y - 13, y2: y + 4 } : { x1: x, x2: x + w, y1: y - 13, y2: y + 4 };
-      }
-      g.obstacles = [
-        box(q.topLeft, g.x0 + 8, g.y0 + 18, false),
-        box(q.topRight, g.x0 + g.w - 8, g.y0 + 18, true),
-        box(q.bottomLeft, g.x0 + 8, g.y0 + g.h - 9, false),
-        box(q.bottomRight, g.x0 + g.w - 8, g.y0 + g.h - 9, true)
-      ];
     }
 
-    // Where each dot goes. Dots that share a position are spread side by side.
-    function positions(g) {
-      var groups = {};
-      var list = opts.interventions.map(function (iv) {
-        var s = opts.scoresFor(iv);
+    // Tools with the same pair of scores form one group, drawn at one marker.
+    function groupsOf(g) {
+      var byKey = {};
+      var groups = [];
+      opts.interventions.forEach(function (iv) {
+        var s = scoresFor(iv);
         var key = s[opts.xKey].score + "," + s[opts.yKey].score;
-        (groups[key] = groups[key] || []).push(iv.id);
-        return { iv: iv, key: key, x: g.sx(s[opts.xKey].score), y: g.sy(s[opts.yKey].score) };
+        if (!byKey[key]) {
+          byKey[key] = { x: g.sx(s[opts.xKey].score), y: g.sy(s[opts.yKey].score), members: [] };
+          groups.push(byKey[key]);
+        }
+        byKey[key].members.push(iv);
       });
-      list.forEach(function (p) {
-        var members = groups[p.key];
-        if (members.length > 1) { p.x += (members.indexOf(p.iv.id) - (members.length - 1) / 2) * 24; }
-      });
-      return list;
+      return groups;
     }
 
-    // Greedy label placement: above, below, right, left; first spot that is
-    // inside the plot and clear of other labels, dots and corner labels.
-    function placeLabels(list, g) {
-      var taken = g.obstacles.slice();
-      list.forEach(function (p) { taken.push({ x1: p.x - 12, x2: p.x + 12, y1: p.y - 12, y2: p.y + 12, owner: p.iv.id }); });
-      // The faint ring and connector that show a tool's other position.
-      list.forEach(function (p) {
-        var other = opts.otherScoresFor ? opts.otherScoresFor(p.iv) : null;
-        if (!other) { return; }
-        var ox = g.sx(other[opts.xKey].score);
-        var oy = g.sy(other[opts.yKey].score);
-        taken.push({ x1: Math.min(p.x, ox) - 4, x2: Math.max(p.x, ox) + 4, y1: Math.min(p.y, oy) - 4, y2: Math.max(p.y, oy) + 4 });
-      });
-      var lineH = g.font + 3;
-      list.forEach(function (p) {
-        var lines = wrapLabel(p.iv.name, g.narrow ? 14 : 28).map(function (t) { return { text: t, cls: "dot-label" }; });
-        var extra = opts.stateLabel ? opts.stateLabel(p.iv) : "";
-        if (extra) { lines.push({ text: extra, cls: "dot-sub" }); }
-        var w = 0;
-        lines.forEach(function (l) { w = Math.max(w, l.text.length * g.font * 0.57); });
-        var h = lines.length * lineH;
-        var minX = g.x0 + 3;
-        var maxX = g.x0 + g.w - 3;
+    // Greedy label placement: right, left, above, below; first spot that is inside
+    // the plot and clear of other labels and markers. A group's labels move as a block.
+    function placeLabels(groups, g) {
+      var taken = [];
+      groups.forEach(function (grp) { taken.push({ x1: grp.x - 12, x2: grp.x + 12, y1: grp.y - 12, y2: grp.y + 12, owner: grp }); });
+      var lineH = g.font + 4;
+      var minX = g.x0 + 3;
+      var maxX = g.x0 + g.w - 3;
+      groups.forEach(function (grp) {
+        var tools = grp.members.map(function (iv) {
+          var lines = wrapLabel(iv.name, g.narrow ? 14 : 30);
+          var w = 0;
+          lines.forEach(function (l) { w = Math.max(w, l.length * g.font * 0.58); });
+          return { iv: iv, lines: lines, w: w, h: lines.length * lineH };
+        });
+        var w = Math.max.apply(null, tools.map(function (t) { return t.w; }));
+        var h = tools.reduce(function (sum, t) { return sum + t.h; }, 0) + (tools.length - 1) * 4;
         function centred(top) {
-          var cx = Math.min(Math.max(p.x, minX + w / 2), maxX - w / 2);
+          var cx = Math.min(Math.max(grp.x, minX + w / 2), maxX - w / 2);
           return { anchor: "middle", x: cx, x1: cx - w / 2, x2: cx + w / 2, y1: top, y2: top + h };
         }
         var options = [
-          centred(p.y - 15 - h),
-          centred(p.y + 15),
-          { anchor: "start", x: p.x + 16, x1: p.x + 16, x2: p.x + 16 + w, y1: p.y - h / 2, y2: p.y + h / 2 },
-          { anchor: "end", x: p.x - 16, x1: p.x - 16 - w, x2: p.x - 16, y1: p.y - h / 2, y2: p.y + h / 2 }
+          { anchor: "start", x: grp.x + 16, x1: grp.x + 16, x2: grp.x + 16 + w, y1: grp.y - h / 2, y2: grp.y + h / 2 },
+          { anchor: "end", x: grp.x - 16, x1: grp.x - 16 - w, x2: grp.x - 16, y1: grp.y - h / 2, y2: grp.y + h / 2 },
+          centred(grp.y - 15 - h),
+          centred(grp.y + 15)
         ];
         var chosen = null;
         options.forEach(function (o) {
           if (chosen) { return; }
           if (o.x1 < minX - 1 || o.x2 > maxX + 1 || o.y1 < g.y0 + 2 || o.y2 > g.y0 + g.h - 2) { return; }
-          var clash = taken.some(function (t) { return t.owner !== p.iv.id && overlaps(o, t); });
+          var clash = taken.some(function (t) { return t.owner !== grp && overlaps(o, t); });
           if (!clash) { chosen = o; }
         });
         if (!chosen) { chosen = options[0]; }
-        taken.push({ x1: chosen.x1, x2: chosen.x2, y1: chosen.y1, y2: chosen.y2, owner: p.iv.id });
-        p.label = { anchor: chosen.anchor, x: chosen.x, top: chosen.y1, lines: lines, lineH: lineH };
+        taken.push({ x1: chosen.x1, x2: chosen.x2, y1: chosen.y1, y2: chosen.y2, owner: grp });
+        // Stack the tools' labels from the top of the block.
+        var top = chosen.y1;
+        tools.forEach(function (t) {
+          t.top = top;
+          top += t.h + 4;
+        });
+        grp.label = { anchor: chosen.anchor, x: chosen.x, tools: tools, lineH: lineH };
       });
     }
 
-    function drawLabel(textNode, p) {
-      while (textNode.firstChild) { textNode.removeChild(textNode.firstChild); }
-      textNode.setAttribute("text-anchor", p.label.anchor);
-      p.label.lines.forEach(function (line, i) {
-        // Coordinates are relative to the dot, because the whole link is translated.
-        textNode.appendChild(svg("tspan", {
-          x: p.label.x - p.x,
-          y: p.label.top - p.y + (i + 1) * p.label.lineH - 4,
-          class: line.cls
-        }, line.text));
-      });
-    }
-
-    function drawExtras(g, list) {
-      while (extras.firstChild) { extras.removeChild(extras.firstChild); }
-      if (!opts.otherScoresFor) { return; }
-      list.forEach(function (p) {
-        var other = opts.otherScoresFor(p.iv);
-        if (!other) { return; }
-        var ox = g.sx(other[opts.xKey].score);
-        var oy = g.sy(other[opts.yKey].score);
-        if (Math.abs(ox - p.x) < 1 && Math.abs(oy - p.y) < 1) { return; }
-        extras.appendChild(svg("line", { x1: p.x, y1: p.y, x2: ox, y2: oy, class: "ghost-line" }));
-        extras.appendChild(svg("circle", { cx: ox, cy: oy, r: 6, class: "ghost-dot" }));
+    function drawGroup(rootSvg, grp, g) {
+      var single = grp.members.length === 1;
+      if (!single) {
+        // One marker for all of them, drawn first so the labels sit on top.
+        var marker = svg("g", { "aria-hidden": "true", transform: "translate(" + grp.x + "," + grp.y + ")" });
+        marker.appendChild(svg("circle", { r: 8, class: "dot-mark" }));
+        rootSvg.appendChild(marker);
+      }
+      grp.label.tools.forEach(function (t) {
+        var link = svg("a", { href: opts.href(t.iv), class: "dot", "aria-label": opts.ariaLabel(t.iv) });
+        if (single) {
+          var at = svg("g", { transform: "translate(" + grp.x + "," + grp.y + ")" });
+          at.appendChild(svg("circle", { r: 22, class: "dot-hit" }));
+          at.appendChild(svg("circle", { r: 15, class: "dot-focus" }));
+          at.appendChild(svg("circle", { r: 8, class: "dot-mark" }));
+          link.appendChild(at);
+        }
+        var pad = 4;
+        var x1 = grp.label.anchor === "start" ? grp.label.x : grp.label.anchor === "end" ? grp.label.x - t.w : grp.label.x - t.w / 2;
+        link.appendChild(svg("rect", { x: x1 - pad, y: t.top - pad / 2, width: t.w + 2 * pad, height: t.h + pad, rx: 4, class: "label-hit" }));
+        var text = svg("text", { class: "dot-text", "text-anchor": grp.label.anchor });
+        t.lines.forEach(function (line, i) {
+          text.appendChild(svg("tspan", { x: grp.label.x, y: t.top + (i + 1) * grp.label.lineH - 5, class: "dot-label" }, line));
+        });
+        link.appendChild(text);
+        rootSvg.appendChild(link);
       });
     }
 
     function render() {
       container.textContent = "";
-      refs = {};
       geom = geometry();
       lastWidth = container.clientWidth;
       var g = geom;
@@ -227,48 +200,15 @@
         class: "map-svg"
       });
       drawFrame(rootSvg, g);
-      extras = svg("g", { "aria-hidden": "true" });
-      rootSvg.appendChild(extras);
-
-      var list = positions(g);
-      placeLabels(list, g);
-      drawExtras(g, list);
-
-      list.forEach(function (p) {
-        var iv = p.iv;
-        var link = svg("a", { href: opts.href(iv), class: "dot", "aria-label": opts.ariaLabel(iv) });
-        link.style.transform = "translate(" + p.x + "px," + p.y + "px)";
-        link.appendChild(svg("circle", { r: 22, class: "dot-hit" }));
-        link.appendChild(svg("circle", { r: 15, class: "dot-focus" }));
-        var mark = svg("circle", { r: 8, class: "dot-mark " + (iv.readiness === "now" ? "is-now" : "is-dev") });
-        link.appendChild(mark);
-        var label = svg("text", { class: "dot-text" });
-        link.appendChild(label);
-        drawLabel(label, p);
-        if (opts.onEnter) {
-          link.addEventListener("mouseenter", function () { opts.onEnter(mark, iv); });
-          link.addEventListener("focus", function () { opts.onEnter(mark, iv); });
-          link.addEventListener("mouseleave", function () { opts.onLeave(); });
-          link.addEventListener("blur", function () { opts.onLeave(); });
-        }
-        refs[iv.id] = { link: link, label: label };
-        rootSvg.appendChild(link);
-      });
+      var groups = groupsOf(g);
+      placeLabels(groups, g);
+      groups.forEach(function (grp) { drawGroup(rootSvg, grp, g); });
       container.appendChild(rootSvg);
     }
 
-    // Move dots to their current positions (after the today / mature toggle).
+    // Redraw if the container has changed width (phone turned, window resized).
     function update() {
-      if (!geom || container.clientWidth !== lastWidth) { render(); return; }
-      var list = positions(geom);
-      placeLabels(list, geom);
-      drawExtras(geom, list);
-      list.forEach(function (p) {
-        var ref = refs[p.iv.id];
-        ref.link.style.transform = "translate(" + p.x + "px," + p.y + "px)";
-        ref.link.setAttribute("aria-label", opts.ariaLabel(p.iv));
-        drawLabel(ref.label, p);
-      });
+      if (!geom || container.clientWidth !== lastWidth) { render(); }
     }
 
     return { render: render, update: update };
