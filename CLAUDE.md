@@ -76,7 +76,7 @@ Status lives in exactly two files, with no overlap: `Backlog.md` for what is lef
 
 ### After any significant change
 
-Update, in order: `Decisions.md` (what and why), then `Backlog.md` (remove what is finished, add what was discovered). Update `README.md` only if the folder's structure changed. Then Antilia commits and pushes in GitHub Desktop (below).
+Update, in order: `Decisions.md` (what and why), then `Backlog.md` (remove what is finished, add what was discovered). Update `README.md` only if the folder's structure changed. Then Claude commits and Antilia pushes in GitHub Desktop (below).
 
 ### Applications: freezing what was sent
 
@@ -94,13 +94,13 @@ One post she saved (`0. Inputs & context/1. Career paths/0. General/What the fie
 - Superseded but possibly useful material goes to `Archive/` with a dated, self-describing name. Closed postings that are still useful as examples of what employers ask for stay in `Postings/`, with `[CLOSED]` at the start of the file name (as she already does).
 - Agreed deletions go to `Archive/_to_delete/`. Antilia empties it herself from the Finder.
 
-### Backup: private GitHub repository through GitHub Desktop
+### Backup: private GitHub repository (Claude commits, Antilia pushes)
 
-The folder is backed up to a private GitHub repository (`AntiliaV/ai-pivot`, remote `origin`). **All commits and pushes go through the GitHub Desktop app**, and Antilia is new to git, so guide her through GitHub Desktop rather than the command line. After a significant change, and after updating the trackers, she commits with a short summary of what changed and why, then pushes. Keep commits focused: one logical change per commit.
+The folder is backed up to a private GitHub repository (`AntiliaV/ai-pivot`, remote `origin`). **Claude makes the commits; Antilia pushes.** After a significant change, and after updating the trackers, Claude commits from the shell with a short message saying what changed and why. Keep commits focused: one logical change per commit, and commit only changes whose purpose is clear (ask about anything unexplained). Pushing is blocked from the shell, so Antilia pushes by clicking **Push origin** in GitHub Desktop; tell her when there is something to push. She is new to git, so guide her through GitHub Desktop rather than the command line.
 
 `.gitignore` leaves out macOS and R clutter, audio and video files, project `3. Results/` folders, `Archive/_to_delete/` and `Archive/Claude outputs/`. Files that are ignored will not appear in GitHub Desktop's list of changes; that is expected. Phone photos (`.HEIC`) and saved web pages are kept, because they cannot be downloaded again.
 
-**If you must run git from the sandbox shell (avoid if possible).** Git commands that write the index or refs from the sandbox leave stale `.lock` files, because the mounted folder cannot delete them, and these block GitHub Desktop ("A lock file already exists in the repository"). Use `git --no-optional-locks status` to look. After any write, run `find .git -name '*.lock'` and move leftovers aside with `mv` (`rm` is blocked).
+**Running git from the shell.** Git deletes its own `.lock` files as it works. Deletion is off by default in the mounted folder, so before the first commit of a session ask Antilia for deletion permission on this folder (used only for git's lock files); otherwise git leaves stale locks that block GitHub Desktop ("A lock file already exists in the repository"). Use `git --no-optional-locks status` to look. The shell has no git identity, so commit with `-c user.name=... -c user.email=...` matching the author of earlier commits (`git log`). After any write, run `find .git -name '*.lock'`; if permission was not given, move leftovers aside with `mv`.
 
 ------------------------------------------------------------------------
 
@@ -108,7 +108,7 @@ The folder is backed up to a private GitHub repository (`AntiliaV/ai-pivot`, rem
 
 ### Running code: never ask Antilia to run it herself
 
-Do not ask her to run scripts, shell commands, package installs or any other terminal step. When something must run on her Mac and you cannot run it yourself, write a self-contained **Claude Code prompt** for her to paste into a Claude Code session opened in this folder. It must say which folder to work in and point to this file, list the exact commands in order, state the checks that show success, say what to do on failure (diagnose and report; fix only obvious environment problems such as a missing package), forbid other changes, and end by asking for a plain-language summary of what ran, written by the communication rules below. Deliver the prompt in the chat (as a file if it is long), not as a folder document. Git is the one exception: commits and pushes stay in GitHub Desktop.
+Do not ask her to run scripts, shell commands, package installs or any other terminal step. When something must run on her Mac and you cannot run it yourself, write a self-contained **Claude Code prompt** for her to paste into a Claude Code session opened in this folder. It must say which folder to work in and point to this file, list the exact commands in order, state the checks that show success, say what to do on failure (diagnose and report; fix only obvious environment problems such as a missing package), forbid other changes, and end by asking for a plain-language summary of what ran, written by the communication rules below. Deliver the prompt in the chat (as a file if it is long), not as a folder document. Git is the one exception: Claude makes commits itself, and Antilia pushes in GitHub Desktop.
 
 ### Communication
 
