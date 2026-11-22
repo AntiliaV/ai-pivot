@@ -4,7 +4,7 @@
 
 ++What Pacing Proposals Say about chip production ledgers++
 
-All four proposals treat the ledger as a core mechanism and as the foundation other checks build on, never as sufficient by itself.
+The four international proposals treat the ledger as a core mechanism and as the foundation other checks build on, never as sufficient by itself. Amodei's essay does not propose it.
 
 | Proposal | What the ledger is for | Scope and threshold | Distinctive design choices |
 |----|----|----|----|
@@ -12,6 +12,7 @@ All four proposals treat the ledger as a core mechanism and as the foundation ot
 | **AI 2040: Plan A** | First step of the deal: each side becomes confident the other hides no more than \~1% of AI compute, before training is paused. | Data-centre owners and upstream suppliers (incl. fabs) declare major purchases and sales: first holders above 10k H100e (\~\$100M), within a year anyone above 0.001% of world compute (\~2,800 H100e). | Declarations are public, so analysts from any country can challenge anomalies; mutual inspectors; dead chips stored or verifiably destroyed. Recommends starting now: intelligence on the compute supply chain, and an end to chip recycling (decommissioned chips are a main route to covert compute). The Verification Plan models the numbers: chip tracking starts in 2026, when each side's uncertainty about the other's AI compute is about 10%; by 2028 it is 2–4%. The aim is to account for 100% of new production (including memory and networking), with new chips routed either to retrofitted data centres or to guarded cold storage. At the 2029 declaration (US \~224M, China \~26M, rest of world \~39M H100e), each side's best guess is that at most \~1.5M H100e is hidden (80% interval up to \~4M), about 0.5% of world compute (Verification Plan). |
 | **Building the Pause Button** | "Traceability" is one of three pillars, alongside hardware controls and legal rules. | "High-performance AI chips", defined by standard benchmarks (e.g. MLPerf) set by a multilateral working group. | Four layers: (1) register of critical chip-making tools and inputs (EUV, HBM and packaging equipment); (2) global registry of production volumes, specs and sales, run by an NSG/Wassenaar-style body that flags risks but does not itself control exports; (3) chain of custody from a cryptographic chip ID at manufacture, logging owner, location and declared use, with automated anomaly detection; (4) know-your-customer checks for cloud users. Enforced through ecosystem leverage: violators lose firmware updates, design software, cloud and tool supply. |
 | **Hardwired Pause** | A global census of pre-pause chips plus registration of all new ones. The census's completeness is judged the binding constraint on how long the pause can last. | All training-capable accelerators. Pre-pause chips enter by census, new ones by registration at a licensed fab; the only exit is verified destruction. Unaccounted chips are presumed hidden ("dark compute") and charged to the host state. | Census draws on 13 paper trails (tax deductions, vendor and resale records, customs, colocation rentals, loan collateral listed by serial, warranty returns, e-waste records, etc.). Registration is the price of joining profitable transitional inference service; buybacks, bounties, and amnesty for past export-control evasion in exchange for records. Extends the ledger upstream to every advanced lithography machine. |
+| **We Must Pace the Frontier** (Amodei essay) | Not proposed as a verification tool. Its measures to protect the democracies' lead (no sales of advanced chips or chipmaking equipment to China, a crackdown on smuggling) depend on knowing where chips are (our inference). | US and allied export controls. | Treats chip controls as a way to widen the US lead before any global deal, not as treaty verification. |
 
 ++Effectiveness:++\
 Q: Under ideal conditions – do chip ledgers actually slow capability development, or just constrain an imperfect proxy?
@@ -103,6 +104,12 @@ Among the more robust pacing tools, provided gaps are measured and published.
 - **Lifting.** The ledger creates no overhang of its own and can stay as cheap standing infrastructure after the binding rules are lifted, which also makes staged exits observable. The risk is that it persists and its use expands.\
 - **Long-run threat:** a covert or independent supply chain, especially unregistered lithography machines.
 
+++Regulatory burden++
+
+Q: What does it take for governments to set up and run it?
+
+A registry body, national at first and international under an agreement, collects records from chipmakers, distributors and data-centre operators and reconciles them with customs and sales data. It builds on export-control licensing and on records firms already keep. Tracking millions of chips a year by serial number must be automated. The burden rises if chips must also be consolidated into declared sites and inspected.
+
 # Deep dive: AI labs
 
 *Our assessment. "Invasiveness" follows the project's definition: how much effort compliance takes, and how much of what labs see as proprietary information they must reveal.*
@@ -186,6 +193,7 @@ Strategic consequences and incentive compatibility analysis.\
 - **Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.\
 - **Atlas 04 / Atlas briefs:** Pacing Verification Atlas, mechanism page "Chip production and transfer ledger" and the four proposal briefs.\
 - **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.\
+- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.\
 - **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*.\
 - **Verification Plan:** Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*, ai-2040.com/supplements/verification-plan (read up to its 2033 section).\
 - **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.\

@@ -4,7 +4,7 @@
 
 ++What Pacing Proposals Say about cloud workload metering++
 
-The proposals treat cloud metering as an existing, light-touch layer to build on rather than as a main pillar. They pair it with tracking of chips and data centres, because frontier training increasingly runs on labs' own or partners' hardware.
+The four international proposals treat cloud metering as an existing, light-touch layer to build on rather than as a main pillar. They pair it with tracking of chips and data centres, because frontier training increasingly runs on labs' own or partners' hardware.
 
 | Proposal | Role of metering | Who meters, and what is reported | Distinctive design choices |
 |----|----|----|----|
@@ -12,6 +12,7 @@ The proposals treat cloud metering as an existing, light-touch layer to build on
 | **AI 2040: Plan A** | Part of compute accounting: the verification plan calls for investment in compute accounting and tracking, including by intelligence agencies. | Tiered by site size. Sites above 10,000 H100-equivalents (about 99% of compute) are converted to inference only; smaller sites face reporting requirements and spot checks. | Metering covers the long tail of smaller sites; the large sites are handled by physical conversion. |
 | **Building the Pause Button** | Know-your-customer rules as one layer of a multilayer regime, with cloud usage logs linked to verified identities. | Providers verify identity and declared projects, keep identity-linked logs, deny above-threshold access to unverified users and report suspicious activity. Regulators inspect the records, logs and configurations. | Cites banking enforcement as precedent: TD Bank's $1.3 billion fine for anti-money-laundering failures. |
 | **Hardwired Pause** | Reconciliation: inference traffic and power use are reported per cluster and checked against power-station and inference-provider records. | Licensed hardware operators, kept separate from inference providers. | AI companies cannot hold hardware licences, which avoids the conflict of a developer metering itself. |
+| **We Must Pace the Frontier** (Amodei essay) | Not proposed for pacing itself. Calls for a crackdown on remote access to data centres outside China, which relies on providers knowing their customers (our inference). | US export controls. | Considers limiting "ingredients" such as training compute, but worries they are easier to game than measures of what models do. |
 
 ++Effectiveness:++\
 Q: Under ideal conditions – do cloud workload metering actually slow capability development, or just constrain an imperfect proxy?
@@ -99,6 +100,12 @@ Adaptable and easy to lift, but its coverage erodes.
 - **Imperfect implementation:** degrades gracefully. A missed account loses one customer's data, not the whole system.
 - **Adaptation:** thresholds and counting rules can be updated, and reporting can be extended to on-premises compute. Coverage erodes as training moves in-house and efficiency improves.
 - **Lifting:** easy, with no overhang, since it builds nothing beyond reporting.
+
+++Regulatory burden++
+
+Q: What does it take for governments to set up and run it?
+
+Regulators set common counting rules and thresholds, receive providers' reports, and audit their records and identity checks. Most of the work falls on providers and reuses billing and know-your-customer systems that already exist for export controls. The burden rises if reports must be reconciled across countries, which needs an international body.
 
 # Deep dive: AI labs
 
@@ -192,6 +199,7 @@ Strategic consequences and incentive compatibility analysis.\
 - **FMF:** Frontier Model Forum (2 May 2024), issue brief on measuring training compute.\
 - **Sastry:** Sastry et al. (2024), *Computing Power and the Governance of Artificial Intelligence*.\
 - **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.\
+- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.\
 - **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.\
 - **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.\
 - **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.\

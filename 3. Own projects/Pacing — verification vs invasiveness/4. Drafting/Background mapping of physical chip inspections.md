@@ -6,7 +6,7 @@
 
 What do each of the pacing proposals say about physical chip inspections?
 
-All four proposals use inspections; MIRI, AI 2040 and Hardwired treat them as core, Building the Pause Button as one specified option. None relies on periodic visits alone: each pairs them with a register, continuous monitoring (cameras, seals, sensors) or intelligence.
+The four international proposals use inspections, and Amodei's essay does not discuss them; MIRI, AI 2040 and Hardwired treat them as core, Building the Pause Button as one specified option. None relies on periodic visits alone: each pairs them with a register, continuous monitoring (cameras, seals, sensors) or intelligence.
 
 | Proposal | What inspection is for | Who inspects, and how often | Distinctive design choices |
 |----------------|-----------------|---------------------|--------------------|
@@ -14,6 +14,7 @@ All four proposals use inspections; MIRI, AI 2040 and Hardwired treat them as co
 | **AI 2040: Plan A** | Check each side's declared chip numbers, then certify the devices that keep data centres inference-only during the training pause. | Reciprocal: "a few hundred" US and Chinese inspectors in each other's country check declarations and records against chip counts; auditor teams in R&D clusters later approve workloads. Clusters \>10k H100e (≈99% of compute) get inference-only retrofits; small sites and diffuse compute (≈1%) get reporting and random spot checks. | Only data centres that both sides agree have working verification may keep providing AI services. Inspectors also verify sealed "chip banks" in cold storage (5M H100e US, 500k H100e China). The Verification Plan treats embedded auditors, interviews and whistleblowers as supplements, not load-bearing; the aim is to bound undeclared compute to ≈0.5% of world compute. The scenario's branches show the limits: in the covert branch, China admits US auditors to declared sites while hiding a smuggled stockpile elsewhere; in the breakdown branch, turning inspectors away is the first sign the deal has collapsed; in Plans B and C, the US treats foreign inspectors in its data centres as a nonstarter, so no verified US–China deal is reached (in Plan B the rivals turn to sabotage). |
 | **Building the Pause Button** | Back up chip registries and compute caps; check that interconnect limits have not been re-cabled after a visit. | Routine audits of facilities holding high-risk chips by certified third parties; surprise inspections for hidden or diverted chips; on-site audits of major data centres; challenge inspections of sites suspected of exceeding thresholds (OPCW model). | Audits cover utilisation logs, access records, physical security and firmware integrity, alongside cable inspections and tamper-resistant enclosures. Customs inspect chip shipments; suppliers and fabs are also inspected. International funding for countries with little inspection capacity. |
 | **Hardwired Pause** | Keep licensed chips at registered sites, confirm sealed reserves, and verify fab output during a production halt. | Licensed hardware operators face routine inspections; chips that move or go silent must be produced for inspection; a large standing international inspectorate (modelled on the OPCW and CTBTO). | Strategic reserves of powered-off chips under seal, checked by periodic counting. At fabs, every printed chip and reject is shown to inspectors; sampling 2,400 chips per production line per year would catch 1% diversion within six months with 95% probability, even if inspectors spot only one illicit chip in four. Walk-through inspections rule out hidden clean rooms. Inspection protocols follow CWC practice (in the US: consent, administrative warrant, or criminal warrant for challenge inspections). More inspector access lowers the hidden capacity a state is assumed to hold. "Whole-lab" inspections serve as a stopgap while technical monitoring is built. |
+| **We Must Pace the Frontier** (Amodei essay) | Not discussed. | — | For a full global pause, says verification would need very high confidence, without naming methods. |
 
 ++Effectiveness:++\
 Q: Under ideal conditions – do physical chip inspections actually slow capability development, or just constrain an imperfect proxy?
@@ -110,6 +111,12 @@ Fairly robust and easy to scale up or down, but politically fragile: it depends 
 - **Lifting:** visits can stop at once, without creating an overhang. A standing inspectorate, however, tends to persist and look for new work.\
 - **Political shocks:** access can be withdrawn overnight in a crisis; restarting after a breakdown is harder than continuing.
 
+++Regulatory burden++
+
+Q: What does it take for governments to set up and run it?
+
+An inspectorate of trained, security-vetted staff, with rights of access and rules for warrants, disputes and challenge inspections. Proper checks take chips offline to attest them. Periodic visits to declared sites are a moderate effort. Continuous monitoring (cameras, seals, sensors) and challenge inspections of undeclared sites need a standing international body, comparable to nuclear safeguards (our inference).
+
 # Deep dive: AI labs
 
 *Our assessment. "Invasiveness" follows the project's definition: how much effort compliance takes, and how much of what labs see as proprietary information they must reveal.*
@@ -195,6 +202,7 @@ Strategic consequences and incentive compatibility analysis.\
 - **Atlas 05 / Atlas briefs:** Pacing Verification Atlas, mechanism page "Physical chip inventory inspection" and the four proposal briefs.\
 - **S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI.\
 - **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.\
+- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.\
 - **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*.\
 - **Verification Plan:** Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*, ai-2040.com/supplements/verification-plan (read up to its 2033 section).\
 - **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.\

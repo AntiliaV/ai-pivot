@@ -6,7 +6,7 @@
   
 What do each of the pacing proposals say about FlexHEGs?  
   
-No proposal relies on FlexHEGs today. All treat them, or similar on-chip mechanisms, as a later upgrade to cruder near-term tools. Two of the four (Hardwired, AI 2040) deliberately design around them because they judge firmware-level security insufficient against a state adversary in the near term.  
+No proposal relies on FlexHEGs today. All treat them, or similar on-chip mechanisms, as a later upgrade to cruder near-term tools. Two of the four (Hardwired, AI 2040) deliberately design around them because they judge firmware-level security insufficient against a state adversary in the near term. Amodei's essay does not discuss them.  
   
 | Proposal | Role of FlexHEG-type mechanisms | Timing | Distinctive design choices |
 | -------- | ------------------------------- | ------ | -------------------------- |
@@ -14,6 +14,7 @@ No proposal relies on FlexHEGs today. All treat them, or similar on-chip mechani
 | **MIRI agreement** | One option for verifying chip use: "on-chip hardware-enabled mechanisms", including retrofits and remote deactivation that let the Executive Council disable chips (Art. VII.1(d)). | Not relied on: current chips are judged insecure, so chips must be consolidated and monitored on site until such mechanisms mature. Cites 2–5 years for ideal mechanisms (less secure versions in months), and notes little progress since; retrofitting in 1–2 years if chips are already tracked (Art. V notes). | Preparation phase includes R&D on hardware-enabled mechanisms, an interagency group and a public–private partnership. Once mature, they would allow chips to be governed without centralising them. |
 | **AI 2040: Plan A** and its **Verification Plan** | Not named. The pause is verified with "simple, passive" network taps and recomputation servers instead, because a fully trustless, low-cost solution "is not mature". | Later upgrades: secure gateways, hardware-derived keys, offline licensing to support compute destruction, more robust trusted execution (around 2033) [Verification Plan]. | In the breakdown branch, chips in the transparent training data centres need regular "continue" messages from each great power, in effect a multilateral operating licence, and become bricks when the deal collapses. Cryptographic proof schemes are called more speculative. |
 | **Hardwired Pause** | Chooses physical specialisation (inference-only chips) over programmable guarantees: for a near-term treaty, it assumes firmware- and driver-level guarantees will not survive a state-level adversary (§4.2, fn. 41). | FlexHEG ideas could help monitor the remaining training-capable chips during the transition (§1). Trusted execution environments and formal methods could tighten verification later (§3.3.3). | Licensed chips are fitted or retrofitted with on-chip location attestation (§3.3.2). Treaty authorities may accept firmware guarantees if shown evidence that they are secure enough. |
+| **We Must Pace the Frontier** (Amodei essay) | Not discussed. | — | — |
   
 ++Effectiveness:++  
 Q: Under ideal conditions – do FlexHEGs actually slow capability development, or just constrain an imperfect proxy?  
@@ -106,6 +107,12 @@ Highly adaptable by design, but fragile to a single deep flaw, and only as trust
 - **Lifting:** rules can be relaxed or removed by update, and licences can simply lapse. But baseline rulesets are hard to change, so bugs in them are permanent; and it is likely infeasible to restrict what future updates may add (e.g. "phoning home" or back doors), so trust depends on governance, not on the chip.  
 - **Durability:** states with fabs can leave gradually by making unequipped chips. Readiness is the binding constraint: estimates range from about two years (chip-adjacent prototypes) to five years (secure chips in the installed base) [S&T; CNAS; MIRI].  
   
+++Regulatory burden++
+
+Q: What does it take for governments to set up and run it?
+
+Governments fund research, set hardware standards, certify chip designs and oversee the supply chain. Someone must govern updates to the rules chips enforce, and hold the keys. Enforcement adds licensing authorities and, internationally, joint sign-off on updates. Chipmakers bear most of the cost; the state's role is standard-setting and oversight, but it is new and highly technical.
+
 # Deep dive: AI labs
 
 *Our assessment. "Invasiveness" follows the project's definition: how much effort compliance takes, and how much of what labs see as proprietary information they must reveal.*
@@ -195,6 +202,7 @@ Strategic consequences and incentive compatibility analysis.
 - **Petrie:** Petrie, Aarne, Ammann & Dalrymple (2025), *Flexible Hardware-Enabled Guarantees for AI Compute*, Part I (page numbers refer to Part I; Parts II and III were not reviewed).  
 - **Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.  
 - **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.  
+- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.  
 - **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*.  
 - **Verification Plan:** Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*, ai-2040.com/supplements/verification-plan (read up to its 2033 section).  
 - **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.  

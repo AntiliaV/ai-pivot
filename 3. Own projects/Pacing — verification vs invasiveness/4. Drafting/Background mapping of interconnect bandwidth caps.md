@@ -4,7 +4,7 @@
 
 ++What Pacing Proposals Say about interconnect bandwidth caps++
 
-All four proposals use bandwidth limits for the same purpose: keeping inference running while making training impractical. None relies on the cap alone; each pairs it with compute tracking, inspections or recomputation of workloads.
+The four international proposals use bandwidth limits for the same purpose (Amodei's essay does not discuss them): keeping inference running while making training impractical. None relies on the cap alone; each pairs it with compute tracking, inspections or recomputation of workloads.
 
 | Proposal | Role of the cap | Where it sits and how it is verified | Distinctive design choices |
 |----|----|----|----|
@@ -12,6 +12,7 @@ All four proposals use bandwidth limits for the same purpose: keeping inference 
 | **AI 2040: Plan A** | A boundary around inference datacentres: a "secure boundary" lets through only verified tokens, at about 1 MB/s. | At the datacentre perimeter. The main verification is more invasive: network taps that copy traffic, plus recomputation of sampled work. | Unplugging most backend networking is named as a quick first option. Warns that outputs from capped inference sites could still feed training elsewhere. |
 | **Building the Pause Button** | The "fixed set" option: cap the bandwidth between chips, or the number of chips that can communicate. | Facility path: low-throughput cables and physically separated groups of servers, fast to deploy but dependent on the facility's integrity. Chip path: limits built into firmware or chip logic, which takes years. Verified by audits, cameras, cable inspections, tamper-resistant enclosures and telemetry. | Rated medium on tamper-resistance and deployable within a year. Warns that training methods needing about a hundred times less bandwidth undermine the premise, so the cap should be used only alongside tracking of total compute. |
 | **Hardwired Pause** | Part of a transitional inference regime: an internationally operated router feeds requests to small, physically isolated clusters. | Router and cluster design, checked by recomputing a sample of the work. | Bandwidth limits feed into the proposal's estimate of how much training a capped cluster could still do. |
+| **We Must Pace the Frontier** (Amodei essay) | Not discussed. | — | Considers limiting "ingredients" such as training compute, but worries they are easier to game than measures of what models do. |
 
 ++Effectiveness:++\
 Q: Under ideal conditions – do interconnect bandwidth caps actually slow capability development, or just constrain an imperfect proxy?
@@ -97,6 +98,12 @@ Simple to apply and to lift, but fragile.
 - **Imperfect implementation:** one missed link or one unrestricted pod can defeat it.
 - **Adaptation:** a fixed cap becomes obsolete as training methods need less communication, and results from small tests may overstate how well it works at scale. The cap must be revised as methods change.
 - **Lifting:** easy, by reconnecting cables or changing configurations. But the chips remain in place, so training capacity returns at once: a compute overhang.
+
+++Regulatory burden++
+
+Q: What does it take for governments to set up and run it?
+
+Regulators audit facilities: they check network maps and cabling, approve topology changes and model-loading procedures, and inspect sites at random. The cap itself is cheap to install, but checking that every pathway is covered needs staff who understand data-centre networks. Caps built into chips would add standards and certification.
 
 # Deep dive: AI labs
 
@@ -189,6 +196,7 @@ Strategic consequences and incentive compatibility analysis.\
 - **Atlas 19 / Atlas briefs:** Pacing Verification Atlas, mechanism page "Interconnect bandwidth cap" and the four proposal briefs.\
 - **MIRI TGT:** Scher, Sarbakysh & Moskvin (30 July 2026), *De-risking Interconnect Limits for AI Verification*, MIRI Technical Governance Team blog (SPAR project).\
 - **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.\
+- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.\
 - **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.\
 - **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.\
 - **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.\

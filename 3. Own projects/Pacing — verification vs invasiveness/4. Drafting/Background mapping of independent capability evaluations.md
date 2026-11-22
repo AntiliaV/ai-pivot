@@ -4,7 +4,7 @@
 
 ++What Pacing Proposals Say about independent capability evaluations++
 
-Every proposal uses evaluations, but none trusts them as the main brake on development. The four pacing proposals make compute the binding rule and use evaluations to keep compute thresholds honest or to gate the release of particular models. The two direct proposals give evaluations more weight: one lets safety institutes pause development, the other requires developers to prove safety.
+The four international proposals use evaluations but do not trust them as the main brake: they make compute the binding rule and use evaluations to keep compute thresholds honest or to gate the release of particular models. Amodei's essay prefers the opposite, pacing based on what models can do, checked by evaluations and embedded evaluators. The two direct proposals also give evaluations more weight: one lets safety institutes pause development, the other requires developers to prove safety.
 
 | Proposal | Role of evaluations | Who evaluates, with what access | Distinctive design choices |
 |----|----|----|----|
@@ -12,6 +12,7 @@ Every proposal uses evaluations, but none trusts them as the main brake on devel
 | **AI 2040: Plan A** | A release gate under "total research transparency": final training runs get verified evaluations before a model is approved for release. Training proceeds in increments, with frequent capability measurements. | Third-party risk assessors chosen by the US and Chinese regulators, each assessing all relevant companies in both countries, with legally compelled staff interviews. The public may also run evaluations, including fine-tuning, under transparency conditions. | Each risk area uses a weighted combination of assessors, with the weights made public. Regulators set the risk thresholds, and safety cases are expected for advanced systems. |
 | **Building the Pause Button** | Explicitly not the pause trigger, because evaluations miss unknown failure modes, so the trigger is a compute threshold. Evaluations recalibrate that threshold, lowering it when a model reaches a given performance with less compute. | An expert panel. Evaluators could also hold the keys that release "locked" model weights. | Calls for a large safety margin until the science of evaluations matures. |
 | **Hardwired Pause** | Gatekeeper for the model whitelist: models above the threshold that are submitted before a deadline are assessed, and only whitelisted models may be served or built into inference-only chips. | Treaty authorities. Developers submit a hash (a unique fingerprint) of the architecture and weights, which is checked against the deployed model. Approved fine-tunes are run and evaluated by the authorities themselves. | A model can be removed from the whitelist if a critical jailbreak is found. The proposal acknowledges that imperfect evaluations could create a false sense of security. |
+| **We Must Pace the Frontier** (Amodei essay) | Central to its preferred approach: pacing based on what a model can do. "Checkpoints" would require models with a given capability to come with certified alignment properties (evaluations, interpretability analyses, audits of training environments). Internationally, a "Level 2" agreement would test models for acute risks before release. | Embedded third-party evaluators with employee-like access, which Anthropic commits to unilaterally; a global standards body for the international level. | Names the main difficulty as verifying that neither side keeps secret, untested models. Warns that more capable models are better at deceiving tests. |
 | **Conditional AI Safety Treaty** (direct proposal) | The core mechanism. Above a compute threshold, models are audited (evaluated and red-teamed) during development, at intervals approved by national AI safety institutes. If the institutes find unacceptable risk, states must pause development. | National AI safety institutes with "grey-box" or "white-box" access (partial or full access to the model's internals), recognising each other's results. Accredited private auditors run lower-risk benchmark tests. | Developers may also have to present safety cases. Security and governance audits run alongside, and cloud providers face know-your-customer and reporting duties. |
 | **Taking Control** (direct proposal) | "Gating critical experiments": above a threshold, developers must provide affirmative evidence of safety before building or deploying a system, and government inspectors audit it. | Government inspectors verify the developers' evidence. | Reverses the burden of proof: developers must show safety, rather than auditors showing danger. Argues that dangerous-capability tests rely on complete lists of risks and reliable tests, neither of which exists. Admits nobody yet knows how to demonstrate affirmative safety. |
 
@@ -116,6 +117,12 @@ They adapt quickly but fail badly at the decision point.
 - **Lifting:** a gate can be lifted model by model, and the evaluation itself creates no overhang. A release gate may leave a backlog of capable, unreleased models.
 - **Persistence:** safety institutes persist and accumulate expertise, a useful spillover.
 
+++Regulatory burden++
+
+Q: What does it take for governments to set up and run it?
+
+Governments need accredited evaluators (today, national AI safety institutes and some private auditors) with scarce domain experts and secure infrastructure for testing models. They must set thresholds and decision rules, and agree to recognise each other's results. Every frontier release needs testing, so capacity must keep up with the pace of releases. Regional institutes could serve states without their own.
+
 # Deep dive: AI labs
 
 *Our assessment. "Invasiveness" follows the project's definition: how much effort compliance takes, and how much of what labs see as proprietary information they must reveal.*
@@ -210,6 +217,7 @@ Strategic consequences and incentive compatibility analysis.\
 - **CAST:** Scholefield, Martin & Barten (2025), *International Agreements on AI Safety: Review and Recommendations for a Conditional AI Safety Treaty*, arXiv:2503.18956.\
 - **Taking Control:** Miotti (2023, rev. 2025), *Taking control: Policies to address extinction risks from advanced AI*, arXiv:2310.20563.\
 - **MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.\
+- **Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.\
 - **AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.\
 - **Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.\
 - **Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.\
