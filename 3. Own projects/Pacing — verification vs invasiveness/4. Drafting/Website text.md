@@ -1,10 +1,10 @@
 # Website text
 
-*The wording shown on the pacing explorer website. Scores, stances and readiness come from the "Step 1" table of each background mapping; sources come from each mapping's "Sources" list. Edit the text here, not in the site's code.*
+*The wording shown on the pacing explorer website. Scores and stances come from the "Step 1" table of each background mapping; sources come from each mapping's "Sources" list. Edit the text here, not in the site's code.*
 
 ## Site title
 
-Verifying agreements to pace AI: five tools compared
+Verifying agreements to pace AI
 
 ## 1. Introduction
 
@@ -12,25 +12,25 @@ Some researchers, governments and AI companies now argue that frontier AI is adv
 
 Since an agreement to pace AI – whether between companies or between states – only works if each side can check that the others are keeping to it, verification is central to any such agreement. However, the more a verification tool can confirm, the more it usually has to see or control, which makes it harder to accept for those being verified.
 
-On this site, we compare five verification tools. For each, we assess how much it would slow AI development, how reliably it catches cheating, and what it costs governments and AI companies. The site is written for policymakers and assumes no background in AI safety; all scores reflect the authors' judgement.
+On this site, we compare five verification tools. For each, we assess how much it would slow AI development, how reliably it detects violations, and what it costs governments and AI companies. The site is written for policymakers and assumes no background in AI safety; all scores reflect our judgement.
 
 ## 3. The five pacing proposals
 
 We use five published proposals as reference points. Each describes how AI development could be paced and which verification tools it would rely on.
 
-**MIRI agreement** (Scher, Abecassis, Barnett & Abeyta, 2025). Proposed by the Machine Intelligence Research Institute, this is an international treaty to stop the development of superintelligent AI until it can be done safely. Parties register every cluster of AI chips above 16 H100-equivalents and gather them in declared, monitored facilities. Training runs above 10²⁴ FLOP are banned, while runs between 10²² and 10²⁴ FLOP require prior approval, with inspectors present. A treaty body monitors how chips are used, approves every chip transfer and limits which training techniques may be used; it can also restrict how fast chips communicate, so that they can run existing models but not train new ones.
+**[MIRI agreement](https://arxiv.org/abs/2511.10783)** (Scher, Abecassis, Barnett & Abeyta, 2025). Proposed by the Machine Intelligence Research Institute, this is an international treaty to stop the development of superintelligent AI until it can be done safely. Parties register every cluster of AI chips above 16 H100-equivalents and gather them in declared, monitored facilities. Training runs above 10²⁴ FLOP are banned, while runs between 10²² and 10²⁴ FLOP require prior approval, with inspectors present. A treaty body monitors how chips are used, approves every chip transfer and limits which training techniques may be used; it can also restrict how fast chips communicate, so that they can run existing models but not train new ones.
 
-**AI 2040: Plan A** (AI Futures Project, 2026). A US–China deal to pause frontier AI training, accompanied by a detailed verification plan. Chip tracking starts immediately, so that by a joint declaration in 2029 each side is confident the other hides less than approximately 1% of the world's AI computing power. Data centres above 10,000 H100-equivalents (about 99% of that computing power) are then converted to run existing models only, which is checked by network taps that copy traffic and by recomputing samples of the work, while smaller sites report and face spot checks. Additionally, third-party assessors chosen by both governments evaluate every company, and new models require verified evaluations before release.
+**[AI 2040: Plan A](https://www.ai-2040.com/)** (AI Futures Project, 2026). A US–China deal to pause frontier AI training, accompanied by a detailed [verification plan](https://ai-2040.com/supplements/verification-plan). Chip tracking starts immediately, so that by a joint declaration in 2029 each side is confident the other hides less than approximately 1% of the world's AI computing power. Data centres above 10,000 H100-equivalents (about 99% of that computing power) are then converted to run existing models only, which is checked by network taps that copy traffic and by recomputing samples of the work, while smaller sites report and face spot checks. Additionally, third-party assessors chosen by both governments evaluate every company, and new models require verified evaluations before release.
 
-**Building the Pause Button** (Al Ramiah et al., 2025). Rather than pausing AI development directly, this proposal sets up a global regime that puts in place, in advance, the means to pause if needed. The pause is triggered by a computing-power threshold rather than by tests of models, since such tests can miss failures nobody anticipated. The regime rests on three pillars: hardware controls on chips (starting with limits on how chips connect, and later controls built into the chips themselves); tracking of chips from the machines that make them to their final users, including identity checks on cloud customers; and legal rules. Violators are cut off from firmware updates, design software, cloud access and chipmaking tools.
+**[Building the Pause Button](https://arxiv.org/abs/2506.20530)** (Al Ramiah et al., 2025). Rather than pausing AI development directly, this proposal sets up a global regime that puts in place, in advance, the means to pause if needed. The pause is triggered by a computing-power threshold rather than by tests of models, since such tests can miss failures nobody anticipated. The regime rests on three pillars: hardware controls on chips (starting with limits on how chips connect, and later controls built into the chips themselves); tracking of chips from the machines that make them to their final users, including identity checks on cloud customers; and legal rules. Violators are cut off from firmware updates, design software, cloud access and chipmaking tools.
 
-**Hardwired Pause** (Working Group on AI Pause Feasibility, 2026). This proposal aims to make a pause enforceable by the hardware itself. Every chip able to train frontier models is either counted in a global census or registered when made at a licensed factory, and only leaves the count through verified destruction; unaccounted chips are presumed hidden and charged to the country that hosts them. During the pause, licensed operators – kept separate from AI companies – run approved models only, eventually on chips that cannot train. Importantly, the pause can only last as long as the census remains complete enough, since hidden chips become more useful as algorithms improve. Buybacks and an amnesty for past export-control evasion encourage registration.
+**[Hardwired Pause](https://hardwired-pause.ai/)** (Working Group on AI Pause Feasibility, 2026). This proposal aims to make a pause enforceable by the hardware itself. Every chip able to train frontier models is either counted in a global census or registered when made at a licensed factory, and only leaves the count through verified destruction; unaccounted chips are presumed hidden and charged to the country that hosts them. During the pause, licensed operators – kept separate from AI companies – run approved models only, eventually on chips that cannot train. Importantly, the pause can only last as long as the census remains complete enough, since hidden chips become more useful as algorithms improve. Buybacks and an amnesty for past export-control evasion encourage registration.
 
-**We Must Pace the Frontier** (Dario Amodei, 2026). In this essay, the chief executive of the AI company Anthropic argues that AI systems helping to build the next generation of AI are now speeding up progress, and that pacing is needed for safety work to keep up. The essay sets out three steps. First, each frontier company gives independent evaluators employee-like access to check its safety practices, a step Anthropic commits to unilaterally. Second, companies in democratic countries agree common limits backed by regulation, preferably based on what models can do. Third, the US seeks global agreements with China, ranging from bans on narrow dangerous uses to a full pause, which the essay considers unlikely in the near term. In the meantime, chip export controls protect the US lead.
+**[We Must Pace the Frontier](https://darioamodei.com/post/we-must-pace-the-frontier)** (Dario Amodei, 2026). In this essay, the chief executive of the AI company Anthropic argues that AI systems helping to build the next generation of AI are now speeding up progress, and that pacing is needed for safety work to keep up. The essay sets out three steps. First, each frontier company gives independent evaluators employee-like access to check its safety practices, a step Anthropic commits to unilaterally. Second, companies in democratic countries agree common limits backed by regulation, preferably based on what models can do. Third, the US seeks global agreements with China, ranging from bans on narrow dangerous uses to a full pause, which the essay considers unlikely in the near term. In the meantime, chip export controls protect the US lead.
 
 ## 4. Ranking: how central each tool is to the proposals
 
-The table below shows how much each proposal relies on each tool; it therefore measures reliance rather than quality. The classification is our own, adapted from the Pacing Verification Atlas, and tools are ranked by a weighted count (Core = 1, Partial = 0.5, Option = 0.2), with ties going to the tool with more Core entries.
+The table below shows how much each proposal relies on each tool; it therefore measures reliance rather than quality. The classification is our own, adapted from the [Pacing Verification Atlas](https://pacing-atlas.acacianimrod.chatgpt.site/), and tools are ranked by a weighted count (Core = 1, Partial = 0.5, Option = 0.2), with ties going to the tool with more Core entries.
 
 | Rank | Tool | MIRI agreement | AI 2040: Plan A | Building the Pause Button | Hardwired Pause | Amodei |
 |----|----|----|----|----|----|----|
@@ -56,11 +56,11 @@ The table below shows how much each proposal relies on each tool; it therefore m
 
 ## 6. Trade-off map (caption)
 
-Each marker represents one tool, or several tools with the same scores. Tools further right are more invasive for AI labs, while tools higher up are better at catching cheating; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.
+Each marker represents one tool, or several tools with the same scores. Tools further right are more invasive for AI labs, while tools higher up are better at detecting violations; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.
 
 ## 7. Build a verification package (intro)
 
-Choose what matters most to you, and the tool suggests a combination of verification tools, explaining the reasoning behind it.
+Given a set of priorities, the tool below suggests a combination of verification tools and explains the reasoning behind each choice.
 
 **Dependencies** (each reason is shown in the package's explanation when a tool is added as a foundation):
 
@@ -97,7 +97,7 @@ Coverage is good where it matters most. New AI chips come from a handful of firm
 - **Unilateral use.** When one country uses the ledger to enforce export controls, it pushes rivals to build their own chip supply chain, which then sits outside any future ledger.
 - **A covert supply chain.** In the long run, a state could build undeclared chip factories; one older-generation lithography machine can make chips worth roughly 24,000–38,000 H100-equivalents a month (Hardwired Pause estimate).
 
-Provided gaps are measured and published, the ledger holds up well over time. Since over 95% of the world's AI chips, by computing power, are less than three years old, tracking new production now would soon cover most of the stock (our inference), whereas each year of delay adds untracked chips. Registration thresholds must, however, keep falling as chips become more efficient.
+Provided gaps are measured and published, the ledger holds up well over time. Since over 95% of the world's AI chips, by computing power, are less than three years old, tracking new production now would soon cover most of the stock, whereas each year of delay adds untracked chips. Registration thresholds must, however, keep falling as chips become more efficient.
 
 **Regulatory burden.** A registry body – national at first, then international under an agreement – collects records from chipmakers, distributors and data-centre operators, checks them against customs, tax and sales data, and investigates gaps. It builds on export-control licensing and on records firms already keep (for example for tax deductions and warranties), although tracking millions of chips a year by serial number must be automated. The burden rises considerably if chips must also be gathered in declared sites and inspected, as the MIRI agreement requires.
 
@@ -133,7 +133,7 @@ Coverage is narrow, since inspections only reach declared sites or sites identif
 
 Methods, frequency and scope are easy to adjust, and visits can stop at once when no longer needed. However, access can be withdrawn overnight in a crisis, and restarting inspections after a breakdown is harder than continuing them.
 
-**Regulatory burden.** Inspection requires an inspectorate of trained, security-vetted staff, with rights of access and agreed rules for warrants, disputes and inspections of suspected hidden sites. While periodic visits to declared sites represent a moderate effort, continuous monitoring (cameras, seals, sensors) and short-notice inspections of suspected sites would require a standing international body, comparable to nuclear safeguards (our inference). Automated location checks on chips could lighten this load, with inspectors sent only to investigate alerts.
+**Regulatory burden.** Inspection requires an inspectorate of trained, security-vetted staff, with rights of access and agreed rules for warrants, disputes and inspections of suspected hidden sites. While periodic visits to declared sites represent a moderate effort, continuous monitoring (cameras, seals, sensors) and short-notice inspections of suspected sites would require a standing international body, comparable to nuclear safeguards. Automated location checks on chips could lighten this load, with inspectors sent only to investigate alerts.
 
 ### Independent capability evaluation
 
@@ -179,9 +179,9 @@ Tests can be updated quickly, and a gate can be lifted model by model. However, 
 
 The proposals use the cap for the same purpose: keeping AI services running while training stops. The MIRI agreement lets its treaty body restrict bandwidth between chips, AI 2040 surrounds data centres that only run models with a boundary passing about 1 megabyte per second, and Building the Pause Button caps either bandwidth or the number of chips that can work together. The Hardwired Pause, for its part, runs AI services on small, physically isolated clusters.
 
-Two gaps nonetheless remain. First, chips inside one tightly linked group, or "pod", keep full speed, and a pod can be large: 128 of today's top chips running for a year exceed the MIRI agreement's training limit (our inference). Second, newer training methods need far less communication – in the 2026 test, one such method cut traffic between servers about a hundredfold. For this reason, Building the Pause Button recommends using the cap only alongside tracking of total computing power.
+Two gaps nonetheless remain. First, chips inside one tightly linked group, or "pod", keep full speed, and a pod can be large: 128 of today's top chips running for a year exceed the MIRI agreement's training limit. Second, newer training methods need far less communication – in the 2026 test, one such method cut traffic between servers about a hundredfold. For this reason, Building the Pause Button recommends using the cap only alongside tracking of total computing power.
 
-The cap is well targeted, sparing most existing AI services, although very large models split across servers, as well as some scientific computing, also need fast links (our inference). Additionally, it only reaches sites where it is installed, so that other tools must find undeclared sites.
+The cap is well targeted, sparing most existing AI services, although very large models split across servers, as well as some scientific computing, also need fast links. Additionally, it only reaches sites where it is installed, so that other tools must find undeclared sites.
 
 **Failure scenarios.** The cap can fail in several ways:
 
@@ -212,7 +212,7 @@ However, two limits remain. Leading labs increasingly train on their own or part
 
 The proposals treat metering as an existing, light layer to build on. The MIRI agreement builds on monitoring clouds already carry out and keeps foreign remote access to chips under watch, while AI 2040 relies on reporting and spot checks for sites too small to convert. Building the Pause Button links cloud usage logs to verified customer identities, borrowing from banking regulation, and the Hardwired Pause checks reported use against power-station records.
 
-Within the cloud, coverage is broad, extending to every customer above a threshold, including small and foreign ones. As a result, metering bites hardest on smaller labs and academics who depend on the cloud, rather than on leading labs with their own data centres (our inference).
+Within the cloud, coverage is broad, extending to every customer above a threshold, including small and foreign ones. As a result, metering bites hardest on smaller labs and academics who depend on the cloud, rather than on leading labs with their own data centres.
 
 **Failure scenarios.** Metering can fail in several ways:
 
@@ -231,24 +231,20 @@ Thresholds and counting rules are easy to update, and metering can be lifted wit
 
 ### How we score
 
-Each tool is scored by the authors on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). Effectiveness ("Slows AI development") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.
+We score each tool on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). Effectiveness ("Slows AI development") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.
 
 | Shown as | What 1 means | What 5 means |
 |----|----|----|
 | Slows AI development | Closes no route on its own | Closes most routes, with little room to get around them |
 | Reaches the right actors | Reaches few relevant actors, or mainly hits beneficial work | Reaches nearly all relevant actors, with little spillover |
-| Catches cheating | Violations mostly go undetected | Violations are detected quickly; enforcement is credible or automatic |
+| Detects violations | Violations mostly go undetected | Violations are detected quickly; enforcement is credible or automatic |
 | Holds up over time | Breaks when circumstances change; hard to lift | Adapts by design; can be lifted without leaving spare capacity ready to use |
 | Burden on government | Light reporting on records firms already keep | A standing international inspectorate, or new hardware standards |
 | Invasiveness for AI labs | Negligible effort; reveals nothing proprietary | Major disruption, deep access to secrets, or others can stop labs' chips |
 
-**Readiness.** Green: available now. Red: not yet available, with the expected wait.
-
 **Expected behaviours.** For four actors (AI labs, chip and cloud firms, a leading state, a trailing state), we state whether we expect them to *cooperate*, *circumvent* (comply on paper while evading in practice) or *undermine* (work to weaken the rule).
 
-**Where it acts.** Each tool is tagged with the stage of AI development it acts on: inputs and infrastructure (chips, data centres), capability development (training and testing models), or use and distribution (releasing and running models). Tools acting at earlier stages are easier to observe but blunter, whereas tools acting at later stages are more targeted but easier to get around.
-
-All scores reflect the authors' judgement, based on the sources listed on each tool's page.
+All scores reflect our judgement, based on the sources listed on each tool's page.
 
 ### Glossary
 
