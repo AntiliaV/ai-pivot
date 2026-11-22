@@ -6,6 +6,10 @@
 
 ------------------------------------------------------------------------
 
+### 2026-11-22 — Pacing website: FlexHEGs dropped; Claude outputs folder moved
+
+FlexHEGs removed from the pacing explorer website (its mapping stays in `4. Drafting/`). *Why:* the Pacing Verification Atlas does not rank it, and it is not yet available. The site now covers five tools, with a ranking table labelled as our own classification. Also moved the stray root `Claude outputs/` folder (Claude Code prompts v1–v2) into `Archive/Claude outputs/`, per `CLAUDE.md`.
+
 ### 2026-11-22 — Pacing mappings: effectiveness scored by routes closed
 
 Effectiveness is now scored by how many routes to frontier capability progress an intervention closes (Agenda §3.2: training compute, algorithms, post-training, elicitation), net of substitution, replacing the Case A compute-cap yardstick; each intervention also gets a lifecycle-stage tag (Agenda §3.1). *Why:* so that non-compute interventions can be compared, and new interventions or routes added later. Changed scores: capability evaluations 3→4, cloud metering 3→2. Touched: `Scoring method.md` and the six mappings in `4. Drafting/`.
