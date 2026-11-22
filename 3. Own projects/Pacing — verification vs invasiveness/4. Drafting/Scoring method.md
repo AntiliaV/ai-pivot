@@ -13,7 +13,7 @@ Each intervention is scored once, in the configuration the pacing proposals use 
 5 = best, except **regulatory burden** and **invasiveness**, where 5 = heaviest.
 
 | Criterion | 1 | 3 | 5 |
-|---|---|---|---|
+|----|----|----|----|
 | Pacing effectiveness | Produces information only | Constrains a proxy, or only part of relevant compute | Directly blocks capability-relevant activity on nearly all relevant compute |
 | Coverage and targeting | Reaches few relevant actors, or hits mainly beneficial work | Reaches declared or large actors; some spillover onto beneficial work | Reaches nearly all relevant actors, with little spillover |
 | Verifiability and enforceability | Violations mostly undetectable | Detectable for declared or large activity; blind to undeclared activity | Detected quickly and with confidence; enforcement credible or automatic |
@@ -30,9 +30,9 @@ Invasiveness follows the project's definition (compliance effort; proprietary in
 
 ## Process
 
-1. Each score gets a one-sentence justification (the bullets under each table) and a confidence level (low, medium, high).
-2. Two team members score independently, then reconcile differences and record the reason for any change.
-3. Scores are the authors' judgements, labelled as such wherever they appear.
+1.  Each score gets a one-sentence justification (the bullets under each table) and a confidence level (low, medium, high).
+2.  Two team members score independently, then reconcile differences and record the reason for any change.
+3.  Scores are the authors' judgements, labelled as such wherever they appear.
 
 ## Display to policymakers
 

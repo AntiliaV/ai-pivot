@@ -4,16 +4,14 @@
 
 ++What Pacing Proposals Say about chip production ledgers++
 
-What do each of the pacing proposals say about chip production ledgers?
-
 All four proposals treat the ledger as a core mechanism and as the foundation other checks build on, never as sufficient by itself.
 
 | Proposal | What the ledger is for | Scope and threshold | Distinctive design choices |
-|------------------|------------------|------------------|------------------|
-| **MIRI agreement**: US–China-led treaty: training above 10²⁴ FLOP banned, above 10²² FLOP monitored. | Locate all existing chips, consolidate them in declared, inspectable facilities, and keep new production inside the monitored pool. | Any cluster above 16 H100-equivalents (≈\$500k), registered within 120 days and updated every 90: location, type, quantity, serials, interconnects. Staged by size: \>10k H100e on day 1, \>1k by day 10, \>100 by day 100, all \>16 by year 2. Below 16 H100e: "reasonable efforts" only. | Every transfer needs 14 days' notice and treaty-body approval; broken chips count as working until certified destroyed; salvage banned. Production tracked from HBM and logic fabrication to installation, halted where it cannot be tracked; sales to non-parties presumed denied; annual production caps possible to stop stockpiling. Chips stay privately owned. |
-| **AI 2040: Plan A**. Scenario for a US–China slowdown with a training pause. | First step of the deal: each side becomes confident the other hides no more than \~1% of AI compute, before training is paused. | Data-centre owners and upstream suppliers (incl. fabs) declare major purchases and sales: first holders above 10k H100e (\~\$100M), within a year anyone above 0.001% of world compute (\~2,800 H100e). | Declarations are public, so analysts from any country can challenge anomalies; mutual inspectors; dead chips stored or verifiably destroyed. Recommends starting now: intelligence on the compute supply chain, and an end to chip recycling (decommissioned chips are a main route to covert compute). The Verification Plan models the numbers: chip tracking starts in 2026, when each side's uncertainty about the other's AI compute is about 10%; by 2028 it is 2–4%. The aim is to account for 100% of new production (including memory and networking), with new chips routed either to retrofitted data centres or to guarded cold storage. At the 2029 declaration (US ~224M, China ~26M, rest of world ~39M H100e), each side's best guess is that at most ~1.5M H100e is hidden (80% interval up to ~4M), about 0.5% of world compute (Verification Plan). |
-| **Building the Pause Button**. Infrastructure for an enforceable global compute pause. | "Traceability" is one of three pillars, alongside hardware controls and legal rules. | "High-performance AI chips", defined by standard benchmarks (e.g. MLPerf) set by a multilateral working group. | Four layers: (1) register of critical chip-making tools and inputs (EUV, HBM and packaging equipment); (2) global registry of production volumes, specs and sales, run by an NSG/Wassenaar-style body that flags risks but does not itself control exports; (3) chain of custody from a cryptographic chip ID at manufacture, logging owner, location and declared use, with automated anomaly detection; (4) know-your-customer checks for cloud users. Enforced through ecosystem leverage: violators lose firmware updates, design software, cloud and tool supply. |
-| **Hardwired Pause**. Pause of ≥10 years; training-capable chips stop being made and are replaced by inference-only chips. | A global census of pre-pause chips plus registration of all new ones. The census's completeness is judged the binding constraint on how long the pause can last. | All training-capable accelerators. Pre-pause chips enter by census, new ones by registration at a licensed fab; the only exit is verified destruction. Unaccounted chips are presumed hidden ("dark compute") and charged to the host state. | Census draws on 13 paper trails (tax deductions, vendor and resale records, customs, colocation rentals, loan collateral listed by serial, warranty returns, e-waste records, etc.). Registration is the price of joining profitable transitional inference service; buybacks, bounties, and amnesty for past export-control evasion in exchange for records. Extends the ledger upstream to every advanced lithography machine. |
+|----|----|----|----|
+| **MIRI agreement** | Locate all existing chips, consolidate them in declared, inspectable facilities, and keep new production inside the monitored pool. | Any cluster above 16 H100-equivalents (≈\$500k), registered within 120 days and updated every 90: location, type, quantity, serials, interconnects. Staged by size: \>10k H100e on day 1, \>1k by day 10, \>100 by day 100, all \>16 by year 2. Below 16 H100e: "reasonable efforts" only. | Every transfer needs 14 days' notice and treaty-body approval; broken chips count as working until certified destroyed; salvage banned. Production tracked from HBM and logic fabrication to installation, halted where it cannot be tracked; sales to non-parties presumed denied; annual production caps possible to stop stockpiling. Chips stay privately owned. |
+| **AI 2040: Plan A** | First step of the deal: each side becomes confident the other hides no more than \~1% of AI compute, before training is paused. | Data-centre owners and upstream suppliers (incl. fabs) declare major purchases and sales: first holders above 10k H100e (\~\$100M), within a year anyone above 0.001% of world compute (\~2,800 H100e). | Declarations are public, so analysts from any country can challenge anomalies; mutual inspectors; dead chips stored or verifiably destroyed. Recommends starting now: intelligence on the compute supply chain, and an end to chip recycling (decommissioned chips are a main route to covert compute). The Verification Plan models the numbers: chip tracking starts in 2026, when each side's uncertainty about the other's AI compute is about 10%; by 2028 it is 2–4%. The aim is to account for 100% of new production (including memory and networking), with new chips routed either to retrofitted data centres or to guarded cold storage. At the 2029 declaration (US \~224M, China \~26M, rest of world \~39M H100e), each side's best guess is that at most \~1.5M H100e is hidden (80% interval up to \~4M), about 0.5% of world compute (Verification Plan). |
+| **Building the Pause Button** | "Traceability" is one of three pillars, alongside hardware controls and legal rules. | "High-performance AI chips", defined by standard benchmarks (e.g. MLPerf) set by a multilateral working group. | Four layers: (1) register of critical chip-making tools and inputs (EUV, HBM and packaging equipment); (2) global registry of production volumes, specs and sales, run by an NSG/Wassenaar-style body that flags risks but does not itself control exports; (3) chain of custody from a cryptographic chip ID at manufacture, logging owner, location and declared use, with automated anomaly detection; (4) know-your-customer checks for cloud users. Enforced through ecosystem leverage: violators lose firmware updates, design software, cloud and tool supply. |
+| **Hardwired Pause** | A global census of pre-pause chips plus registration of all new ones. The census's completeness is judged the binding constraint on how long the pause can last. | All training-capable accelerators. Pre-pause chips enter by census, new ones by registration at a licensed fab; the only exit is verified destruction. Unaccounted chips are presumed hidden ("dark compute") and charged to the host state. | Census draws on 13 paper trails (tax deductions, vendor and resale records, customs, colocation rentals, loan collateral listed by serial, warranty returns, e-waste records, etc.). Registration is the price of joining profitable transitional inference service; buybacks, bounties, and amnesty for past export-control evasion in exchange for records. Extends the ledger upstream to every advanced lithography machine. |
 
 ++Effectiveness:++\
 Q: Under ideal conditions – do chip ledgers actually slow capability development, or just constrain an imperfect proxy?
@@ -21,7 +19,7 @@ Q: Under ideal conditions – do chip ledgers actually slow capability developme
 **On its own, no.** A ledger records chips; it limits no training, so it slows nothing unless a rule acts on what it reveals. Its value is as an enabler: compute is the AI input that is easiest to count and verify, and the ledger is what makes it countable. Even with a rule attached, what is constrained is a proxy (compute), not capability. The proxy erodes as algorithms become more efficient (Hardwired assumes \~57%/yr post-pause; pre-pause estimates reach 2.7×/yr), as dangerous narrow models need far less compute (AlphaFold 2 used \<10²³ FLOP), and as capability comes from post-training and inference-time compute. Ledger-based pacing is strongest while frontier training needs a large share of the world's chips.
 
 | Specific use of chip ledgers | Likelihood of leading to a slow down in capability development on its own | Why? |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Transparency only: a register of stocks and flows, with no rule attached | Very low | Informs decisions but restricts nothing. Knowing a rival is close can even intensify racing. |
 | Unilateral export-control enforcement: detect diversion to restricted countries | Low | Slows targeted rivals, not the frontier; leaky (smuggling already happens); pushes targets to build their own supply chain, outside any ledger. |
 | Location rules: covered chips must sit in declared, inspectable sites | Low–medium | Stops large hidden clusters from being assembled and makes shutdown possible, but does not restrict what declared chips do. |
@@ -55,7 +53,7 @@ Largely yes for new production and large holdings; weaker for legacy stock, smal
 - **Enforcement:** domestic law and customs; internationally, ecosystem leverage, sanctions, and ultimately disabling chips held in consolidated sites.
 
 | Circumvention strategy | How likely? | Discussed |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Keep existing chips off the register ("dark compute"), especially chips diverted around export controls | High: the stock already exists | Hardwired §5.5, §6.4.3; AI 2040 App. D; MIRI App. D |
 | Divert through intermediaries, shell companies or mislabelled shipments | High: ongoing under export controls | CNAS; Sastry §5; AI 2040; MIRI App. D; Atlas 04 |
 | Declare chips destroyed or broken, then keep, repair or resell them | Medium | MIRI Art. V; AI 2040; Hardwired §5.5; Atlas 04 |
@@ -113,16 +111,16 @@ Frontier labs relate to chips in two ways: some own and run their own data centr
 
 ++What success would require from AI labs++
 
-1. Declare every covered chip they own *or control*, including capacity reserved long-term from clouds or held by partners, and report transfers, repairs and disposals on time.
-2. Train only on registered chips, and rent only from providers who report their customers (the ledger sees owners, not users).
-3. Not restructure to fall below reporting thresholds, e.g. by splitting holdings across subsidiaries or sites.
-4. Hand over purchase records for a census of existing stock, and destroy retired chips under certification instead of reselling them.
-5. Accept that the regulator knows their compute stock and sites, and that rivals see aggregates.
+1.  Declare every covered chip they own *or control*, including capacity reserved long-term from clouds or held by partners, and report transfers, repairs and disposals on time.
+2.  Train only on registered chips, and rent only from providers who report their customers (the ledger sees owners, not users).
+3.  Not restructure to fall below reporting thresholds, e.g. by splitting holdings across subsidiaries or sites.
+4.  Hand over purchase records for a census of existing stock, and destroy retired chips under certification instead of reselling them.
+5.  Accept that the regulator knows their compute stock and sites, and that rivals see aggregates.
 
 ++How invasiveness shapes labs' behaviour++
 
 | Dimension | What it asks of labs | Likely lab response | Second-order effect |
-| --------- | -------------------- | ------------------- | ------------------- |
+|----|----|----|----|
 | Compliance effort | Low to moderate: labs already track hardware for accounting, tax and security; the new costs are timely transfer reports and certified destruction | Comply, but push for high thresholds and long reporting windows | Long windows are what lets diversion go unnoticed; small labs and resellers bear proportionally more cost, a mild advantage for incumbents |
 | Proprietary information | Moderate: chip counts, growth plans and site locations reveal strategy, which labs increasingly withhold | Rent rather than own; hold chips through partners or special-purpose companies; insist on confidentiality | Visibility shifts to cloud providers, so the ledger needs know-your-customer rules and a definition based on control, not ownership. Aggregates may show rivals how close they are, which can intensify racing |
 
@@ -147,14 +145,14 @@ Give a score/value to each intervention of these 5 on:\
 3. Incentive compatibility: do we expect the most relevant actors to {cooperate, circumvent, undermine}?\
 4. Verifiability and enforceability: score 1 to 5 on whether violations of the intervention can be detected/whether intervention can be credibly enforced\
 5. Regulatory burden: score 1 to 5, how much active regulation is needed?\
-6. Robustness: score 1 to 5, how flexibly can the intervention be adapted to changing circumstances  
-7. Invasiveness for labs: score 1 to 5, how much compliance effort, proprietary information and loss of control it imposes on AI labs  
+6. Robustness: score 1 to 5, how flexibly can the intervention be adapted to changing circumstances\
+7. Invasiveness for labs: score 1 to 5, how much compliance effort, proprietary information and loss of control it imposes on AI labs\
 8. Readiness: available now, in 1–3 years, or in 3+ years
 
 E.g. for chip ledgers:
 
 |   | Pacing effectiveness | Coverage and targeting | Incentive compatibility | Verifiability and enforceability | Regulatory burden | Robustness and flexibility | Invasiveness for labs | Readiness |
-|-----------|-----------|-----------|-----------|-----------|-----------|-----------| --- | --- |
+|----|----|----|----|----|----|----|----|----|
 | chip ledgers | 2 | 4 | Labs: cooperate. Chip and cloud firms: cooperate if market access depends on it. Leading state: cooperate (it enforces the lead). Trailing state: circumvent (unrecorded and diverted stock) | 3 | 3 | 4 | 2 | Now |
 
 *Our assessment. Scored against a common yardstick, a coordinated cap on frontier training compute (the Agenda's Case A), using the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
