@@ -10,6 +10,10 @@
 
 Rebuilt the pacing explorer for five tools (FlexHEGs removed): a main page, five tool pages, and a validator that fails if site text, scores, stances, readiness or sources differ from `Website text.md` and the mappings. *Why:* a short site for policymakers whose every word and score traces to a source. Touched: `3. Own projects/Pacing — verification vs invasiveness/2. Code/pacing-explorer/` (four commits, not yet pushed). Open questions are in the session summary.
 
+### 2026-11-23 — Pacing explorer v2.3: simpler, neutral page
+
+Dropped readiness (all five tools are available now), the "Where it acts" tag and "(our inference)" labels from the site; neutral wording throughout ("we", never "you"); the Pacing Verification Atlas is not mentioned. *Why:* the review asked for a simpler, neutral page. Touched: `2. Code/pacing-explorer/`, `Website text.md`.
+
 ### 2026-11-23 — Pacing mappings: effectiveness reframed as relevance to pacing
 
 Effectiveness now asks how many routes to capability progress the rule a tool verifies would close if fully respected, shown as "Relevance to pacing". *Why:* verification tools do not slow AI development themselves; the old wording penalised tools for only providing information. Ledger and inspections 2→3. Touched: `Scoring method.md`, the six mappings, `Website text.md`.
