@@ -8,9 +8,8 @@ Run from anywhere:
 Standard library only. It reads files and changes none.
 
 Sources it compares against (both in "4. Drafting", next to the site's folder tree):
-  - Website text.md                       all wording shown on the site
-  - Background mapping of ... .md (x5)    scores, stances, readiness, justifications,
-                                          the "Where it acts" tag and the sources list
+  - Website text.md                       all wording shown on the site, with its links
+  - Background mapping of ... .md (x5)    scores, stances, justifications and the sources list
 
 What it checks
   (a) Site text. Every piece of wording in data/interventions.js, data/method.js and
@@ -18,14 +17,17 @@ What it checks
       the one-line reason for each dependency (dependsOnWhy, from the "Dependencies" list in
       section 7, with its first letter capitalised) and every glossary definition. Exempt:
       only the interface labels set in the build brief (section titles on tool pages, meter
-      labels, Low/Medium/High and Light/Moderate/Heavy, stance names, readiness labels,
-      "Learn more →", "← All tools", "Sources", "Glossary").
-  (b) Every score, stance and readiness value equals the one in the tool's mapping
-      ("Step 1" scores table). The same goes for each justification (the bullet under the
-      table) and the "Where it acts" tag (the "Lifecycle stage" bullet).
-  (c) Every tool's sources list equals the mapping's "# Sources" list.
-  Also: every dependsOn id exists, no tool depends on itself or in a circle, and every
-  field the pages need is present.
+      labels, Low/Medium/High and Light/Moderate/Heavy, stance names,
+      "Learn more →", "← All tools", "Sources", "Glossary"). Links are part of the text:
+      "[text](url)" in Website text.md must appear unchanged in the data.
+  (b) Every score and stance equals the one in the tool's mapping ("Step 1" scores table).
+      The same goes for each justification (the bullet under the table). The marker
+      "(our inference)" is ignored: the mappings keep it, the site does not show it.
+  (c) Every tool's sources list equals the mapping's "# Sources" list, links included,
+      except the "Atlas ..." entries, which the site leaves out.
+  Also: every dependsOn id exists, no tool depends on itself or in a circle, every
+  field the pages need is present, and the words "(our inference)" and "Atlas" appear
+  nowhere in the data files.
 
 Exit code 0: no errors (warnings do not change it). Exit code 1: at least one error.
 """
@@ -62,7 +64,9 @@ ACTOR_WEBSITE = {"labs": "AI labs", "chipCloudFirms": "Chip and cloud firms",
 ACTOR_MAPPING = {"labs": "Labs", "chipCloudFirms": "Chip and cloud firms",
                  "leadingState": "Leading state", "trailingState": "Trailing state"}
 STANCES = ["cooperate", "circumvent", "undermine"]
-READINESS_IDS = {"Now": "now", "In 1–3 years": "1-3y", "In 3+ years": "3y+"}
+# Wording the site must not show (the mappings still contain it).
+FORBIDDEN = ["(our inference)", "Atlas"]
+INFERENCE = re.compile(r"\s*\(our inference\)")
 
 LEAD_INTRO = "**Introduction.** "
 LEAD_WHY = "**Expected behaviours (why).** "
@@ -143,7 +147,7 @@ def squash(s):
 
 
 def md_blocks(lines):
-    """Group lines into blocks: ("p", text), ("table", [rows]) or ("li", text)."""
+    """Group lines into blocks: ("p", text), ("table", [rows]), ("li", text) or ("oli", text)."""
     blocks = []
     para = []
     table = []
@@ -174,6 +178,9 @@ def md_blocks(lines):
         elif s.startswith("- ") and not para:
             flush()
             blocks.append(("li", unescape(squash(s[2:]))))
+        elif re.match(r"\d+\.\s", s) and not para:
+            flush()
+            blocks.append(("oli", unescape(squash(re.sub(r"^\d+\.\s+", "", s)))))
         else:
             if table:
                 flush()
@@ -213,7 +220,7 @@ def parse_website(path):
         elif h2.startswith("1."):
             web["introduction"] = paras
         elif h2.startswith("3."):
-            web["proposals"] = paras
+            web["proposals"] = parse_proposals(blocks)
         elif h2.startswith("4."):
             web["ranking"] = {"intro": paras[0], "table": [b[1] for b in blocks if b[0] == "table"][0], "legend": paras[1]}
         elif h2.startswith("5."):
@@ -235,6 +242,41 @@ def parse_website(path):
                     terms.append((m.group(1), m.group(2)))
             web["glossary"] = terms
     return web
+
+
+def rich_blocks(blocks):
+    """Paragraphs and lists as {"type": "p"|"ul"|"ol", ...}; neighbouring items of one kind join one list."""
+    out = []
+    for kind, text in blocks:
+        if kind == "p":
+            out.append({"type": "p", "text": text})
+        elif kind in ("li", "oli"):
+            t = "ul" if kind == "li" else "ol"
+            if out and out[-1]["type"] == t:
+                out[-1]["items"].append(text)
+            else:
+                out.append({"type": t, "items": [text]})
+    return out
+
+
+def parse_proposals(blocks):
+    """Section 3: an intro paragraph, then one group of paragraphs and lists per proposal.
+    A proposal starts at a paragraph that begins with a linked bold name, "[**Name**](url)"."""
+    groups = []
+    for kind, text in blocks[1:]:
+        if kind == "p" and text.startswith("[**"):
+            groups.append([])
+        if groups:
+            groups[-1].append((kind, text))
+    return {"intro": blocks[0][1], "items": [rich_blocks(g) for g in groups]}
+
+
+def flatten_text(blocks):
+    """All the text of rich blocks, for the glossary check."""
+    out = []
+    for b in blocks:
+        out.append(b["text"] if b["type"] == "p" else " ".join(b["items"]))
+    return " ".join(out)
 
 
 def split_why(items):
@@ -301,7 +343,8 @@ def tool_descriptions(web):
 # ------------------------------------------------------------------ reading a mapping
 
 def parse_mapping(path):
-    """Return {header, row, bullets, sources} from a background mapping."""
+    """Return {header, row, bullets, sources} from a background mapping.
+    "(our inference)" is removed from the bullets and "Atlas ..." entries from the sources."""
     lines = path.read_text(encoding="utf-8").splitlines()
     start = next(i for i, l in enumerate(lines) if l.strip().startswith("++Step 1"))
     end = next(i for i, l in enumerate(lines) if l.strip().startswith("++Step 2"))
@@ -317,7 +360,7 @@ def parse_mapping(path):
             s = re.sub(r"\\$", "", s).rstrip()
             m = re.fullmatch(r"- \*\*(.+?):\*\* (.+)", s)
             if m:
-                bullets[m.group(1)] = unescape(squash(m.group(2)))
+                bullets[m.group(1)] = INFERENCE.sub("", unescape(squash(m.group(2))))
     header, row = None, None
     for cells in table:
         if any("effectiveness" in c.lower() for c in cells):
@@ -331,7 +374,10 @@ def parse_mapping(path):
             in_sources = l.strip() == "# Sources"
             continue
         if in_sources and l.strip().startswith("- "):
-            sources.append(unescape(squash(re.sub(r"\\$", "", l.strip())[2:])))
+            item = unescape(squash(re.sub(r"\\$", "", l.strip())[2:]))
+            if item.startswith("**Atlas"):       # the site does not mention the Atlas
+                continue
+            sources.append(item)
     return {"header": header, "row": row, "bullets": bullets, "sources": sources}
 
 
@@ -401,10 +447,8 @@ def check_structure(data, method, glossary):
 
     for iv in items:
         n = iv.get("id", "?")
-        for f in ("id", "name", "description", "acts", "readiness", "introduction", "burden"):
+        for f in ("id", "name", "description", "introduction", "burden"):
             present("%s.%s" % (n, f), iv.get(f))
-        if iv.get("readiness") not in READINESS_IDS.values():
-            error("%s.readiness: must be one of %s, found %r" % (n, sorted(READINESS_IDS.values()), iv.get("readiness")))
         for c in CRITERIA:
             e = iv.get("scores", {}).get(c)
             if not isinstance(e, dict):
@@ -451,8 +495,24 @@ def check_structure(data, method, glossary):
     for i in ids:
         walk(i, [i])
 
+    # Wording the site must not show.
+    def strings(x):
+        if isinstance(x, str):
+            yield x
+        elif isinstance(x, dict):
+            for v in x.values():
+                yield from strings(v)
+        elif isinstance(x, list):
+            for v in x:
+                yield from strings(v)
+    for name, obj in (("interventions.js", data), ("method.js", method), ("glossary.js", glossary)):
+        for text in strings(obj):
+            for word in FORBIDDEN:
+                if word in text:
+                    error("%s contains %r: %s..." % (name, word, text[:60]))
+
     if len(errors) == before:
-        ok("all fields present and well formed; every dependsOn id exists; no circular dependencies")
+        ok("all fields present and well formed; every dependsOn id exists; no circular dependencies; no forbidden wording")
     return items
 
 
@@ -475,8 +535,8 @@ def check_site_text(data, method, glossary, web):
         eq("<title> of %s (the site title)" % page, m.group(1).strip() if m else None, web["site_title"])
 
     prop = data.get("proposals", {})
-    eq("proposals: intro", prop.get("intro"), web["proposals"][0])
-    eq("proposals: the five proposals", prop.get("items"), web["proposals"][1:])
+    eq("proposals: intro", prop.get("intro"), web["proposals"]["intro"])
+    eq("proposals: the five proposals (paragraphs, lists and links)", prop.get("items"), web["proposals"]["items"])
 
     rk = data.get("ranking", {})
     eq("ranking: intro", rk.get("intro"), web["ranking"]["intro"])
@@ -559,16 +619,14 @@ def check_site_text(data, method, glossary, web):
     blocks = web.get("how_we_score", {}).get("blocks", [])
     paras = [b[1] for b in blocks if b[0] == "p"]
     tables = [b[1] for b in blocks if b[0] == "table"]
-    if len(paras) != 5 or len(tables) != 1:
-        error("Website text.md: 'How we score' should hold five paragraphs and one table; found %d and %d" % (len(paras), len(tables)))
+    if len(paras) != 3 or len(tables) != 1:
+        error("Website text.md: 'How we score' should hold three paragraphs and one table; found %d and %d" % (len(paras), len(tables)))
     else:
         eq("how we score: first paragraph", how.get("intro"), paras[0])
         eq("how we score: table header", how.get("table", {}).get("header"), tables[0][0])
         eq("how we score: table rows", how.get("table", {}).get("rows"), tables[0][1:])
-        eq("how we score: readiness", how.get("readiness"), paras[1])
-        eq("how we score: expected behaviours", how.get("expected"), paras[2])
-        eq("how we score: where it acts", how.get("acts"), paras[3])
-        eq("how we score: closing line", how.get("closing"), paras[4])
+        eq("how we score: expected behaviours", how.get("expected"), paras[1])
+        eq("how we score: closing line", how.get("closing"), paras[2])
         labels = [c.get("label") for c in method.get("criteria", [])]
         eq("how we score: the 'Shown as' column names the six criteria, in order", [r[0] for r in tables[0][1:]], labels)
 
@@ -595,7 +653,7 @@ def check_glossary(glossary, web):
             error("glossary: every entry needs term, match (a list) and definition: %r" % g.get("term"))
     # Which terms appear in the site's text? A term nobody can see is only a warning.
     corpus = " ".join(
-        [web["site_title"]] + web["introduction"] + web["proposals"] + [web["ranking"]["intro"], web["ranking"]["legend"]]
+        [web["site_title"]] + web["introduction"] + [web["proposals"]["intro"]] + [flatten_text(g) for g in web["proposals"]["items"]] + [web["ranking"]["intro"], web["ranking"]["legend"]]
         + web["tool_descriptions"] + [web["caption"], web["builder_intro"]]
         + [b[1] for b in web["how_we_score"]["blocks"] if b[0] == "p"]
         + [" ".join(str(v) for v in json.dumps(web["tools"], ensure_ascii=False).split())]
@@ -610,8 +668,8 @@ def check_glossary(glossary, web):
 
 
 def check_mappings(data, docs):
-    """(b) scores, stances, readiness, justifications, tag; (c) sources."""
-    print("\n4. Scores, stances, readiness, justifications and sources against the mappings  [checks (b) and (c)]")
+    """(b) scores, stances, justifications; (c) sources."""
+    print("\n4. Scores, stances, justifications and sources against the mappings  [checks (b) and (c)]")
     for iv in data["interventions"]:
         n = iv.get("id")
         before = len(errors)
@@ -653,22 +711,9 @@ def check_mappings(data, docs):
             for a in ACTORS:
                 compare("%s.stances.%s (site vs %s)" % (n, a, fname), iv["stances"][a], stances[a])
 
-        idx = next((i for i, h in enumerate(header) if "readiness" in h.lower()), None)
-        raw = row[idx] if idx is not None else ""
-        if raw not in READINESS_IDS:
-            error("%s.readiness: the mapping has %r, which is not one of %s" % (n, raw, list(READINESS_IDS)))
-        else:
-            compare("%s.readiness (site vs %s)" % (n, fname), iv["readiness"], READINESS_IDS[raw])
-
-        tag = m["bullets"].get("Lifecycle stage")
-        if tag is None:
-            error("%s: no 'Lifecycle stage' bullet in %s" % (n, fname))
-        else:
-            compare("%s: 'Where it acts' tag" % n, iv["acts"], tag.rstrip("."))
-
         compare("%s: sources list (site vs %s)" % (n, fname), iv["sources"], m["sources"])
         if len(errors) == before:
-            ok("%s: scores, stances, readiness, justifications, tag and %d sources match %s" % (n, len(m["sources"]), fname))
+            ok("%s: scores, stances, justifications and %d sources match %s" % (n, len(m["sources"]), fname))
 
 
 def main():

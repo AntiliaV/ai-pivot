@@ -4,13 +4,13 @@ A short website for policymakers that compares five tools for verifying agreemen
 
 ## How to open it
 
-Double-click `index.html`. It opens in your browser. There is no server to start, no internet connection is needed, nothing is installed, and nothing is sent anywhere or stored in the browser. The five tool pages open from the main page (`tool.html#ledger`, `#inspections`, `#evaluations`, `#bandwidth`, `#metering`).
+Double-click `index.html`. It opens in a browser. There is no server to start, no internet connection is needed, nothing is installed, and nothing is sent anywhere or stored in the browser (links to sources are followed only when clicked). The five tool pages open from the main page (`tool.html#ledger`, `#inspections`, `#evaluations`, `#bandwidth`, `#metering`).
 
 ## What is in it
 
 - `index.html`: the main page. Introduction, contents, the five pacing proposals, the ranking, one card per tool, the trade-off map, the package builder, and the appendix (how we score, glossary).
 - `tool.html`: one page for every tool, chosen by the part after `#` in the address.
-- `data/interventions.js`: all the wording, scores, stances, readiness, justifications and sources for the five tools.
+- `data/interventions.js`: all the wording, scores, stances, justifications and sources for the five tools.
 - `data/method.js`: the appendix text, section titles, the six criteria and their display labels, the words (Low … High, Light … Heavy), the colours and the package builder's numbers.
 - `data/glossary.js`: the glossary.
 - `js/app.js` (the pages), `js/chart.js` (the map), `js/builder.js` (the package builder's rules), `css/style.css`.
@@ -25,9 +25,9 @@ All files below are in `4. Drafting/` of the pacing project, and the site copies
 | On the site | Source |
 |---|---|
 | Wording: introduction, proposals, ranking, tool descriptions, map caption, builder intro, each tool's introduction, expected-behaviour reasons, contribution to pacing, failure scenarios, regulatory burden, the reason for each dependency, appendix, glossary | `Website text.md` |
-| Scores, stances, readiness, the "Where it acts" tag | the "Step 1" scores table (and the "Lifecycle stage" bullet) of each `Background mapping of … .md` |
-| The sentence shown when you click a score | the bullet under that table, without its bold label |
-| Sources list on each tool page | the "# Sources" list of the mapping |
+| Scores and stances | the "Step 1" scores table of each `Background mapping of … .md` |
+| The sentence shown when a score is clicked | the bullet under that table, without its bold label and without the marker "(our inference)" |
+| Sources list on each tool page | the "# Sources" list of the mapping, links included, without the "Atlas …" entries |
 | Rules for scoring | `Scoring method.md` |
 
 Only the interface labels (for example "What it achieves", "Learn more →", "Previous") come from neither. The validator does not check them.
@@ -35,10 +35,10 @@ Only the interface labels (for example "What it achieves", "Learn more →", "Pr
 ## How to change the text
 
 1. Edit `Website text.md` (not the site's code).
-2. Copy the change into the matching place in `data/interventions.js` (or `data/method.js` for the appendix, `data/glossary.js` for glossary terms). The data files are plain JSON, so keep the quotes and commas intact. Text may use `**bold**` and `*italic*` as in `Website text.md`.
+2. Copy the change into the matching place in `data/interventions.js` (or `data/method.js` for the appendix, `data/glossary.js` for glossary terms). The data files are plain JSON, so keep the quotes and commas intact. Text may use `**bold**`, `*italic*` and `[text](url)` links as in `Website text.md`. Links open in a new tab and load nothing until they are clicked.
 3. Run `python3 tools/validate_data.py` from this folder. It prints `RESULT: PASSED` when everything matches and `RESULT: FAILED` with the first difference otherwise. It changes no files.
 
-## How to change a score, stance or readiness
+## How to change a score or stance
 
 Change it in the tool's background mapping first (the "Step 1" scores table, and the bullet under it that justifies the score). Then copy it into `data/interventions.js` and run the validator. The map, the meters and the package builder update by themselves. If the change moves a score used in the builder's examples, also run the builder self-checks (below), because a few of them check exact results.
 
