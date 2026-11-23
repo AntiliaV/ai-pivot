@@ -12,7 +12,7 @@ Some researchers, governments and AI companies argue that frontier AI is advanci
 
 An agreement to pace AI, between companies or between states, only works if each side can check that the others are keeping to it. Therefore, having reliable verification tools in place is central to any such agreement. However, the more a verification tool can confirm, the more it usually has to see or control, which makes it harder to accept for those being verified. This implies there is a tradeoff between how accurate a verification tool is and how invasive it is for the actors involved. In turn, this tradeoff may lead to relevant actors changing their behaviour as a response to the invasiveness of verification procedures. A key policy question is therefore pinning down what these tradeoffs are and how potential actors might respond to them.
 
-Our analysis compares five candidate verification tools prominently featured in recent pacing proposals. For each, we assess how much it would slow AI development, how reliably it detects violations, and what it costs governments and AI companies. The analysis is written for policymakers and assumes no background in AI safety.
+Our analysis compares five candidate verification tools prominently featured in recent pacing proposals. For each, we assess how much the rule it verifies would slow AI development, how reliably it detects violations, and what it costs governments and AI companies. The analysis is written for policymakers and assumes no background in AI safety.
 
 ## 3. Pacing proposals
 
@@ -271,11 +271,11 @@ Thresholds and counting rules are easy to update, and metering can be lifted wit
 
 ### How we score
 
-We score each tool on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). Effectiveness ("Slows AI development") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.
+We score each tool on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). A verification tool does not itself slow AI development; what matters is whether the rule it lets us check would slow it if fully respected. "Relevance to pacing" therefore asks how many routes to more capable AI the verified rule would close. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do.
 
 | Shown as | What 1 means | What 5 means |
 |------------------------|------------------------|------------------------|
-| Slows AI development | Closes no route on its own | Closes most routes, with little room to get around them |
+| Relevance to pacing | What it verifies has little bearing on how fast AI develops | Verifies rules that close most routes, with little room to get around them |
 | Reaches the right actors | Reaches few relevant actors, or mainly hits beneficial work | Reaches nearly all relevant actors, with little spillover |
 | Detects violations | Violations mostly go undetected | Violations are detected quickly; enforcement is credible or automatic |
 | Holds up over time | Breaks when circumstances change; hard to lift | Adapts by design; can be lifted without leaving spare capacity ready to use |

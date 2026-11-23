@@ -1,12 +1,12 @@
 # Scoring method for the intervention mappings
 
-*Agreed 12 November 2026; effectiveness yardstick and lifecycle tag revised 22 November 2026. Applies to the "Step 1" scores table in every background mapping in this folder.*
+*Agreed 12 November 2026; effectiveness yardstick and lifecycle tag revised 22 November 2026; effectiveness reframed as relevance to pacing 23 November 2026. Applies to the "Step 1" scores table in every background mapping in this folder.*
 
 ## Common yardstick
 
-Effectiveness is scored against the **routes to frontier capability progress**. *Pacing the Frontier* (Douglas et al. 2026, §3.2) lists four: more training compute, better algorithms, more elaborate post-training, and better elicitation of existing models. An intervention scores by how many routes it would close under ideal conditions, net of what developers recover by substituting another route. A tool that only reveals information scores low even if other tools depend on it.
+Effectiveness is scored as **relevance to pacing**. A verification tool does not itself slow AI development; what matters is whether the rule it lets us check would slow it if fully respected. The yardstick is the **routes to frontier capability progress**: *Pacing the Frontier* (Douglas et al. 2026, §3.2) lists four, namely more training compute, better algorithms, more elaborate post-training, and better elicitation of existing models. An intervention scores by how many routes the rule it verifies would close, net of what developers recover by substituting another route. A tool is therefore not penalised for only providing information; it scores low when what it verifies has little bearing on pacing.
 
-The list of routes can grow as new routes appear (the Agenda flags continual learning, where models keep improving after deployment). A new intervention is scored by asking the same two questions: which routes does it close, and how easily can developers substitute another?
+The list of routes can grow as new routes appear (the Agenda flags continual learning, where models keep improving after deployment). A new intervention is scored by asking the same two questions: which routes would the rule it verifies close, and how easily can developers substitute another?
 
 Each intervention is scored once, in the configuration the pacing proposals use it (e.g. FlexHEGs enforcing a cap or licence; inspections of declared sites backed by the ledger). Where another configuration would score differently, the note under the table says so.
 
@@ -16,7 +16,7 @@ Each intervention is scored once, in the configuration the pacing proposals use 
 
 | Criterion | 1 | 3 | 5 |
 |----|----|----|----|
-| Pacing effectiveness | Closes no route on its own (information, or support for other tools); 2 = partly closes one route, or only at some sites | Directly closes one route; others stay open and substitution is easy; 4 = closes one route with little room to substitute, or several routes partly | Closes most routes, with little room to substitute |
+| Pacing effectiveness (relevance to pacing) | What it verifies has little bearing on pacing; 2 = verifies a rule that partly closes one route, or only at some sites | Verifies a rule that directly closes one route; others stay open and substitution is easy; 4 = verifies rules that close one route with little room to substitute, or several routes partly | Verifies rules that close most routes, with little room to substitute |
 | Coverage and targeting | Reaches few relevant actors, or hits mainly beneficial work | Reaches declared or large actors; some spillover onto beneficial work | Reaches nearly all relevant actors, with little spillover |
 | Verifiability and enforceability | Violations mostly undetectable | Detectable for declared or large activity; blind to undeclared activity | Detected quickly and with confidence; enforcement credible or automatic |
 | Regulatory burden | Light reporting on records firms already keep | A new body plus periodic audits | A standing international inspectorate or new hardware standards |

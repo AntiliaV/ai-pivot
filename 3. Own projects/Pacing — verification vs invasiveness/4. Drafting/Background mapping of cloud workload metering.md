@@ -164,8 +164,8 @@ E.g. for cloud workload metering:
 |----|----|----|----|----|----|----|----|----|
 | cloud workload metering | 2 | 3 | Labs: cooperate, while leaders shift frontier training to their own hardware. Chip and cloud firms: cooperate if obligations are uniform across providers. Leading state: cooperate (already uses cloud know-your-customer rules through export controls). Trailing state: undermine (rejects foreign access to its providers' records) | 3 | 2 | 3 | 2 | Now |
 
-*Our assessment. Scored as the proposals use it: identity checks plus compute metering by cloud providers, with threshold reporting or alarms. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** partly closes the compute route, for cloud compute only; own data centres and the other routes stay open.\
+*Our assessment. Scored as the proposals use it: identity checks plus compute metering by cloud providers, with threshold reporting or alarms. Effectiveness (relevance to pacing) is scored by how many routes to frontier capability progress the rule this intervention verifies would close if fully respected; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** verifies computing power used in the cloud, so a limit on it partly closes the compute route, for cloud compute only; own data centres and the other routes stay open.\
 - **Lifecycle stage:** inputs and infrastructure.\
 - **Coverage:** all cloud customers above a threshold; blind to own data centres.\
 - **Verifiability:** accurate records and easy account-level enforcement; cannot see what a workload does, or compute outside the cloud.\

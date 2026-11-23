@@ -10,6 +10,10 @@
 
 Rebuilt the pacing explorer for five tools (FlexHEGs removed): a main page, five tool pages, and a validator that fails if site text, scores, stances, readiness or sources differ from `Website text.md` and the mappings. *Why:* a short site for policymakers whose every word and score traces to a source. Touched: `3. Own projects/Pacing — verification vs invasiveness/2. Code/pacing-explorer/` (four commits, not yet pushed). Open questions are in the session summary.
 
+### 2026-11-23 — Pacing mappings: effectiveness reframed as relevance to pacing
+
+Effectiveness now asks how many routes to capability progress the rule a tool verifies would close if fully respected, shown as "Relevance to pacing". *Why:* verification tools do not slow AI development themselves; the old wording penalised tools for only providing information. Ledger and inspections 2→3. Touched: `Scoring method.md`, the six mappings, `Website text.md`.
+
 ### 2026-11-22 — Pacing website: FlexHEGs dropped; Claude outputs folder moved
 
 FlexHEGs removed from the pacing explorer website (its mapping stays in `4. Drafting/`). *Why:* the Pacing Verification Atlas does not rank it, and it is not yet available. The site now covers five tools, with a ranking table labelled as our own classification. Also moved the stray root `Claude outputs/` folder (Claude Code prompts v1–v2) into `Archive/Claude outputs/`, per `CLAUDE.md`. A duplicate of the style profile, added to the pacing project's `0. Inputs/`, moved to `Archive/_to_delete/` (identical to the canonical copy in `0. Inputs & context/5. About me/Writing style/`). The 17 v1 screenshots of the pacing explorer, no longer used by v2, moved to `Archive/_to_delete/`.

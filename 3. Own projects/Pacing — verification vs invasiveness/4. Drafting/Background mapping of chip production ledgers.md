@@ -160,10 +160,10 @@ E.g. for chip ledgers:
 
 |   | Pacing effectiveness | Coverage and targeting | Incentive compatibility | Verifiability and enforceability | Regulatory burden | Robustness and flexibility | Invasiveness for labs | Readiness |
 |----|----|----|----|----|----|----|----|----|
-| chip ledgers | 2 | 4 | Labs: cooperate. Chip and cloud firms: cooperate if market access depends on it. Leading state: cooperate (it enforces the lead). Trailing state: circumvent (unrecorded and diverted stock) | 3 | 3 | 4 | 2 | Now |
+| chip ledgers | 3 | 4 | Labs: cooperate. Chip and cloud firms: cooperate if market access depends on it. Leading state: cooperate (it enforces the lead). Trailing state: circumvent (unrecorded and diverted stock) | 3 | 3 | 4 | 2 | Now |
 
-*Our assessment. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** closes no route by itself; it lets a cap on the compute route be checked for undeclared stock and lets chips be withheld from non-compliant actors. Algorithms, post-training and elicitation stay open.\
+*Our assessment. Effectiveness (relevance to pacing) is scored by how many routes to frontier capability progress the rule this intervention verifies would close if fully respected; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** verifies chip stocks and locations, so that caps on chip stocks or production, and rules on where chips sit, can be checked; respecting these directly limits computing power. Algorithms, post-training and elicitation stay open.\
 - **Lifecycle stage:** inputs and infrastructure.\
 - **Coverage:** new production and large holdings well covered; legacy stock, small clusters and non-parties are the gaps.\
 - **Verifiability:** concentrated supply chain and rich paper trails; weak against state concealment and small clusters.\

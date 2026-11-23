@@ -183,8 +183,8 @@ E.g. for independent capability evaluations:
 |----|----|----|----|----|----|----|----|----|
 | independent capability evaluations | 4 | 3 | Labs: cooperate (many already volunteer for testing), while contesting thresholds and access. Chip and cloud firms: cooperate (little at stake). Leading state: cooperate domestically, but undermine foreign access to its models. Trailing state: circumvent (lenient national evaluators; results hard to check) | 2 | 3 | 3 | 4 | Now |
 
-*Our assessment. Scored as the proposals use evaluations: independent pre-deployment and in-training tests that can gate release or further training. Effectiveness is scored by the routes to frontier capability progress the intervention closes under ideal conditions; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
-- **Effectiveness:** under ideal conditions, catches capability gains from every route (compute, algorithms, post-training, elicitation), but only at a gate on submitted models.\
+*Our assessment. Scored as the proposals use evaluations: independent pre-deployment and in-training tests that can gate release or further training. Effectiveness (relevance to pacing) is scored by how many routes to frontier capability progress the rule this intervention verifies would close if fully respected; all criteria use the anchored 1–5 scales in `Scoring method.md`. 5 = best, except regulatory burden and invasiveness, where 5 = heaviest.*\
+- **Effectiveness:** verifies capability thresholds, which every route feeds into (compute, algorithms, post-training, elicitation), but only at a gate on submitted models.\
 - **Lifecycle stage:** capability development, and use and distribution (release gate).\
 - **Coverage:** precisely targeted at hazards; misses unsubmitted models, internal use, and risks without tests.\
 - **Verifiability:** hard to prove that the tested model is the deployed one, or that elicitation was complete; says nothing about compute.\
