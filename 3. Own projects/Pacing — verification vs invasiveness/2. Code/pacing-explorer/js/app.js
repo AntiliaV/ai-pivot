@@ -62,15 +62,10 @@
     return METHOD.criteria.filter(function (c) { return c.id === id; })[0];
   }
 
-  function readinessLevel(id) {
-    return METHOD.readiness.filter(function (r) { return r.id === id; })[0] || { id: id, label: id, column: id };
-  }
-
   function toolHref(id) { return "tool.html#" + id; }
 
-  // ---------- rich text: **bold**, *italic*, "(our inference)", glossary terms ----------
+  // ---------- rich text: **bold**, *italic*, [links](https://...), glossary terms ----------
 
-  var INFERENCE = "(our inference)";
   var termIndex = {};
   var termPatterns = [];
   GLOSSARY.forEach(function (entry, i) {
@@ -106,30 +101,51 @@
     frag.appendChild(document.createTextNode(piece.slice(last)));
   }
 
-  function inline(str, ctx) {
-    var frag = document.createDocumentFragment();
-    String(str).split(INFERENCE).forEach(function (piece, i) {
-      if (i > 0) { frag.appendChild(h("span", { class: "inference" }, L.ourInference)); }
-      linkTerms(piece, ctx, frag);
-    });
-    return frag;
-  }
-
-  // ctx null = no glossary tooltips (used inside tables of figures and in the sources).
-  function rich(str, ctx) {
+  // **bold** and *italic*, with glossary terms underlined.
+  function emphasis(str, ctx) {
     var frag = document.createDocumentFragment();
     String(str).split(/(\*\*[^*]+\*\*|\*[^*]+\*)/).forEach(function (part) {
       if (!part) { return; }
       var m = /^\*\*([^*]+)\*\*$/.exec(part);
-      if (m) { frag.appendChild(h("strong", null, inline(m[1], ctx))); return; }
+      if (m) { var strong = h("strong"); linkTerms(m[1], ctx, strong); frag.appendChild(strong); return; }
       m = /^\*([^*]+)\*$/.exec(part);
-      if (m) { frag.appendChild(h("em", null, inline(m[1], ctx))); return; }
-      frag.appendChild(inline(part, ctx));
+      if (m) { var em = h("em"); linkTerms(m[1], ctx, em); frag.appendChild(em); return; }
+      linkTerms(part, ctx, frag);
     });
     return frag;
   }
 
+  // Links open in a new tab and load nothing until they are clicked. Only http(s) addresses become links.
+  // Glossary terms are not underlined inside link text.
+  // ctx null = no glossary tooltips (used inside tables of figures and in the sources).
+  function rich(str, ctx) {
+    var frag = document.createDocumentFragment();
+    var text = String(str);
+    var re = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+    var last = 0;
+    var m;
+    while ((m = re.exec(text)) !== null) {
+      frag.appendChild(emphasis(text.slice(last, m.index), ctx));
+      if (/^https?:\/\//i.test(m[2])) {
+        frag.appendChild(h("a", { href: m[2], target: "_blank", rel: "noopener noreferrer" }, emphasis(m[1], null)));
+      } else {
+        frag.appendChild(emphasis(m[0], ctx));
+      }
+      last = m.index + m[0].length;
+    }
+    frag.appendChild(emphasis(text.slice(last), ctx));
+    return frag;
+  }
+
   function para(str, ctx) { return h("p", null, rich(str, ctx)); }
+
+  // Paragraphs and lists: [{type: "p", text}, {type: "ul" | "ol", items: [...]}].
+  function richBlocks(blocks, ctx) {
+    return blocks.map(function (b) {
+      if (b.type === "p") { return para(b.text, ctx); }
+      return h(b.type, { class: "bullets" }, b.items.map(function (it) { return h("li", null, rich(it, ctx)); }));
+    });
+  }
 
   function table(header, rows, cls, firstColHeader, label) {
     return h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": label }, h("table", { class: "data-table " + cls }, [
@@ -213,15 +229,7 @@
   });
   window.addEventListener("scroll", function () { if (!tooltip.hidden) { hideTip(); } }, { passive: true });
 
-  // ---------- readiness pill, stance badges, ranking badges ----------
-
-  function readinessPill(iv) {
-    var ready = iv.readiness === "now";
-    return h("span", { class: "pill" }, [
-      h("span", { class: "dot " + (ready ? "dot-ready" : "dot-notready"), "aria-hidden": "true" }),
-      readinessLevel(iv.readiness).label
-    ]);
-  }
+  // ---------- stance badges, ranking badges ----------
 
   function stanceBadges(stances) {
     return h("span", { class: "badges" }, stances.map(function (s) { return h("span", { class: "badge-stance" }, METHOD.stances[s]); }));
@@ -276,8 +284,8 @@
   function renderProposals(ctx) {
     var s = h("section", { id: "proposals", "aria-labelledby": "proposals-title" }, [sectionHead("proposals", T.proposals)]);
     s.appendChild(para(DATA.proposals.intro, ctx));
-    s.appendChild(h("ul", { class: "proposal-list" }, DATA.proposals.items.map(function (item) {
-      return h("li", null, para(item, ctx));
+    s.appendChild(h("ul", { class: "proposal-list" }, DATA.proposals.items.map(function (blocks) {
+      return h("li", null, richBlocks(blocks, ctx));
     })));
     return s;
   }
@@ -312,10 +320,7 @@
       return h("li", { class: "card" }, [
         h("h3", null, iv.name),
         h("p", { class: "card-text" }, iv.description),
-        h("div", { class: "card-foot" }, [
-          readinessPill(iv),
-          h("a", { class: "card-link", href: toolHref(iv.id) }, L.learnMore)
-        ])
+        h("a", { class: "card-link", href: toolHref(iv.id) }, L.learnMore)
       ]);
     })));
     return s;
@@ -357,9 +362,7 @@
     s.appendChild(h("h3", null, T.howWeScore));
     s.appendChild(para(how.intro, ctx));
     s.appendChild(table(how.table.header, how.table.rows, "score-key", true, T.howWeScore));
-    s.appendChild(para(how.readiness, ctx));
     s.appendChild(para(how.expected, ctx));
-    s.appendChild(para(how.acts, ctx));
     s.appendChild(para(how.closing, ctx));
 
     s.appendChild(h("h3", null, T.glossary));
@@ -412,10 +415,7 @@
     var costs = METHOD.criteria.filter(function (c) { return c.kind === "cost"; });
 
     view.appendChild(h("p", { class: "crumbs" }, h("a", { href: "index.html#tools" }, L.allTools)));
-    view.appendChild(h("header", { class: "tool-head" }, [
-      h("h1", { tabindex: "-1" }, iv.name),
-      h("p", { class: "tag" }, L.whereItActs + ": " + iv.acts)
-    ]));
+    view.appendChild(h("header", { class: "tool-head" }, h("h1", { tabindex: "-1" }, iv.name)));
 
     // Introduction
     view.appendChild(h("section", { "aria-labelledby": "t-intro" }, [
@@ -438,7 +438,6 @@
     view.appendChild(h("section", { class: "overview", "aria-labelledby": "t-overview" }, [
       h("h2", { id: "t-overview" }, L.overview),
       h("div", { class: "overview-grid" }, [
-        h("div", { class: "ov ov-ready" }, [h("h3", null, L.readiness), readinessPill(iv)]),
         h("div", { class: "ov ov-achieves" }, [
           h("h3", null, L.achieves),
           h("ul", { class: "meters" }, benefits.map(function (c) { return meterRow(c, iv.scores[c.id], "j-" + c.id); }))
@@ -498,7 +497,7 @@
   // THE PACKAGE BUILDER
   // =====================================================================
 
-  var builderState = { priorities: [], availableNow: false, maxInvasiveness: "any" };
+  var builderState = { priorities: [], maxInvasiveness: "any" };
   var builderBox = null;
 
   function radioGroup(legend, name, options, current, onChange) {
@@ -517,11 +516,10 @@
     var iv = byId[layer.id];
     var roleText = layer.role === "foundation" ? "Needed as a foundation"
       : layer.role === "closest" ? "Closest fit"
-      : (result.choices.priorities.length ? "Fits your priorities" : "Fits overall");
+      : (result.choices.priorities.length ? "Fits the priorities" : "Fits overall");
     return h("li", { class: "layer layer-" + layer.role }, [
       h("span", { class: "layer-role" }, roleText),
       h("a", { class: "layer-name", href: toolHref(iv.id) }, iv.name),
-      readinessPill(iv),
       layer.foundationFor.length ? h("span", { class: "layer-supports" },
         "Foundation for: " + B.joinList(layer.foundationFor.map(function (d) { return byId[d].name; }))) : null
     ]);
@@ -536,10 +534,9 @@
     function outcome(row) {
       var layer = layerById[row.id];
       if (!layer) { return "Left out"; }
-      var text = layer.role === "foundation"
+      return layer.role === "foundation"
         ? "Included as a foundation for " + B.joinList(layer.foundationFor.map(function (d) { return byId[d].name; }))
         : layer.role === "closest" ? "Included as the closest fit" : "Included";
-      return text + (layer.lane === "prepare" ? " (start preparing now)" : "");
     }
 
     var tbl = h("table", { class: "data-table sums" }, [
@@ -574,7 +571,7 @@
           result.rows.map(function (row) { return h("td", null, row.meetsThreshold ? "Yes" : "No"); })
         ]),
         h("tr", null, [
-          h("th", { scope: "row" }, "Within your invasiveness limit?"),
+          h("th", { scope: "row" }, "Within the invasiveness limit?"),
           h("td", null, ""),
           result.rows.map(function (row) { return h("td", null, row.withinLimit ? "Yes" : "No"); })
         ]),
@@ -590,14 +587,13 @@
       h("summary", null, "How this was worked out"),
       h("div", { class: "worked-body" }, [
         h("ol", { class: "plain-list" }, [
-          h("li", null, "Every criterion counts " + METHOD.builder.baseWeight + ". Each criterion you picked counts " + METHOD.builder.pickedWeight + "."),
+          h("li", null, "Every criterion counts " + METHOD.builder.baseWeight + ". Each criterion picked as a priority counts " + METHOD.builder.pickedWeight + "."),
           h("li", null, "Scores run from 1 to 5. For the two cost criteria (burden on government, invasiveness for AI labs), the score is turned round as 6 minus the score, so that a higher number is always better."),
           h("li", null, "Fit is the sum of score × weight, divided by the sum of the weights. It stays on the 1 to 5 scale."),
-          h("li", null, "A tool is included if its fit is at least " + threshold + " and its invasiveness score is within your limit (" +
-            (limit >= 5 ? "you set no limit" : "you allowed scores up to " + limit + " out of 5") + ")."),
+          h("li", null, "A tool is included if its fit is at least " + threshold + " and its invasiveness score is within the limit (" +
+            (limit >= 5 ? "no limit was set" : "scores up to " + limit + " out of 5 were allowed") + ")."),
           h("li", null, "If no tool qualifies, the single best is shown, with a note that it falls short."),
-          h("li", null, "Anything an included tool depends on is added as a foundation, even if it did not qualify by itself."),
-          h("li", null, "If you asked for tools that are available now, tools still in development are not removed. They move to “Start preparing now”.")
+          h("li", null, "Anything an included tool depends on is added as a foundation, even if it did not qualify by itself.")
         ]),
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Fit arithmetic" }, tbl)
       ])
@@ -614,7 +610,7 @@
 
     if (result.noneWithinLimit) {
       box.appendChild(h("p", { class: "why" }, text.priorities + " " + text.why.join(" ")));
-      status.textContent = "No tool is within your invasiveness limit.";
+      status.textContent = "No tool is within the invasiveness limit.";
       box.appendChild(workedOut(result));
       return;
     }
@@ -627,27 +623,8 @@
     });
     box.appendChild(chainNode);
 
-    // Layers on a timeline: only the columns that hold something.
-    var timelineLayers = result.layers.filter(function (l) { return l.lane === "timeline"; });
-    var prepareLayers = result.layers.filter(function (l) { return l.lane === "prepare"; });
-    var columns = METHOD.readiness.filter(function (col, i) {
-      return timelineLayers.some(function (l) { return l.readiness === col.id; }) || i === 0;
-    });
-    box.appendChild(h("div", { class: "timeline cols-" + columns.length }, columns.map(function (col) {
-      var here = timelineLayers.filter(function (l) { return l.readiness === col.id; });
-      return h("section", { class: "time-col" }, [
-        h("h4", { class: "time-title" }, col.column),
-        here.length ? h("ol", { class: "layers" }, here.map(function (l) { return layerCard(l, result); }))
-          : h("p", { class: "empty" }, "Nothing in this package")
-      ]);
-    })));
-    if (prepareLayers.length) {
-      box.appendChild(h("section", { class: "prepare-lane" }, [
-        h("h4", { class: "time-title" }, "Start preparing now"),
-        h("p", { class: "field-hint" }, "Not available yet, but worth starting on."),
-        h("ol", { class: "layers" }, prepareLayers.map(function (l) { return layerCard(l, result); }))
-      ]));
-    }
+    // The tools in the package, foundations first.
+    box.appendChild(h("ol", { class: "layers" }, result.layers.map(function (l) { return layerCard(l, result); })));
 
     // Why this package, and what it gives up.
     box.appendChild(h("h4", null, "Why this package"));
@@ -696,10 +673,10 @@
     pickStatus.textContent = pickText();
 
     var order = METHOD.builder.priorityOrder || METHOD.criteria.map(function (c) { return c.id; });
-    var priorityField = h("fieldset", { class: "field" }, [
-      h("legend", null, "What matters most to you?"),
+    var priorityField = h("fieldset", { class: "field field-priorities" }, [
+      h("legend", null, "What matters most?"),
       h("p", { class: "field-hint" }, "Pick up to " + max + "."),
-      order.map(function (id) {
+      h("div", { class: "choices" }, order.map(function (id) {
         var c = criterion(id);
         var input = h("input", { type: "checkbox", name: "priority", value: id });
         input.checked = builderState.priorities.indexOf(id) !== -1;
@@ -707,7 +684,7 @@
           if (input.checked) {
             if (builderState.priorities.length >= max) {
               input.checked = false;
-              pickStatus.textContent = "You can pick up to " + max + ". Untick one to choose another.";
+              pickStatus.textContent = "Up to " + max + " can be picked. Untick one to pick another.";
               return;
             }
             builderState.priorities.push(id);
@@ -718,25 +695,24 @@
           refresh();
         });
         return h("label", { class: "choice" }, [input, h("span", null, c.priorityLabel)]);
-      }),
+      })),
       pickStatus
     ]);
 
-    var form = h("form", { class: "builder-form", "aria-label": "Your choices", onsubmit: function (e) { e.preventDefault(); } }, [
+    var form = h("form", { class: "builder-form", "aria-label": "Choices", onsubmit: function (e) { e.preventDefault(); } }, [
       priorityField,
-      radioGroup("Must it be available now?", "now", [{ value: "no", label: "No" }, { value: "yes", label: "Yes" }],
-        builderState.availableNow ? "yes" : "no", function (v) { builderState.availableNow = v === "yes"; refresh(); }),
       radioGroup("Maximum acceptable invasiveness for AI labs", "limit",
         [{ value: "any", label: "Any" }, { value: "medium", label: "Medium" }, { value: "low", label: "Low" }],
         builderState.maxInvasiveness, function (v) { builderState.maxInvasiveness = v; refresh(); }),
       h("button", { type: "button", class: "btn", onclick: function () {
-        builderState = { priorities: [], availableNow: false, maxInvasiveness: "any" };
+        builderState = { priorities: [], maxInvasiveness: "any" };
         var fresh = renderBuilder(pageCtx);
         s.parentNode.replaceChild(fresh, s);
       } }, "Reset choices")
     ]);
 
-    s.appendChild(h("div", { class: "builder-grid" }, [form, h("div", null, [status, output])]));
+    s.appendChild(form);
+    s.appendChild(h("div", { class: "builder-results" }, [status, output]));
     refresh();
     return s;
   }
