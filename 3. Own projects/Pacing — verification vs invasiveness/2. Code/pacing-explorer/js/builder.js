@@ -8,13 +8,11 @@
 //   2. Orientation  burden and invasiveness are used as 6 - score, so higher is always better.
 //   3. Fit          fit = sum(weight x oriented score) / sum(weights), on a 1 to 5 scale.
 //   4. Constraints  tools above the user's invasiveness limit are removed.
-//                   "Must be available now" never removes a tool: tools that are not
-//                   ready move to a separate "Start preparing now" lane.
 //   5. Selection    every remaining tool with fit >= 3.0 is included. If none
 //                   qualifies, the single best is included, with a note that it falls short.
 //   6. Dependencies anything an included tool depends on is added as a foundation,
 //                   even if a constraint had removed it (and that is said explicitly).
-//   7. Layout       layers are ordered by readiness, foundations first.
+//   7. Layout       layers are ordered with foundations first, then in card order.
 //   8. Other side   for each tool in the package, the trailing state's expected stance
 //                   and reason are listed (always, whatever the other choices).
 //   9. Wording      the explanation is generated from templates and the scores only.
@@ -23,8 +21,6 @@
 
 (function (root) {
   "use strict";
-
-  var READINESS_ORDER = ["now", "1-3y", "3y+"];
 
   // ---------- small helpers ----------
 
@@ -149,7 +145,6 @@
     });
     return {
       priorities: priorities,
-      availableNow: !!choices.availableNow,
       maxInvasiveness: method.builder.invasivenessLimits.hasOwnProperty(choices.maxInvasiveness) ? choices.maxInvasiveness : "any"
     };
   }
@@ -189,14 +184,12 @@
     // Rule 6: dependencies.
     var resolved = resolveDependencies(selected, interventions);
 
-    // Rules 4 (lane) and 7 (order); first steps are an optional field (the data has none yet).
+    // Rule 7 (order); first steps are an optional field (the data has none yet).
     var layers = resolved.ids.map(function (id) {
       var iv = map[id];
       var isSelected = selected.indexOf(id) !== -1;
       return {
         id: id,
-        readiness: iv.readiness,
-        lane: choices.availableNow && iv.readiness !== "now" ? "prepare" : "timeline",
         role: isSelected ? (noneQualify ? "closest" : "fit") : "foundation",
         foundationFor: resolved.foundationFor[id],
         withinLimit: rowById[id].withinLimit,
@@ -205,9 +198,6 @@
       };
     });
     layers.sort(function (a, b) {
-      var ra = READINESS_ORDER.indexOf(a.readiness);
-      var rb = READINESS_ORDER.indexOf(b.readiness);
-      if (ra !== rb) { return ra - rb; }
       var da = dependencyDepth(a.id, map);
       var db = dependencyDepth(b.id, map);
       if (da !== db) { return da - db; }
@@ -239,10 +229,9 @@
   // ---------- the one-line chain ("Foundation: chip ledger -> ...") ----------
 
   function layerLabel(layer, map) {
-    if (layer.lane === "prepare") { return "Start preparing now"; }
     var hasDeps = (map[layer.id].dependsOn || []).length > 0;
     if (layer.role === "foundation" || (layer.foundationFor.length && !hasDeps)) { return "Foundation"; }
-    return layer.readiness === "now" ? "Available now" : "In development";
+    return layer.role === "closest" ? "Closest fit" : "Selected";
   }
 
   function describeChain(result, data) {
@@ -264,23 +253,23 @@
 
     // Sentence 1: what the user asked for.
     if (!choices.priorities.length) {
-      out.priorities = "You picked no priority, so every criterion counts equally.";
+      out.priorities = "No priority was selected, so every criterion counts equally.";
     } else {
       var phrases = choices.priorities.map(function (p) { return criterionById(method, p).phrase; });
       var ratio = method.builder.pickedWeight / method.builder.baseWeight;
-      out.priorities = "You prioritised " + joinList(phrases) + ". " +
+      out.priorities = "The selected priorities are " + joinList(phrases) + ". " +
         (phrases.length === 1 ? "It counts " : "Each counts ") + ratio + " times as much as the other criteria.";
     }
 
     if (result.noneWithinLimit) {
-      out.why.push("No tool is within your limit on invasiveness for AI labs, so there is no package to show. Raise the limit to see options.");
+      out.why.push("No tool is within the limit on invasiveness for AI labs, so there is no package to show. A higher limit shows more options.");
       return out;
     }
 
     // Sentence 2: why these tools.
     if (result.noneQualify) {
       var closest = map[result.selected[0]];
-      out.why.push("No option fits your priorities well: none reaches an overall fit of " + threshold +
+      out.why.push("No option fits the priorities well: none reaches an overall fit of " + threshold +
         " out of 5. The closest is " + inText(closest) + ", shown here.");
     } else if (!choices.priorities.length) {
       out.why.push("Each tool shown either has an overall fit of at least " + threshold +
@@ -340,19 +329,13 @@
     }
 
     // Sentence 3: what the package gives up.
-    var nowLayers = result.layers.filter(function (l) { return l.lane === "timeline"; });
-    var hasPrepare = nowLayers.length < result.layers.length;
     var lowAlways = [];
-    var lowUntilReady = [];
     var heavy = [];
     method.criteria.forEach(function (c) {
       if (c.kind === "benefit") {
         var bestAll = 0;
-        var bestNow = 0;
         result.layers.forEach(function (l) { bestAll = Math.max(bestAll, map[l.id].scores[c.id].score); });
-        nowLayers.forEach(function (l) { bestNow = Math.max(bestNow, map[l.id].scores[c.id].score); });
         if (bestAll <= 2) { lowAlways.push(c.phrase); }
-        else if (hasPrepare && bestNow <= 2) { lowUntilReady.push(c.phrase); }
       } else {
         var heavyParts = result.layers.filter(function (l) { return map[l.id].scores[c.id].score >= 4; });
         if (heavyParts.length) {
@@ -363,9 +346,6 @@
     });
     var parts = [];
     if (lowAlways.length) { parts.push("no part of it is rated above Low on " + joinList(lowAlways)); }
-    if (lowUntilReady.length) {
-      parts.push("until the tools under “Start preparing now” are ready, nothing in it is rated above Low on " + joinList(lowUntilReady));
-    }
     if (heavy.length) { parts.push("it accepts " + joinList(heavy)); }
     out.givesUp = parts.length
       ? "What it gives up: " + parts.join("; ") + "."
@@ -382,13 +362,8 @@
         });
         out.notes.push(iv.name + ": " +
           (layer.withinLimit ? "not selected on fit, but needed as a foundation. "
-            : "above your limit on invasiveness for AI labs, but still needed as a foundation. ") +
+            : "above the limit on invasiveness for AI labs, but still needed as a foundation. ") +
           reasons.join(" "));
-      }
-      if (layer.lane === "prepare") {
-        var level = method.readiness.filter(function (r) { return r.id === iv.readiness; })[0];
-        out.notes.push(iv.name + ": not available yet (" + (iv.readinessNote || (level ? level.column.toLowerCase() : iv.readiness)) +
-          "), so shown under “Start preparing now” with first steps.");
       }
     });
     result.excluded.forEach(function (ex) {
@@ -396,9 +371,9 @@
       if (ex.reason === "invasiveness") {
         var c = criterionById(method, "invasiveness");
         out.notes.push(iv.name + ": left out. Invasiveness for AI labs (" +
-          wordFor(c, iv.scores.invasiveness.score, method) + ") is above your limit.");
+          wordFor(c, iv.scores.invasiveness.score, method) + ") is above the limit.");
       } else {
-        out.notes.push(iv.name + ": left out. Overall fit with your priorities is below " + threshold + " out of 5.");
+        out.notes.push(iv.name + ": left out. Overall fit with the priorities is below " + threshold + " out of 5.");
       }
     });
 
@@ -406,7 +381,6 @@
   }
 
   var api = {
-    READINESS_ORDER: READINESS_ORDER,
     computeWeights: computeWeights,
     orientScore: orientScore,
     wordFor: wordFor,

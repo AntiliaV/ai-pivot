@@ -5,8 +5,8 @@
 //   - run `node js/builder.tests.js` from the pacing-explorer folder.
 // Each check is also passed to console.assert.
 //
-// Checks marked "real data" use data/interventions.js as it stands and assume
-// the default builder numbers in data/method.js. Checks marked "synthetic" use
+// Checks labelled "real data" use data/interventions.js as it stands and assume
+// the default builder numbers in data/method.js. Checks labelled "synthetic" use
 // an altered copy made here, to reach rules the real data never triggers.
 // The real data is never changed.
 
@@ -41,6 +41,7 @@
   function approx(a, b) { return Math.abs(a - b) < 1e-9; }
 
   function row(r, id) { return r.rows.filter(function (x) { return x.id === id; })[0]; }
+  function byTool(data) { var m = {}; data.interventions.forEach(function (i) { m[i.id] = i; }); return m; }
   function tool(data, id) { return data.interventions.filter(function (i) { return i.id === id; })[0]; }
 
   // ---------- the five tools and their dependencies (real data) ----------
@@ -58,7 +59,7 @@
     var r = B.buildPackage(DATA, METHOD, {});
     var allOne = METHOD.criteria.every(function (c) { return r.weights[c.id] === 1; });
     check("(a) no priorities: every weight is 1", allOne);
-    var expected = { ledger: 20, inspections: 14, evaluations: 17, bandwidth: 18, metering: 19 };
+    var expected = { ledger: 21, inspections: 15, evaluations: 17, bandwidth: 18, metering: 19 };
     Object.keys(expected).forEach(function (id) {
       var f = row(r, id).fit;
       check("(a) no priorities: " + id + " fit is " + expected[id] + "/6", f.num === expected[id] && f.den === 6, f.num + "/" + f.den);
@@ -69,7 +70,8 @@
     check("(a) no priorities: evaluations are left out on fit",
       !layer(r, "evaluations") && r.excluded.filter(function (e) { return e.id === "evaluations" && e.reason === "fit"; }).length === 1);
     check("(a) no priorities: layers run ledger, metering, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,metering,inspections,bandwidth", ids(r.layers).join(","));
-    check("(a) no priorities: nothing sits in the prepare lane", r.layers.every(function (l) { return l.lane === "timeline"; }));
+    var labels = B.describeChain(r, DATA).map(function (c) { return c.label; }).join(",");
+    check("(a) no priorities: the chain labels run Foundation, Selected, Foundation, Selected", labels === "Foundation,Selected,Foundation,Selected", labels);
     var text = B.explain(r, DATA, METHOD);
     check("(a) no priorities: the explanation says every criterion counts equally", /every criterion counts equally/.test(text.priorities), text.priorities);
   })();
@@ -86,36 +88,22 @@
       insp && insp.role === "foundation" && insp.withinLimit === false && insp.foundationFor.join(",") === "bandwidth");
     check("(b) light on labs + low limit: layers run ledger, metering, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,metering,inspections,bandwidth", ids(r.layers).join(","));
     var f = row(r, "ledger").fit;
-    check("(b) light on labs + low limit: ledger fit is 28/8 = 3.5", f.num === 28 && f.den === 8 && approx(f.value, 3.5));
+    check("(b) light on labs + low limit: ledger fit is 29/8 = 3.625", f.num === 29 && f.den === 8 && approx(f.value, 3.625));
     var notes = B.explain(r, DATA, METHOD).notes.join(" ");
     check("(b) light on labs + low limit: the explanation says inspections are above the limit but still needed",
-      /Physical chip inspection: above your limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
+      /Physical chip inspection: above the limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
   })();
 
-  // ---------- (c) "Actually slows AI development" plus must be available now ----------
+  // ---------- (c) "Relevance to pacing" as the priority ----------
   (function () {
-    // Real data: all five tools are available now, so nothing moves to the prepare lane.
-    var r = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness"], availableNow: true });
-    check("(c) slows AI + available now (real data): every tool stays on the timeline", r.layers.every(function (l) { return l.lane === "timeline"; }));
-    var f = row(r, "ledger");
-    check("(c) slows AI + available now: ledger fit is exactly 3.0 and counts as 'at least 3.0'", f.fit.num === 24 && f.fit.den === 8 && f.meetsThreshold);
-    check("(c) slows AI + available now: evaluations (fit 25/8) are selected", row(r, "evaluations").fit.num === 25 && ids(r.layers).indexOf("evaluations") !== -1);
-
-    // Synthetic: evaluations made "not yet available". They must not be removed.
-    var altered = clone(DATA);
-    var ev = tool(altered, "evaluations");
-    ev.readiness = "1-3y";
-    ev.firstSteps = ["Step one", "Step two"];
-    var s = B.buildPackage(altered, METHOD, { priorities: ["effectiveness"], availableNow: true });
-    var layerEv = layer(s, "evaluations");
-    check("(c) synthetic: a tool that is not available yet is not removed", !!layerEv);
-    check("(c) synthetic: it sits in the 'Start preparing now' lane", layerEv && layerEv.lane === "prepare");
-    check("(c) synthetic: it carries its first steps", layerEv && layerEv.steps.first.join("|") === "Step one|Step two");
-    check("(c) synthetic: the ledger stays on the timeline", layer(s, "ledger") && layer(s, "ledger").lane === "timeline");
-    var chain = B.describeChain(s, altered).filter(function (c) { return c.id === "evaluations"; })[0];
-    check("(c) synthetic: the chain labels it 'Start preparing now'", chain && chain.label === "Start preparing now");
-    var notes = B.explain(s, altered, METHOD).notes.join(" ");
-    check("(c) synthetic: the explanation says it is not available yet", /Independent capability evaluation: not available yet/.test(notes), notes);
+    var r = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness"] });
+    check("(c) relevance to pacing: effectiveness has weight 3", r.weights.effectiveness === 3);
+    var f = row(r, "bandwidth");
+    check("(c) relevance to pacing: the bandwidth cap's fit is exactly 3.0 and counts as 'at least 3.0'", f.fit.num === 24 && f.fit.den === 8 && f.meetsThreshold);
+    check("(c) relevance to pacing: evaluations (fit 25/8) are selected", row(r, "evaluations").fit.num === 25 && ids(r.layers).indexOf("evaluations") !== -1);
+    check("(c) relevance to pacing: metering (fit 23/8) is left out on fit",
+      r.excluded.filter(function (e) { return e.id === "metering" && e.reason === "fit"; }).length === 1);
+    check("(c) relevance to pacing: layers run ledger, evaluations, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,evaluations,inspections,bandwidth", ids(r.layers).join(","));
   })();
 
   // ---------- (d) choosing the bandwidth cap pulls in inspections, and through them the ledger ----------
@@ -159,15 +147,15 @@
     check("(e) medium limit: evaluations are left out for invasiveness",
       r.excluded.filter(function (e) { return e.id === "evaluations" && e.reason === "invasiveness"; }).length === 1);
     var notes = B.explain(r, DATA, METHOD).notes.join(" ");
-    check("(e) medium limit: the explanation says so explicitly", /above your limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
+    check("(e) medium limit: the explanation says so explicitly", /above the limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
   })();
 
   // The other side's stance: one trailing-state note per tool in the package, whatever the choices.
   (function () {
     var plain = B.buildPackage(DATA, METHOD, {});
-    var picky = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness", "verifiability"], availableNow: true, maxInvasiveness: "medium" });
+    var picky = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness", "verifiability"], maxInvasiveness: "medium" });
     [plain, picky].forEach(function (r, i) {
-      var which = i === 0 ? "no choices" : "priorities, available now and a medium limit";
+      var which = i === 0 ? "no choices" : "priorities and a medium limit";
       check("(f) " + which + ": one trailing-state note per tool in the package",
         r.rivalNotes.length === r.layers.length && ids(r.rivalNotes).join(",") === ids(r.layers).join(","), ids(r.rivalNotes).join(","));
     });
@@ -184,7 +172,7 @@
   (function () {
     var burden = METHOD.criteria.filter(function (c) { return c.id === "burden"; })[0];
     var eff = METHOD.criteria.filter(function (c) { return c.id === "effectiveness"; })[0];
-    check("(g) orientation: burden 4 becomes 2, effectiveness 4 stays 4", B.orientScore(burden, 4) === 2 && B.orientScore(eff, 4) === 4);
+    check("(g) orientation: burden 4 becomes 2, relevance to pacing 4 stays 4", B.orientScore(burden, 4) === 2 && B.orientScore(eff, 4) === 4);
     var n = B.normaliseChoices({ priorities: ["effectiveness", "coverage", "verifiability", "robustness", "nonsense", "coverage"] }, METHOD);
     check("(g) at most three priorities are kept, unknown ones dropped", n.priorities.join(",") === "effectiveness,coverage,verifiability", n.priorities.join(","));
   })();
@@ -201,10 +189,10 @@
     altered.interventions[1].scores.coverage.score = 2;
     var r = B.buildPackage(altered, METHOD, {});
     check("(h) synthetic: when none qualifies, only the single best is shown", r.noneQualify && ids(r.layers).join(",") === "inspections", ids(r.layers).join(","));
-    check("(h) synthetic: the explanation says no option fits well", /No option fits your priorities well/.test(B.explain(r, altered, METHOD).why.join(" ")));
+    check("(h) synthetic: the explanation says no option fits well", /No option fits the priorities well/.test(B.explain(r, altered, METHOD).why.join(" ")));
     var none = B.buildPackage(altered, METHOD, { maxInvasiveness: "low" });
     check("(h) synthetic: when every tool exceeds the limit, the package is empty and says why",
-      none.noneWithinLimit && none.layers.length === 0 && /No tool is within your limit/.test(B.explain(none, altered, METHOD).why.join(" ")));
+      none.noneWithinLimit && none.layers.length === 0 && /No tool is within the limit/.test(B.explain(none, altered, METHOD).why.join(" ")));
   })();
 
   // Real data: every combination of inputs gives a consistent package.
@@ -217,11 +205,10 @@
     var problems = [];
     var count = 0;
     subsets.forEach(function (p) {
-      [false, true].forEach(function (now) {
-        ["any", "medium", "low"].forEach(function (limit) {
+      ["any", "medium", "low"].forEach(function (limit) {
           {
             count++;
-            var choices = { priorities: p, availableNow: now, maxInvasiveness: limit };
+            var choices = { priorities: p, maxInvasiveness: limit };
             var r, text;
             try {
               r = B.buildPackage(DATA, METHOD, choices);
@@ -237,16 +224,14 @@
                 if (present.indexOf(dep) === -1) { problems.push(JSON.stringify(choices) + ": " + l.id + " is missing " + dep); }
               });
               if (!l.withinLimit && l.role !== "foundation") { problems.push(JSON.stringify(choices) + ": " + l.id + " exceeds the limit but is not a foundation"); }
-              if (now && iv.readiness !== "now" && l.lane !== "prepare") { problems.push(JSON.stringify(choices) + ": " + l.id + " should be in the prepare lane"); }
-              if (i > 0 && B.READINESS_ORDER.indexOf(r.layers[i - 1].readiness) > B.READINESS_ORDER.indexOf(l.readiness)) {
-                problems.push(JSON.stringify(choices) + ": layers are out of readiness order");
+              if (i > 0 && B.dependencyDepth(r.layers[i - 1].id, byTool(DATA)) > B.dependencyDepth(l.id, byTool(DATA))) {
+                problems.push(JSON.stringify(choices) + ": layers are not ordered with foundations first");
               }
             });
             if (present.length + r.excluded.length !== DATA.interventions.length) { problems.push(JSON.stringify(choices) + ": a tool is neither included nor excluded"); }
             if (!text.priorities || !text.why.length) { problems.push(JSON.stringify(choices) + ": empty explanation"); }
             if (r.rivalNotes.length !== r.layers.length) { problems.push(JSON.stringify(choices) + ": a tool has no note on the other side"); }
           }
-        });
       });
     });
     check("(i) all " + count + " input combinations give a consistent package and explanation", problems.length === 0, problems.slice(0, 3).join(" / "));
