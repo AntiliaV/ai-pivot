@@ -233,7 +233,7 @@ details[open] > summary { border-bottom: 1px solid var(--line); }
 .ov { min-width: 0; }
 .ov h3 { margin-top: 0; font-size: 1rem; color: var(--muted); font-weight: 650; }
 
-.meters { list-style: none; padding: 0; margin: 0; }
+.meters { list-style: none; padding: 0; margin: 0; max-width: var(--measure); }
 .meter-item { border-bottom: 1px solid var(--line); }
 .meter-row {
   display: grid; grid-template-columns: minmax(0, 1fr) auto 4.6rem 1rem; gap: .6rem; align-items: center;
