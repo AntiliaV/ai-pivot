@@ -22,11 +22,23 @@ We use five recently published pacing proposals as reference points; each mentio
 
 [**AI 2040: Plan A**](https://www.ai-2040.com/) (AI Futures Project, 2026). A US–China deal to pause frontier AI training, accompanied by a detailed [verification plan](https://ai-2040.com/supplements/verification-plan). Chip tracking starts immediately, so that by a joint declaration in 2029 each side is confident the other hides less than approximately 1% of the world's AI computing power. Data centres above 10,000 H100-equivalents (about 99% of that computing power) are then converted to run existing models only, which is checked by network taps that copy traffic and by recomputing samples of the work, while smaller sites report and face spot checks. Additionally, third-party assessors chosen by both governments evaluate every company, and new models require verified evaluations before release.
 
-[**Building the Pause Button**](https://arxiv.org/abs/2506.20530) (Al Ramiah et al., 2025). Rather than pausing AI development directly, this proposal sets up a global regime that puts in place, in advance, the means to pause if needed. The pause is triggered by a computing-power threshold rather than by tests of models, since such tests can miss failures nobody anticipated. The regime rests on three pillars: hardware controls on chips (starting with limits on how chips connect, and later controls built into the chips themselves); tracking of chips from the machines that make them to their final users, including identity checks on cloud customers; and legal rules. Violators are cut off from firmware updates, design software, cloud access and chipmaking tools.
+[**Building the Pause Button**](https://arxiv.org/abs/2506.20530) (Al Ramiah et al., 2025). Rather than pausing AI development directly, this proposal sets up a global regime that puts in place, in advance, the means to pause if needed. The pause is triggered by a computing-power threshold rather than by tests of models, since such tests can miss failures nobody anticipated. The regime rests on three pillars:
+
+- hardware controls on chips, starting with limits on how chips connect, and later controls built into the chips themselves;
+- tracking of chips from the machines that make them to their final users, including identity checks on cloud customers;
+- legal rules.
+
+Violators are cut off from firmware updates, design software, cloud access and chipmaking tools.
 
 [**Hardwired Pause**](https://hardwired-pause.ai/) (Working Group on AI Pause Feasibility, 2026). This proposal aims to make a pause enforceable by the hardware itself. Every chip able to train frontier models is either counted in a global census or registered when made at a licensed factory, and only leaves the count through verified destruction; unaccounted chips are presumed hidden and charged to the country that hosts them. During the pause, licensed operators – kept separate from AI companies – run approved models only, eventually on chips that cannot train. Importantly, the pause can only last as long as the census remains complete enough, since hidden chips become more useful as algorithms improve. Buybacks and an amnesty for past export-control evasion encourage registration.
 
-[**We Must Pace the Frontier**](https://darioamodei.com/post/we-must-pace-the-frontier) (Dario Amodei, 2026). In this essay, the chief executive of the AI company Anthropic argues that AI systems helping to build the next generation of AI are now speeding up progress, and that pacing is needed for safety work to keep up. The essay sets out three steps. First, each frontier company gives independent evaluators employee-like access to check its safety practices, a step Anthropic commits to unilaterally. Second, companies in democratic countries agree common limits backed by regulation, preferably based on what models can do. Third, the US seeks global agreements with China, ranging from bans on narrow dangerous uses to a full pause, which the essay considers unlikely in the near term. In the meantime, chip export controls protect the US lead.
+[**We Must Pace the Frontier**](https://darioamodei.com/post/we-must-pace-the-frontier) (Dario Amodei, 2026). In this essay, the chief executive of the AI company Anthropic argues that AI systems helping to build the next generation of AI are now speeding up progress, and that pacing is needed for safety work to keep up. The essay sets out three steps:
+
+1. Each frontier company gives independent evaluators employee-like access to check its safety practices, a step Anthropic commits to unilaterally.
+2. Companies in democratic countries agree common limits backed by regulation, preferably based on what models can do.
+3. The US seeks global agreements with China, ranging from bans on narrow dangerous uses to a full pause, which the essay considers unlikely in the near term.
+
+In the meantime, chip export controls protect the US lead.
 
 ## 4. How central each tool is to the proposals
 
@@ -42,7 +54,7 @@ The table below shows how much each proposal relies on each tool. Tools are rank
 
 **Core:** central or required. **Partial:** a broader or closely related check is discussed. **Option:** described as a possibility, without commitment. **—:** not discussed.
 
-## 5. The five tools (short descriptions)
+## 5. Verification interventions (short descriptions)
 
 **Chip production ledger.** A register of every advanced AI chip, recording who made it, who holds it and where it is. It makes the world's AI computing power countable, so that limits on it can be checked.
 
@@ -82,7 +94,11 @@ Given a set of priorities, the tool below suggests a combination of verification
 
 **Under ideal conditions, how does this contribute to pacing?** On its own, a ledger does not slow AI development, since it records chips but limits no training. Its value lies in the fact that every rule based on computing power relies on it: with a complete ledger, verifiers can rule out hidden clusters large enough to train a frontier model, and chips can be withheld from anyone who breaks the rules.
 
-The proposals use the ledger in different ways. The MIRI agreement registers every cluster above 16 H100-equivalents (roughly \$500,000 of chips) and gathers them in monitored sites, while AI 2040 uses it to make each side confident that the other hides less than about 1% of its AI computing power before a pause begins. The Hardwired Pause goes further, making the completeness of its chip census the limit on how long a pause can last.
+The proposals use the ledger in different ways:
+
+- the MIRI agreement registers every cluster above 16 H100-equivalents (roughly \$500,000 of chips) and gathers them in monitored sites;
+- AI 2040 uses it to make each side confident that the other hides less than about 1% of its AI computing power before a pause begins;
+- the Hardwired Pause goes further, making the completeness of its chip census the limit on how long a pause can last.
 
 Importantly, the ledger only acts on one route to more capable AI – computing power – and this route weakens over time, as better algorithms get more out of the same chips.
 
@@ -148,7 +164,13 @@ Methods, frequency and scope are easy to adjust, and visits can stop at once whe
 
 **Under ideal conditions, how does this contribute to pacing?** Evaluations are the only tool here that measures capability itself rather than computing power. Under ideal conditions, they therefore catch gains from every route, whether these come from more computing power, better algorithms, more training after the main run, or better ways of drawing out what a model can do. Used as a gate (e.g. "no release or further training above this threshold"), they act directly on what pacing is ultimately concerned with.
 
-The proposals give evaluations different roles. In the MIRI agreement, the treaty body can pause a training run if monitoring reveals worrying capabilities, while AI 2040 requires verified evaluations before any model is released and the Hardwired Pause only lets models that pass evaluation be served. Building the Pause Button, on the other hand, rejects evaluations as the pause trigger, since tests miss failures nobody anticipated, and uses them instead to adjust its computing-power threshold. Amodei's essay favours them, requiring models with a given capability to have certified safety properties before going further.
+The proposals give evaluations different roles:
+
+- in the MIRI agreement, the treaty body can pause a training run if monitoring reveals worrying capabilities;
+- AI 2040 requires verified evaluations before any model is released;
+- the Hardwired Pause only lets models that pass evaluation be served;
+- Building the Pause Button, on the other hand, rejects evaluations as the pause trigger, since tests miss failures nobody anticipated, and uses them instead to adjust its computing-power threshold;
+- Amodei's essay favours them, requiring models with a given capability to have certified safety properties before going further.
 
 Evaluations are the best-targeted tool, as they restrict only models with dangerous capabilities. However, they only act at the gate, and only on models that labs submit, missing models that are never submitted, models used only inside labs, and risks for which nobody has written a test. Testing also requires scarce experts, while frontier models are released every few months.
 
@@ -177,9 +199,19 @@ Tests can be updated quickly, and a gate can be lifted model by model. However, 
 
 **Under ideal conditions, how does this contribute to pacing?** The cap directly blocks training spread across many servers, which is how frontier models are built today. It acts on one route, computing power, but by limiting how that power can be combined rather than how much of it exists. Notably, it reveals almost nothing to regulators, who see traffic volumes rather than models, code or data.
 
-The proposals use the cap for the same purpose: keeping AI services running while training stops. The MIRI agreement lets its treaty body restrict bandwidth between chips, AI 2040 surrounds data centres that only run models with a boundary passing about 1 megabyte per second, and Building the Pause Button caps either bandwidth or the number of chips that can work together. The Hardwired Pause, for its part, runs AI services on small, physically isolated clusters.
+The proposals use the cap for the same purpose, namely keeping AI services running while training stops:
 
-Two gaps nonetheless remain. First, chips inside one tightly linked group, or "pod", keep full speed, and a pod can be large: 128 of today's top chips running for a year exceed the MIRI agreement's training limit. Second, newer training methods need far less communication – in the 2026 test, one such method cut traffic between servers about a hundredfold. For this reason, Building the Pause Button recommends using the cap only alongside tracking of total computing power.
+- the MIRI agreement lets its treaty body restrict bandwidth between chips;
+- AI 2040 surrounds data centres that only run models with a boundary passing about 1 megabyte per second;
+- Building the Pause Button caps either bandwidth or the number of chips that can work together;
+- the Hardwired Pause runs AI services on small, physically isolated clusters.
+
+Two gaps nonetheless remain:
+
+- chips inside one tightly linked group, or "pod", keep full speed, and a pod can be large: 128 of today's top chips running for a year exceed the MIRI agreement's training limit;
+- newer training methods need far less communication – in the 2026 test, one such method cut traffic between servers about a hundredfold.
+
+For this reason, Building the Pause Button recommends using the cap only alongside tracking of total computing power.
 
 The cap is well targeted, sparing most existing AI services, although very large models split across servers, as well as some scientific computing, also need fast links. Additionally, it only reaches sites where it is installed, so that other tools must find undeclared sites.
 
@@ -208,9 +240,17 @@ Lifting the cap is as easy as reconnecting cables, which also means that trainin
 
 **Under ideal conditions, how does this contribute to pacing?** Metering partly closes one route, computing power, and only for computing power rented through the cloud. With honest providers, identity checks that stop customers from splitting work across accounts, and labels linking all the training runs of one model, a limit on training can be enforced for cloud customers; evading a reporting threshold for the very largest training runs would require spreading the work across more than ten providers.
 
-However, two limits remain. Leading labs increasingly train on their own or partners' hardware, which falls outside metering unless on-site reporting is added. Additionally, billing records show how much computing power was used but not what for: research classifiers distinguish training from other work with about 95% accuracy, which is too unreliable for enforcement.
+However, two limits remain:
 
-The proposals treat metering as an existing, light layer to build on. The MIRI agreement builds on monitoring clouds already carry out and keeps foreign remote access to chips under watch, while AI 2040 relies on reporting and spot checks for sites too small to convert. Building the Pause Button links cloud usage logs to verified customer identities, borrowing from banking regulation, and the Hardwired Pause checks reported use against power-station records.
+- leading labs increasingly train on their own or partners' hardware, which falls outside metering unless on-site reporting is added;
+- billing records show how much computing power was used but not what for: research classifiers distinguish training from other work with about 95% accuracy, which is too unreliable for enforcement.
+
+The proposals treat metering as an existing, light layer to build on:
+
+- the MIRI agreement builds on monitoring clouds already carry out and keeps foreign remote access to chips under watch;
+- AI 2040 relies on reporting and spot checks for sites too small to convert;
+- Building the Pause Button links cloud usage logs to verified customer identities, borrowing from banking regulation;
+- the Hardwired Pause checks reported use against power-station records.
 
 Within the cloud, coverage is broad, extending to every customer above a threshold, including small and foreign ones. As a result, metering bites hardest on smaller labs and academics who depend on the cloud, rather than on leading labs with their own data centres.
 
