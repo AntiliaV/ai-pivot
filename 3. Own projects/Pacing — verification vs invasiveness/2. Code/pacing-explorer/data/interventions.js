@@ -1,34 +1,84 @@
 // Pacing explorer: the data behind every page.
 //
-// Wording is copied exactly from "Website text.md"; scores, stances, readiness,
-// justifications, the "Where it acts" tag and the sources are copied from each
-// tool's background mapping (all in the project's "4. Drafting" folder).
+// Wording is copied exactly from "Website text.md", links included; scores, stances and
+// justifications are copied from each tool's background mapping, and the sources list too
+// (all in the project's "4. Drafting" folder). Some mapping text is deliberately left out;
+// tools/validate_data.py says which.
 // Do not edit by hand without also changing the source: run
 //     python3 tools/validate_data.py
 // afterwards. It fails if anything here differs from its source.
 //
-// Text may use **bold** and *italic* markers, as in the source. "(our inference)"
-// is shown as a small label. This file must stay valid JSON after "window.PACING_DATA =".
+// Text may use **bold**, *italic* and [text](https://...) links, as in the source.
+// This file must stay valid JSON after "window.PACING_DATA =".
 
 window.PACING_DATA = {
-  "siteTitle": "Verifying agreements to pace AI: five tools compared",
+  "siteTitle": "Verifying agreements to pace AI",
   "introduction": [
-    "Some researchers, governments and AI companies now argue that frontier AI is advancing faster than our ability to understand and control it. Pacing refers to deliberately slowing parts of AI development, so that safety research, institutions and public debate have time to keep up.",
-    "Since an agreement to pace AI – whether between companies or between states – only works if each side can check that the others are keeping to it, verification is central to any such agreement. However, the more a verification tool can confirm, the more it usually has to see or control, which makes it harder to accept for those being verified.",
-    "On this site, we compare five verification tools. For each, we assess how much it would slow AI development, how reliably it catches cheating, and what it costs governments and AI companies. The site is written for policymakers and assumes no background in AI safety; all scores reflect the authors' judgement."
+    "Some researchers, governments and AI companies argue that frontier AI is advancing faster than our ability to understand and control it. Pacing refers to deliberately slowing parts of AI development, so that safety research, institutions and public debate have time to keep up.",
+    "An agreement to pace AI, between companies or between states, only works if each side can check that the others are keeping to it. Therefore, having reliable verification tools in place is central to any such agreement. However, the more a verification tool can confirm, the more it usually has to see or control, which makes it harder to accept for those being verified. This implies there is a tradeoff between how accurate a verification tool is and how invasive it is for the actors involved. In turn, this tradeoff may lead to relevant actors changing their behaviour as a response to the invasiveness of verification procedures. A key policy question is therefore pinning down what these tradeoffs are and how potential actors might respond to them.",
+    "Our analysis compares five candidate verification tools prominently featured in recent pacing proposals. For each, we assess how much the rule it verifies would slow AI development, how reliably it detects violations, and what it costs governments and AI companies. The analysis is written for policymakers and assumes no background in AI safety."
   ],
   "proposals": {
-    "intro": "We use five published proposals as reference points. Each describes how AI development could be paced and which verification tools it would rely on.",
+    "intro": "We use five recently published pacing proposals as reference points; each mentions which verification tools it would rely on.",
     "items": [
-      "**MIRI agreement** (Scher, Abecassis, Barnett & Abeyta, 2025). Proposed by the Machine Intelligence Research Institute, this is an international treaty to stop the development of superintelligent AI until it can be done safely. Parties register every cluster of AI chips above 16 H100-equivalents and gather them in declared, monitored facilities. Training runs above 10²⁴ FLOP are banned, while runs between 10²² and 10²⁴ FLOP require prior approval, with inspectors present. A treaty body monitors how chips are used, approves every chip transfer and limits which training techniques may be used; it can also restrict how fast chips communicate, so that they can run existing models but not train new ones.",
-      "**AI 2040: Plan A** (AI Futures Project, 2026). A US–China deal to pause frontier AI training, accompanied by a detailed verification plan. Chip tracking starts immediately, so that by a joint declaration in 2029 each side is confident the other hides less than approximately 1% of the world's AI computing power. Data centres above 10,000 H100-equivalents (about 99% of that computing power) are then converted to run existing models only, which is checked by network taps that copy traffic and by recomputing samples of the work, while smaller sites report and face spot checks. Additionally, third-party assessors chosen by both governments evaluate every company, and new models require verified evaluations before release.",
-      "**Building the Pause Button** (Al Ramiah et al., 2025). Rather than pausing AI development directly, this proposal sets up a global regime that puts in place, in advance, the means to pause if needed. The pause is triggered by a computing-power threshold rather than by tests of models, since such tests can miss failures nobody anticipated. The regime rests on three pillars: hardware controls on chips (starting with limits on how chips connect, and later controls built into the chips themselves); tracking of chips from the machines that make them to their final users, including identity checks on cloud customers; and legal rules. Violators are cut off from firmware updates, design software, cloud access and chipmaking tools.",
-      "**Hardwired Pause** (Working Group on AI Pause Feasibility, 2026). This proposal aims to make a pause enforceable by the hardware itself. Every chip able to train frontier models is either counted in a global census or registered when made at a licensed factory, and only leaves the count through verified destruction; unaccounted chips are presumed hidden and charged to the country that hosts them. During the pause, licensed operators – kept separate from AI companies – run approved models only, eventually on chips that cannot train. Importantly, the pause can only last as long as the census remains complete enough, since hidden chips become more useful as algorithms improve. Buybacks and an amnesty for past export-control evasion encourage registration.",
-      "**We Must Pace the Frontier** (Dario Amodei, 2026). In this essay, the chief executive of the AI company Anthropic argues that AI systems helping to build the next generation of AI are now speeding up progress, and that pacing is needed for safety work to keep up. The essay sets out three steps. First, each frontier company gives independent evaluators employee-like access to check its safety practices, a step Anthropic commits to unilaterally. Second, companies in democratic countries agree common limits backed by regulation, preferably based on what models can do. Third, the US seeks global agreements with China, ranging from bans on narrow dangerous uses to a full pause, which the essay considers unlikely in the near term. In the meantime, chip export controls protect the US lead."
+      [
+        {
+          "type": "p",
+          "text": "[**MIRI agreement**](https://arxiv.org/abs/2511.10783) (Scher, Abecassis, Barnett & Abeyta, 2025). Proposed by the Machine Intelligence Research Institute, this is an international treaty to stop the development of superintelligent AI until it can be done safely. Parties register every cluster of AI chips above 16 H100-equivalents and gather them in declared, monitored facilities. Training runs above 10²⁴ FLOP are banned, while runs between 10²² and 10²⁴ FLOP require prior approval, with inspectors present. A treaty body monitors how chips are used, approves every chip transfer and limits which training techniques may be used; it can also restrict how fast chips communicate, so that they can run existing models but not train new ones."
+        }
+      ],
+      [
+        {
+          "type": "p",
+          "text": "[**AI 2040: Plan A**](https://www.ai-2040.com/) (AI Futures Project, 2026). A US–China deal to pause frontier AI training, accompanied by a detailed [verification plan](https://ai-2040.com/supplements/verification-plan). Chip tracking starts immediately, so that by a joint declaration in 2029 each side is confident the other hides less than approximately 1% of the world's AI computing power. Data centres above 10,000 H100-equivalents (about 99% of that computing power) are then converted to run existing models only, which is checked by network taps that copy traffic and by recomputing samples of the work, while smaller sites report and face spot checks. Additionally, third-party assessors chosen by both governments evaluate every company, and new models require verified evaluations before release."
+        }
+      ],
+      [
+        {
+          "type": "p",
+          "text": "[**Building the Pause Button**](https://arxiv.org/abs/2506.20530) (Al Ramiah et al., 2025). Rather than pausing AI development directly, this proposal sets up a global regime that puts in place, in advance, the means to pause if needed. The pause is triggered by a computing-power threshold rather than by tests of models, since such tests can miss failures nobody anticipated. The regime rests on three pillars:"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "hardware controls on chips, starting with limits on how chips connect, and later controls built into the chips themselves;",
+            "tracking of chips from the machines that make them to their final users, including identity checks on cloud customers;",
+            "legal rules."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Violators are cut off from firmware updates, design software, cloud access and chipmaking tools."
+        }
+      ],
+      [
+        {
+          "type": "p",
+          "text": "[**Hardwired Pause**](https://hardwired-pause.ai/) (Working Group on AI Pause Feasibility, 2026). This proposal aims to make a pause enforceable by the hardware itself. Every chip able to train frontier models is either counted in a global census or registered when made at a licensed factory, and only leaves the count through verified destruction; unaccounted chips are presumed hidden and charged to the country that hosts them. During the pause, licensed operators – kept separate from AI companies – run approved models only, eventually on chips that cannot train. Importantly, the pause can only last as long as the census remains complete enough, since hidden chips become more useful as algorithms improve. Buybacks and an amnesty for past export-control evasion encourage registration."
+        }
+      ],
+      [
+        {
+          "type": "p",
+          "text": "[**We Must Pace the Frontier**](https://darioamodei.com/post/we-must-pace-the-frontier) (Dario Amodei, 2026). In this essay, the chief executive of the AI company Anthropic argues that AI systems helping to build the next generation of AI are now speeding up progress, and that pacing is needed for safety work to keep up. The essay sets out three steps:"
+        },
+        {
+          "type": "ol",
+          "items": [
+            "Each frontier company gives independent evaluators employee-like access to check its safety practices, a step Anthropic commits to unilaterally.",
+            "Companies in democratic countries agree common limits backed by regulation, preferably based on what models can do.",
+            "The US seeks global agreements with China, ranging from bans on narrow dangerous uses to a full pause, which the essay considers unlikely in the near term."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "In the meantime, chip export controls protect the US lead."
+        }
+      ]
     ]
   },
   "ranking": {
-    "intro": "The table below shows how much each proposal relies on each tool; it therefore measures reliance rather than quality. The classification is our own, adapted from the Pacing Verification Atlas, and tools are ranked by a weighted count (Core = 1, Partial = 0.5, Option = 0.2), with ties going to the tool with more Core entries.",
+    "intro": "The table below shows how much each proposal relies on each tool. Tools are ranked by a weighted count (Core = 1, Partial = 0.5, Option = 0.2), with ties going to the tool with more Core entries.",
     "header": [
       "Rank",
       "Tool",
@@ -87,19 +137,17 @@ window.PACING_DATA = {
     ],
     "legend": "**Core:** central or required. **Partial:** a broader or closely related check is discussed. **Option:** described as a possibility, without commitment. **—:** not discussed."
   },
-  "caption": "Each marker represents one tool, or several tools with the same scores. Tools further right are more invasive for AI labs, while tools higher up are better at catching cheating; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.",
-  "builderIntro": "Choose what matters most to you, and the tool suggests a combination of verification tools, explaining the reasoning behind it.",
+  "caption": "Each marker represents one tool, or several tools with the same scores. Tools further right are more invasive for AI labs, while tools higher up are better at detecting violations; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.",
+  "builderIntro": "Given a set of priorities, the tool below suggests a combination of verification tools and explains the reasoning behind each choice.",
   "interventions": [
     {
       "id": "ledger",
       "name": "Chip production ledger",
       "description": "A register of every advanced AI chip, recording who made it, who holds it and where it is. It makes the world's AI computing power countable, so that limits on it can be checked.",
-      "acts": "inputs and infrastructure",
-      "readiness": "now",
       "scores": {
         "effectiveness": {
-          "score": 2,
-          "justification": "closes no route by itself; it lets a cap on the compute route be checked for undeclared stock and lets chips be withheld from non-compliant actors. Algorithms, post-training and elicitation stay open."
+          "score": 3,
+          "justification": "verifies chip stocks and locations, so that caps on chip stocks or production, and rules on where chips sit, can be checked; respecting these directly limits computing power. Algorithms, post-training and elicitation stay open."
         },
         "coverage": {
           "score": 4,
@@ -148,7 +196,12 @@ window.PACING_DATA = {
           "text": "On its own, a ledger does not slow AI development, since it records chips but limits no training. Its value lies in the fact that every rule based on computing power relies on it: with a complete ledger, verifiers can rule out hidden clusters large enough to train a frontier model, and chips can be withheld from anyone who breaks the rules."
         },
         {
-          "text": "The proposals use the ledger in different ways. The MIRI agreement registers every cluster above 16 H100-equivalents (roughly $500,000 of chips) and gathers them in monitored sites, while AI 2040 uses it to make each side confident that the other hides less than about 1% of its AI computing power before a pause begins. The Hardwired Pause goes further, making the completeness of its chip census the limit on how long a pause can last."
+          "text": "The proposals use the ledger in different ways:",
+          "items": [
+            "the MIRI agreement registers every cluster above 16 H100-equivalents (roughly $500,000 of chips) and gathers them in monitored sites;",
+            "AI 2040 uses it to make each side confident that the other hides less than about 1% of its AI computing power before a pause begins;",
+            "the Hardwired Pause goes further, making the completeness of its chip census the limit on how long a pause can last."
+          ]
         },
         {
           "text": "Importantly, the ledger only acts on one route to more capable AI – computing power – and this route weakens over time, as better algorithms get more out of the same chips."
@@ -186,35 +239,32 @@ window.PACING_DATA = {
           }
         ],
         "closing": [
-          "Provided gaps are measured and published, the ledger holds up well over time. Since over 95% of the world's AI chips, by computing power, are less than three years old, tracking new production now would soon cover most of the stock (our inference), whereas each year of delay adds untracked chips. Registration thresholds must, however, keep falling as chips become more efficient."
+          "Provided gaps are measured and published, the ledger holds up well over time. Since over 95% of the world's AI chips, by computing power, are less than three years old, tracking new production now would soon cover most of the stock, whereas each year of delay adds untracked chips. Registration thresholds must, however, keep falling as chips become more efficient."
         ]
       },
       "burden": "A registry body – national at first, then international under an agreement – collects records from chipmakers, distributors and data-centre operators, checks them against customs, tax and sales data, and investigates gaps. It builds on export-control licensing and on records firms already keep (for example for tax deductions and warranties), although tracking millions of chips a year by serial number must be automated. The burden rises considerably if chips must also be gathered in declared sites and inspected, as the MIRI agreement requires.",
       "dependsOn": [],
       "dependsOnWhy": {},
       "sources": [
-        "**Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.",
-        "**Atlas 04 / Atlas briefs:** Pacing Verification Atlas, mechanism page \"Chip production and transfer ledger\" and the four proposal briefs.",
-        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.",
-        "**Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.",
-        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*.",
-        "**Verification Plan:** Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*, ai-2040.com/supplements/verification-plan (read up to its 2033 section).",
-        "**Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.",
-        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.",
-        "**Sastry:** Sastry et al. (2024), *Computing Power and the Governance of Artificial Intelligence*, arXiv:2402.08797.",
-        "**CNAS:** Aarne, Fist & Withers (2024), *Secure, Governable Chips*, CNAS."
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/).",
+        "**Verification Plan:** Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A* (read up to its 2033 section).",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797), arXiv:2402.08797.",
+        "**CNAS:** Aarne, Fist & Withers (2024), [*Secure, Governable Chips*](https://s3.us-east-1.amazonaws.com/files.cnas.org/documents/CNAS-Report-Tech-Secure-Chips-Jan-24-finalb.pdf), CNAS."
       ]
     },
     {
       "id": "inspections",
       "name": "Physical chip inspection",
       "description": "Inspectors visit facilities to check that the chips there match what was declared. Inspection keeps the ledger honest and can confirm that chips are switched off or sealed.",
-      "acts": "inputs and infrastructure",
-      "readiness": "now",
       "scores": {
         "effectiveness": {
-          "score": 2,
-          "justification": "verifies hardware, not use; it partly closes the compute route, since only switched-off or sealed chips are directly prevented from training."
+          "score": 3,
+          "justification": "verifies that chips are present, switched off or sealed, and that factories are not producing them; respecting these rules directly limits computing power. It does not verify how chips are used."
         },
         "coverage": {
           "score": 2,
@@ -306,7 +356,7 @@ window.PACING_DATA = {
           "Methods, frequency and scope are easy to adjust, and visits can stop at once when no longer needed. However, access can be withdrawn overnight in a crisis, and restarting inspections after a breakdown is harder than continuing them."
         ]
       },
-      "burden": "Inspection requires an inspectorate of trained, security-vetted staff, with rights of access and agreed rules for warrants, disputes and inspections of suspected hidden sites. While periodic visits to declared sites represent a moderate effort, continuous monitoring (cameras, seals, sensors) and short-notice inspections of suspected sites would require a standing international body, comparable to nuclear safeguards (our inference). Automated location checks on chips could lighten this load, with inspectors sent only to investigate alerts.",
+      "burden": "Inspection requires an inspectorate of trained, security-vetted staff, with rights of access and agreed rules for warrants, disputes and inspections of suspected hidden sites. While periodic visits to declared sites represent a moderate effort, continuous monitoring (cameras, seals, sensors) and short-notice inspections of suspected sites would require a standing international body, comparable to nuclear safeguards. Automated location checks on chips could lighten this load, with inspectors sent only to investigate alerts.",
       "dependsOn": [
         "ledger"
       ],
@@ -314,30 +364,27 @@ window.PACING_DATA = {
         "ledger": "Inspectors check the chips on site against the ledger's record of which chips should be there."
       },
       "sources": [
-        "**Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.",
-        "**Atlas 05 / Atlas briefs:** Pacing Verification Atlas, mechanism page \"Physical chip inventory inspection\" and the four proposal briefs.",
-        "**S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI.",
-        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.",
-        "**Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.",
-        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*.",
-        "**Verification Plan:** Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*, ai-2040.com/supplements/verification-plan (read up to its 2033 section).",
-        "**Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.",
-        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.",
-        "**Sastry:** Sastry et al. (2024), *Computing Power and the Governance of Artificial Intelligence*, arXiv:2402.08797.",
-        "**CNAS:** Aarne, Fist & Withers (2024), *Secure, Governable Chips*, CNAS.",
-        "**CSET:** Feldgoise, Miller & Dohmen (2026), *Tracking AI Chips: Assessing Location Verification as an Export Control Enforcement Tool*, CSET; cost figures from the companion article *Tracking AI Chips: What Does It Cost?* (cset.georgetown.edu)."
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI.",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/).",
+        "**Verification Plan:** Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A* (read up to its 2033 section).",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797), arXiv:2402.08797.",
+        "**CNAS:** Aarne, Fist & Withers (2024), [*Secure, Governable Chips*](https://s3.us-east-1.amazonaws.com/files.cnas.org/documents/CNAS-Report-Tech-Secure-Chips-Jan-24-finalb.pdf), CNAS.",
+        "**CSET:** Feldgoise, Miller & Dohmen (2026), [*Tracking AI Chips: Assessing Location Verification as an Export Control Enforcement Tool*](https://cset.georgetown.edu/publication/tracking-ai-chips/), CSET; cost figures from the companion article [*Tracking AI Chips: What Does It Cost?*](https://cset.georgetown.edu/article/tracking-ai-chips-what-does-it-cost/)."
       ]
     },
     {
       "id": "evaluations",
       "name": "Independent capability evaluation",
       "description": "Independent experts test new AI models for dangerous capabilities before release or further training. It is the only tool here that measures capability itself.",
-      "acts": "capability development, and use and distribution (release gate)",
-      "readiness": "now",
       "scores": {
         "effectiveness": {
           "score": 4,
-          "justification": "under ideal conditions, catches capability gains from every route (compute, algorithms, post-training, elicitation), but only at a gate on submitted models."
+          "justification": "verifies capability thresholds, which every route feeds into (compute, algorithms, post-training, elicitation), but only at a gate on submitted models."
         },
         "coverage": {
           "score": 3,
@@ -387,7 +434,14 @@ window.PACING_DATA = {
           "text": "Evaluations are the only tool here that measures capability itself rather than computing power. Under ideal conditions, they therefore catch gains from every route, whether these come from more computing power, better algorithms, more training after the main run, or better ways of drawing out what a model can do. Used as a gate (e.g. \"no release or further training above this threshold\"), they act directly on what pacing is ultimately concerned with."
         },
         {
-          "text": "The proposals give evaluations different roles. In the MIRI agreement, the treaty body can pause a training run if monitoring reveals worrying capabilities, while AI 2040 requires verified evaluations before any model is released and the Hardwired Pause only lets models that pass evaluation be served. Building the Pause Button, on the other hand, rejects evaluations as the pause trigger, since tests miss failures nobody anticipated, and uses them instead to adjust its computing-power threshold. Amodei's essay favours them, requiring models with a given capability to have certified safety properties before going further."
+          "text": "The proposals give evaluations different roles:",
+          "items": [
+            "in the MIRI agreement, the treaty body can pause a training run if monitoring reveals worrying capabilities;",
+            "AI 2040 requires verified evaluations before any model is released;",
+            "the Hardwired Pause only lets models that pass evaluation be served;",
+            "Building the Pause Button, on the other hand, rejects evaluations as the pause trigger, since tests miss failures nobody anticipated, and uses them instead to adjust its computing-power threshold;",
+            "Amodei's essay favours them, requiring models with a given capability to have certified safety properties before going further."
+          ]
         },
         {
           "text": "Evaluations are the best-targeted tool, as they restrict only models with dangerous capabilities. However, they only act at the gate, and only on models that labs submit, missing models that are never submitted, models used only inside labs, and risks for which nobody has written a test. Testing also requires scarce experts, while frontier models are released every few months."
@@ -425,28 +479,25 @@ window.PACING_DATA = {
       "dependsOn": [],
       "dependsOnWhy": {},
       "sources": [
-        "**Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.",
-        "**Atlas 01 / Atlas briefs:** Pacing Verification Atlas, mechanism page \"Independent predeployment capability evaluation\" and the four proposal briefs.",
-        "**CAST:** Scholefield, Martin & Barten (2025), *International Agreements on AI Safety: Review and Recommendations for a Conditional AI Safety Treaty*, arXiv:2503.18956.",
-        "**Taking Control:** Miotti (2023, rev. 2025), *Taking control: Policies to address extinction risks from advanced AI*, arXiv:2310.20563.",
-        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.",
-        "**Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.",
-        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.",
-        "**Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.",
-        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.",
-        "**S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI."
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**CAST:** Scholefield, Martin & Barten (2025), [*International Agreements on AI Safety: Review and Recommendations for a Conditional AI Safety Treaty*](https://arxiv.org/abs/2503.18956), arXiv:2503.18956.",
+        "**Taking Control:** Miotti (2023, rev. 2025), [*Taking control: Policies to address extinction risks from advanced AI*](https://arxiv.org/abs/2310.20563), arXiv:2310.20563.",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI."
       ]
     },
     {
       "id": "bandwidth",
       "name": "Interconnect bandwidth cap",
       "description": "A limit on how fast AI chips can exchange data, so that training large models becomes impractically slow while existing AI services keep running.",
-      "acts": "inputs and infrastructure",
-      "readiness": "now",
       "scores": {
         "effectiveness": {
           "score": 3,
-          "justification": "directly closes the compute route for training across servers; developers can substitute training within pods and low-communication methods."
+          "justification": "verifies, and enforces, that no training is spread across servers, which directly closes the compute route for such training; developers can substitute training within pods and low-communication methods."
         },
         "coverage": {
           "score": 3,
@@ -496,13 +547,26 @@ window.PACING_DATA = {
           "text": "The cap directly blocks training spread across many servers, which is how frontier models are built today. It acts on one route, computing power, but by limiting how that power can be combined rather than how much of it exists. Notably, it reveals almost nothing to regulators, who see traffic volumes rather than models, code or data."
         },
         {
-          "text": "The proposals use the cap for the same purpose: keeping AI services running while training stops. The MIRI agreement lets its treaty body restrict bandwidth between chips, AI 2040 surrounds data centres that only run models with a boundary passing about 1 megabyte per second, and Building the Pause Button caps either bandwidth or the number of chips that can work together. The Hardwired Pause, for its part, runs AI services on small, physically isolated clusters."
+          "text": "The proposals use the cap for the same purpose, namely keeping AI services running while training stops:",
+          "items": [
+            "the MIRI agreement lets its treaty body restrict bandwidth between chips;",
+            "AI 2040 surrounds data centres that only run models with a boundary passing about 1 megabyte per second;",
+            "Building the Pause Button caps either bandwidth or the number of chips that can work together;",
+            "the Hardwired Pause runs AI services on small, physically isolated clusters."
+          ]
         },
         {
-          "text": "Two gaps nonetheless remain. First, chips inside one tightly linked group, or \"pod\", keep full speed, and a pod can be large: 128 of today's top chips running for a year exceed the MIRI agreement's training limit (our inference). Second, newer training methods need far less communication – in the 2026 test, one such method cut traffic between servers about a hundredfold. For this reason, Building the Pause Button recommends using the cap only alongside tracking of total computing power."
+          "text": "Two gaps nonetheless remain:",
+          "items": [
+            "chips inside one tightly linked group, or \"pod\", keep full speed, and a pod can be large: 128 of today's top chips running for a year exceed the MIRI agreement's training limit;",
+            "newer training methods need far less communication – in the 2026 test, one such method cut traffic between servers about a hundredfold."
+          ]
         },
         {
-          "text": "The cap is well targeted, sparing most existing AI services, although very large models split across servers, as well as some scientific computing, also need fast links (our inference). Additionally, it only reaches sites where it is installed, so that other tools must find undeclared sites."
+          "text": "For this reason, Building the Pause Button recommends using the cap only alongside tracking of total computing power."
+        },
+        {
+          "text": "The cap is well targeted, sparing most existing AI services, although very large models split across servers, as well as some scientific computing, also need fast links. Additionally, it only reaches sites where it is installed, so that other tools must find undeclared sites."
         }
       ],
       "failures": {
@@ -541,27 +605,24 @@ window.PACING_DATA = {
         "inspections": "Physical caps must be checked on site, so that cables are not reconnected after a visit."
       },
       "sources": [
-        "**Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.",
-        "**Atlas 19 / Atlas briefs:** Pacing Verification Atlas, mechanism page \"Interconnect bandwidth cap\" and the four proposal briefs.",
-        "**MIRI TGT:** Scher, Sarbakysh & Moskvin (30 July 2026), *De-risking Interconnect Limits for AI Verification*, MIRI Technical Governance Team blog (SPAR project).",
-        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.",
-        "**Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.",
-        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.",
-        "**Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.",
-        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.",
-        "**S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI."
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**MIRI TGT:** Scher, Sarbakysh & Moskvin (30 July 2026), [*De-risking Interconnect Limits for AI Verification*](https://techgov.intelligence.org/blog/de-risking-interconnect-limits-for-ai-verification), MIRI Technical Governance Team blog (SPAR project).",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI."
       ]
     },
     {
       "id": "metering",
       "name": "Cloud workload metering",
       "description": "Cloud providers check who their customers are and report when a project's use of computing power nears a limit. It is quick to set up, but blind to labs' own data centres.",
-      "acts": "inputs and infrastructure",
-      "readiness": "now",
       "scores": {
         "effectiveness": {
           "score": 2,
-          "justification": "partly closes the compute route, for cloud compute only; own data centres and the other routes stay open."
+          "justification": "verifies computing power used in the cloud, so a limit on it partly closes the compute route, for cloud compute only; own data centres and the other routes stay open."
         },
         "coverage": {
           "score": 3,
@@ -610,13 +671,23 @@ window.PACING_DATA = {
           "text": "Metering partly closes one route, computing power, and only for computing power rented through the cloud. With honest providers, identity checks that stop customers from splitting work across accounts, and labels linking all the training runs of one model, a limit on training can be enforced for cloud customers; evading a reporting threshold for the very largest training runs would require spreading the work across more than ten providers."
         },
         {
-          "text": "However, two limits remain. Leading labs increasingly train on their own or partners' hardware, which falls outside metering unless on-site reporting is added. Additionally, billing records show how much computing power was used but not what for: research classifiers distinguish training from other work with about 95% accuracy, which is too unreliable for enforcement."
+          "text": "However, two limits remain:",
+          "items": [
+            "leading labs increasingly train on their own or partners' hardware, which falls outside metering unless on-site reporting is added;",
+            "billing records show how much computing power was used but not what for: research classifiers distinguish training from other work with about 95% accuracy, which is too unreliable for enforcement."
+          ]
         },
         {
-          "text": "The proposals treat metering as an existing, light layer to build on. The MIRI agreement builds on monitoring clouds already carry out and keeps foreign remote access to chips under watch, while AI 2040 relies on reporting and spot checks for sites too small to convert. Building the Pause Button links cloud usage logs to verified customer identities, borrowing from banking regulation, and the Hardwired Pause checks reported use against power-station records."
+          "text": "The proposals treat metering as an existing, light layer to build on:",
+          "items": [
+            "the MIRI agreement builds on monitoring clouds already carry out and keeps foreign remote access to chips under watch;",
+            "AI 2040 relies on reporting and spot checks for sites too small to convert;",
+            "Building the Pause Button links cloud usage logs to verified customer identities, borrowing from banking regulation;",
+            "the Hardwired Pause checks reported use against power-station records."
+          ]
         },
         {
-          "text": "Within the cloud, coverage is broad, extending to every customer above a threshold, including small and foreign ones. As a result, metering bites hardest on smaller labs and academics who depend on the cloud, rather than on leading labs with their own data centres (our inference)."
+          "text": "Within the cloud, coverage is broad, extending to every customer above a threshold, including small and foreign ones. As a result, metering bites hardest on smaller labs and academics who depend on the cloud, rather than on leading labs with their own data centres."
         }
       ],
       "failures": {
@@ -655,18 +726,17 @@ window.PACING_DATA = {
       "dependsOn": [],
       "dependsOnWhy": {},
       "sources": [
-        "**Agenda:** Douglas et al. (2026), *Pacing the Frontier: A Framework & Research Agenda*.",
-        "**Atlas 03 / Atlas briefs:** Pacing Verification Atlas, mechanism page \"Cloud workload metering\" and the four proposal briefs.",
-        "**Heim et al.:** Heim, Fist, Egan, Huang, Zekany, Trager, Osborne & Zilberman (2024), *Governing Through the Cloud: The Intermediary Role of Compute Providers in AI Regulation*, arXiv:2403.08501.",
-        "**FMF:** Frontier Model Forum (2 May 2024), issue brief on measuring training compute.",
-        "**Sastry:** Sastry et al. (2024), *Computing Power and the Governance of Artificial Intelligence*.",
-        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), *An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*, arXiv:2511.10783.",
-        "**Amodei:** Amodei (September 2026), *We Must Pace the Frontier*.",
-        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), *AI 2040: Plan A*; and Dean (2026), *Verification plan*, supplement to *AI 2040: Plan A*.",
-        "**Pause Button:** Al Ramiah et al. (2025), *Toward a Global Regime for Compute Governance: Building the Pause Button*, arXiv:2506.20530.",
-        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), *The Feasibility of a Hardwired Pause of Frontier AI Training*.",
-        "**S&T:** Scher & Thiergart (2024), *Mechanisms to Verify International Agreements About AI Development*, MIRI.",
-        "**BIS 2026:** US Bureau of Industry and Security (November 2026), interim final rule \"Addressing Remote Access to Advanced Semiconductors\" (checked 22 Nov 2026 via law-firm summaries)."
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**Heim et al.:** Heim, Fist, Egan, Huang, Zekany, Trager, Osborne & Zilberman (2024), [*Governing Through the Cloud: The Intermediary Role of Compute Providers in AI Regulation*](https://arxiv.org/abs/2403.08501), arXiv:2403.08501.",
+        "**FMF:** Frontier Model Forum (2 May 2024), [issue brief on measuring training compute](https://www.frontiermodelforum.org/updates/issue-brief-measuring-training-compute/).",
+        "**Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797).",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI.",
+        "**BIS 2026:** US Bureau of Industry and Security (November 2026), interim final rule [\"Addressing Remote Access to Advanced Semiconductors\"](https://bis.gov/press-release/bis-issues-rule-addressing-remote-access-american-super-intelligence-technology) (checked 22 Nov 2026 via law-firm summaries)."
       ]
     }
   ]

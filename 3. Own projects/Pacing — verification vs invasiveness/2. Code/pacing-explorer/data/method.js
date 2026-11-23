@@ -6,17 +6,16 @@
 //               "technical" the name used in the background mappings.
 //               kind "benefit": 5 is best. kind "cost": 5 is heaviest.
 //   words       the word shown next to a meter, by score 1 to 5.
-//   colours     blue dots (benefit), brown squares (cost), hollow marks (empty),
-//               green and red readiness dots.
+//   colours     blue dots (benefit), brown squares (cost), hollow marks (empty).
 //   builder     the numbers used by the package builder (js/builder.js). Changing them
 //               changes its results; run tests.html (or node js/builder.tests.js) afterwards.
 // Must stay valid JSON after "window.PACING_METHOD =".
 
 window.PACING_METHOD = {
   "sectionTitles": {
-    "proposals": "The five pacing proposals",
-    "ranking": "Ranking: how central each tool is to the proposals",
-    "tools": "The five tools",
+    "proposals": "Pacing proposals",
+    "ranking": "How central each tool is to the proposals",
+    "tools": "Verification interventions",
     "map": "Trade-off map",
     "builder": "Build a verification package",
     "appendix": "Appendix",
@@ -28,10 +27,8 @@ window.PACING_METHOD = {
     "allTools": "← All tools",
     "previous": "Previous",
     "next": "Next",
-    "whereItActs": "Where it acts",
     "introduction": "Introduction",
     "overview": "Overview",
-    "readiness": "Readiness",
     "achieves": "What it achieves",
     "costs": "What it costs",
     "behaviours": "Expected behaviours",
@@ -42,12 +39,11 @@ window.PACING_METHOD = {
     "failures": "Failure scenarios",
     "burden": "Regulatory burden",
     "sources": "Sources",
-    "ourInference": "our inference",
     "xAxis": "Invasiveness for AI labs",
-    "yAxis": "Catches cheating"
+    "yAxis": "Detects violations"
   },
   "howWeScore": {
-    "intro": "Each tool is scored by the authors on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). Effectiveness (\"Slows AI development\") asks how many routes to more capable AI the tool would close if it worked as intended. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do. Tools that only provide information therefore score low, even when other tools depend on them.",
+    "intro": "We score each tool on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). A verification tool does not itself slow AI development; what matters is whether the rule it lets us check would slow it if fully respected. \"Relevance to pacing\" therefore asks how many routes to more capable AI the verified rule would close. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do.",
     "table": {
       "header": [
         "Shown as",
@@ -56,9 +52,9 @@ window.PACING_METHOD = {
       ],
       "rows": [
         [
-          "Slows AI development",
-          "Closes no route on its own",
-          "Closes most routes, with little room to get around them"
+          "Relevance to pacing",
+          "What it verifies has little bearing on how fast AI develops",
+          "Verifies rules that close most routes, with little room to get around them"
         ],
         [
           "Reaches the right actors",
@@ -66,7 +62,7 @@ window.PACING_METHOD = {
           "Reaches nearly all relevant actors, with little spillover"
         ],
         [
-          "Catches cheating",
+          "Detects violations",
           "Violations mostly go undetected",
           "Violations are detected quickly; enforcement is credible or automatic"
         ],
@@ -87,19 +83,17 @@ window.PACING_METHOD = {
         ]
       ]
     },
-    "readiness": "**Readiness.** Green: available now. Red: not yet available, with the expected wait.",
     "expected": "**Expected behaviours.** For four actors (AI labs, chip and cloud firms, a leading state, a trailing state), we state whether we expect them to *cooperate*, *circumvent* (comply on paper while evading in practice) or *undermine* (work to weaken the rule).",
-    "acts": "**Where it acts.** Each tool is tagged with the stage of AI development it acts on: inputs and infrastructure (chips, data centres), capability development (training and testing models), or use and distribution (releasing and running models). Tools acting at earlier stages are easier to observe but blunter, whereas tools acting at later stages are more targeted but easier to get around.",
-    "closing": "All scores reflect the authors' judgement, based on the sources listed on each tool's page."
+    "closing": "All scores reflect our judgement, based on the sources listed on each tool's page."
   },
   "criteria": [
     {
       "id": "effectiveness",
-      "label": "Slows AI development",
+      "label": "Relevance to pacing",
       "kind": "benefit",
       "technical": "Effectiveness",
-      "priorityLabel": "Actually slows AI development",
-      "phrase": "slowing AI development"
+      "priorityLabel": "Relevance to pacing",
+      "phrase": "relevance to pacing"
     },
     {
       "id": "coverage",
@@ -111,11 +105,11 @@ window.PACING_METHOD = {
     },
     {
       "id": "verifiability",
-      "label": "Catches cheating",
+      "label": "Detects violations",
       "kind": "benefit",
       "technical": "Verifiability and enforceability",
-      "priorityLabel": "Catches cheating",
-      "phrase": "catching cheating"
+      "priorityLabel": "Detects violations",
+      "phrase": "detecting violations"
     },
     {
       "id": "robustness",
@@ -160,23 +154,6 @@ window.PACING_METHOD = {
       "Heavy"
     ]
   },
-  "readiness": [
-    {
-      "id": "now",
-      "label": "Available now",
-      "column": "Now"
-    },
-    {
-      "id": "1-3y",
-      "label": "In 1–3 years",
-      "column": "In 1–3 years"
-    },
-    {
-      "id": "3y+",
-      "label": "In 3+ years",
-      "column": "In 3+ years"
-    }
-  ],
   "stances": {
     "cooperate": "Cooperate",
     "circumvent": "Circumvent",
@@ -191,9 +168,7 @@ window.PACING_METHOD = {
   "colours": {
     "benefit": "#1f5fbf",
     "cost": "#8a5a2b",
-    "empty": "#6b7280",
-    "ready": "#1a7f37",
-    "notReady": "#c62828"
+    "empty": "#6b7280"
   },
   "builder": {
     "baseWeight": 1,
