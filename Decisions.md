@@ -10,6 +10,10 @@
 
 Rebuilt the pacing explorer for five tools (FlexHEGs removed): a main page, five tool pages, and a validator that fails if site text, scores, stances, readiness or sources differ from `Website text.md` and the mappings. *Why:* a short site for policymakers whose every word and score traces to a source. Touched: `3. Own projects/Pacing — verification vs invasiveness/2. Code/pacing-explorer/` (four commits, not yet pushed). Open questions are in the session summary.
 
+### 2026-11-25 — Pacing website: trade-off map removed; stricter package rule; ChatGPT draft archived
+
+Removed the trade-off map from the site (judged unhelpful). The package builder's invasiveness limit now also applies to supporting measures: a tool whose required support exceeds the limit is left out, with the reason given. New introduction and package text. The earlier ChatGPT version of the site and its rewritten text were moved to `Archive/` (it changed the content; a UI-only redesign is to replace it). Touched: `Website text.md`, `2. Code/pacing-explorer/`.
+
 ### 2026-11-23 — Pacing explorer v2.3: simpler, neutral page
 
 Dropped readiness (all five tools are available now), the "Where it acts" tag and "(our inference)" labels from the site; neutral wording throughout ("we", never "you"); the Pacing Verification Atlas is not mentioned. *Why:* the review asked for a simpler, neutral page. Touched: `2. Code/pacing-explorer/`, `Website text.md`.

@@ -76,7 +76,7 @@ The tools address different parts of the problem. The first two establish an inv
 
 ## 7. What could a package include?
 
-The package explorer uses the assessments in this note to illustrate how different priorities change the selection of tools. Choose up to three priorities and a preferred limit on invasiveness. The explanation shows which tools meet the scoring rule, which are added as supporting measures, and what trade-offs follow.
+The package explorer uses the assessments in this note to illustrate how different priorities change the selection of tools. Up to three priorities and a preferred limit on invasiveness can be selected. The explanation shows which tools meet the scoring rule, which are added as supporting measures, and what trade-offs follow.
 
 The result is a starting point for discussion. It does not estimate the combined probability of detecting violations, the total cost of a regime or the likelihood that states would accept it. Several tools may share the same blind spot, and a package can require more access than any headline mechanism suggests.
 

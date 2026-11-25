@@ -1,0 +1,377 @@
+{
+  "criteria": [
+    {
+      "id": "effectiveness",
+      "label": "Relevance to pacing",
+      "kind": "benefit",
+      "technical": "Effectiveness",
+      "priorityLabel": "Relevance to pacing",
+      "phrase": "relevance to pacing"
+    },
+    {
+      "id": "coverage",
+      "label": "Reaches the right actors",
+      "kind": "benefit",
+      "technical": "Coverage and targeting",
+      "priorityLabel": "Reaches the right actors",
+      "phrase": "reaching the right actors"
+    },
+    {
+      "id": "verifiability",
+      "label": "Detects violations",
+      "kind": "benefit",
+      "technical": "Verifiability and enforceability",
+      "priorityLabel": "Detects violations",
+      "phrase": "detecting violations"
+    },
+    {
+      "id": "robustness",
+      "label": "Holds up over time",
+      "kind": "benefit",
+      "technical": "Robustness and flexibility",
+      "priorityLabel": "Holds up over time",
+      "phrase": "holding up over time"
+    },
+    {
+      "id": "burden",
+      "label": "Burden on government",
+      "kind": "cost",
+      "technical": "Regulatory burden",
+      "priorityLabel": "Light on government",
+      "phrase": "staying light on government",
+      "costPhrase": "burden on government"
+    },
+    {
+      "id": "invasiveness",
+      "label": "Invasiveness for AI labs",
+      "kind": "cost",
+      "technical": "Invasiveness for labs",
+      "priorityLabel": "Light on AI labs",
+      "phrase": "staying light on AI labs",
+      "costPhrase": "invasiveness for AI labs"
+    }
+  ],
+  "words": {
+    "benefit": [
+      "Low",
+      "Low",
+      "Medium",
+      "High",
+      "High"
+    ],
+    "cost": [
+      "Light",
+      "Light",
+      "Moderate",
+      "Heavy",
+      "Heavy"
+    ]
+  },
+  "builder": {
+    "baseWeight": 1,
+    "pickedWeight": 3,
+    "maxPicks": 3,
+    "priorityOrder": [
+      "effectiveness",
+      "verifiability",
+      "coverage",
+      "invasiveness",
+      "burden",
+      "robustness"
+    ],
+    "threshold": 3,
+    "invasivenessLimits": {
+      "any": 5,
+      "medium": 3,
+      "low": 2
+    }
+  },
+  "ranking": {
+    "intro": "The table below shows how much each proposal relies on each tool. Tools are ranked by a weighted count (Core = 1, Partial = 0.5, Option = 0.2), with ties going to the tool with more Core entries.",
+    "header": [
+      "Rank",
+      "Tool",
+      "MIRI agreement",
+      "AI 2040: Plan A",
+      "Building the Pause Button",
+      "Hardwired Pause",
+      "Amodei"
+    ],
+    "rows": [
+      [
+        "1",
+        "Chip production ledger",
+        "Core",
+        "Core",
+        "Core",
+        "Core",
+        "—"
+      ],
+      [
+        "2",
+        "Physical chip inspection",
+        "Core",
+        "Core",
+        "Option",
+        "Core",
+        "—"
+      ],
+      [
+        "3",
+        "Interconnect bandwidth cap",
+        "Option",
+        "Core",
+        "Core",
+        "Partial",
+        "—"
+      ],
+      [
+        "4",
+        "Independent capability evaluation",
+        "Partial",
+        "Partial",
+        "Partial",
+        "Core",
+        "Option"
+      ],
+      [
+        "5",
+        "Cloud workload metering",
+        "Partial",
+        "Partial",
+        "Option",
+        "Partial",
+        "—"
+      ]
+    ],
+    "legend": "**Core:** central or required. **Partial:** a broader or closely related check is discussed. **Option:** described as a possibility, without commitment. **—:** not discussed."
+  },
+  "interventions": [
+    {
+      "id": "ledger",
+      "name": "Chip production ledger",
+      "scores": {
+        "effectiveness": {
+          "score": 3,
+          "justification": "verifies chip stocks and locations, so that caps on chip stocks or production, and rules on where chips sit, can be checked; respecting these directly limits computing power. Algorithms, post-training and elicitation stay open."
+        },
+        "coverage": {
+          "score": 4,
+          "justification": "new production and large holdings well covered; legacy stock, small clusters and non-parties are the gaps."
+        },
+        "verifiability": {
+          "score": 3,
+          "justification": "concentrated supply chain and rich paper trails; weak against state concealment and small clusters."
+        },
+        "burden": {
+          "score": 3,
+          "justification": "reporting, audits and customs checks; serial-level lifecycle tracking of millions of chips a year must be automated [Pause Button]. Consolidation and inspections raise it further."
+        },
+        "robustness": {
+          "score": 4,
+          "justification": "degrades gracefully if gaps are measured; reusable across regimes; thresholds need continual revision."
+        },
+        "invasiveness": {
+          "score": 2,
+          "justification": "low effort (records they already keep), but reveals compute stock and sites."
+        }
+      },
+      "dependsOn": [],
+      "dependsOnWhy": {},
+      "sources": [
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/).",
+        "**Verification Plan:** Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A* (read up to its 2033 section).",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797), arXiv:2402.08797.",
+        "**CNAS:** Aarne, Fist & Withers (2024), [*Secure, Governable Chips*](https://s3.us-east-1.amazonaws.com/files.cnas.org/documents/CNAS-Report-Tech-Secure-Chips-Jan-24-finalb.pdf), CNAS."
+      ]
+    },
+    {
+      "id": "inspections",
+      "name": "Physical chip inspection",
+      "scores": {
+        "effectiveness": {
+          "score": 3,
+          "justification": "verifies that chips are present, switched off or sealed, and that factories are not producing them; respecting these rules directly limits computing power. It does not verify how chips are used."
+        },
+        "coverage": {
+          "score": 2,
+          "justification": "declared sites only; reach grows with the ledger and intelligence."
+        },
+        "verifiability": {
+          "score": 3,
+          "justification": "strong snapshot of declared sites; weak between visits and blind to undeclared sites unless continuous monitoring and intelligence are added."
+        },
+        "burden": {
+          "score": 4,
+          "justification": "a trained, vetted inspectorate, access rights, warrants and dispute procedures; proper checks take chips offline to attest them [CSET]. Continuous monitoring and challenge inspections push it to the maximum."
+        },
+        "robustness": {
+          "score": 3,
+          "justification": "easy to adjust and lift; fragile to withdrawal of access in a crisis."
+        },
+        "invasiveness": {
+          "score": 4,
+          "justification": "high: downtime while chips are attested, and inspectors see layouts, security and network topology."
+        }
+      },
+      "dependsOn": [
+        "ledger"
+      ],
+      "dependsOnWhy": {
+        "ledger": "Inspectors check the chips on site against the ledger's record of which chips should be there."
+      },
+      "sources": [
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI.",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/).",
+        "**Verification Plan:** Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A* (read up to its 2033 section).",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797), arXiv:2402.08797.",
+        "**CNAS:** Aarne, Fist & Withers (2024), [*Secure, Governable Chips*](https://s3.us-east-1.amazonaws.com/files.cnas.org/documents/CNAS-Report-Tech-Secure-Chips-Jan-24-finalb.pdf), CNAS.",
+        "**CSET:** Feldgoise, Miller & Dohmen (2026), [*Tracking AI Chips: Assessing Location Verification as an Export Control Enforcement Tool*](https://cset.georgetown.edu/publication/tracking-ai-chips/), CSET; cost figures from the companion article [*Tracking AI Chips: What Does It Cost?*](https://cset.georgetown.edu/article/tracking-ai-chips-what-does-it-cost/)."
+      ]
+    },
+    {
+      "id": "evaluations",
+      "name": "Independent capability evaluation",
+      "scores": {
+        "effectiveness": {
+          "score": 4,
+          "justification": "verifies capability thresholds, which every route feeds into (compute, algorithms, post-training, elicitation), but only at a gate on submitted models."
+        },
+        "coverage": {
+          "score": 3,
+          "justification": "precisely targeted at hazards; misses unsubmitted models, internal use, and risks without tests."
+        },
+        "verifiability": {
+          "score": 2,
+          "justification": "hard to prove that the tested model is the deployed one, or that elicitation was complete; says nothing about compute."
+        },
+        "burden": {
+          "score": 3,
+          "justification": "accredited evaluators, scarce experts, secure infrastructure, and mutual recognition between states."
+        },
+        "robustness": {
+          "score": 3,
+          "justification": "tests can be updated quickly, but they go stale, leak, and get harder as models learn to spot evaluations."
+        },
+        "invasiveness": {
+          "score": 4,
+          "justification": "model access, release delays, and an outside veto over specific models."
+        }
+      },
+      "dependsOn": [],
+      "dependsOnWhy": {},
+      "sources": [
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**CAST:** Scholefield, Martin & Barten (2025), [*International Agreements on AI Safety: Review and Recommendations for a Conditional AI Safety Treaty*](https://arxiv.org/abs/2503.18956), arXiv:2503.18956.",
+        "**Taking Control:** Miotti (2023, rev. 2025), [*Taking control: Policies to address extinction risks from advanced AI*](https://arxiv.org/abs/2310.20563), arXiv:2310.20563.",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI."
+      ]
+    },
+    {
+      "id": "bandwidth",
+      "name": "Interconnect bandwidth cap",
+      "scores": {
+        "effectiveness": {
+          "score": 3,
+          "justification": "verifies, and enforces, that no training is spread across servers, which directly closes the compute route for such training; developers can substitute training within pods and low-communication methods."
+        },
+        "coverage": {
+          "score": 3,
+          "justification": "well targeted at training; reaches only capped sites."
+        },
+        "verifiability": {
+          "score": 3,
+          "justification": "physical caps can be inspected without secrets; software-only versions can be spoofed; every pathway must be covered."
+        },
+        "burden": {
+          "score": 3,
+          "justification": "facility audits, inspections and topology reviews."
+        },
+        "robustness": {
+          "score": 2,
+          "justification": "a fixed cap becomes obsolete as methods change, and lifting it restores capacity at once."
+        },
+        "invasiveness": {
+          "score": 2,
+          "justification": "metadata only, but it constrains how clusters are built and used."
+        }
+      },
+      "dependsOn": [
+        "inspections"
+      ],
+      "dependsOnWhy": {
+        "inspections": "Physical caps must be checked on site, so that cables are not reconnected after a visit."
+      },
+      "sources": [
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**MIRI TGT:** Scher, Sarbakysh & Moskvin (30 July 2026), [*De-risking Interconnect Limits for AI Verification*](https://techgov.intelligence.org/blog/de-risking-interconnect-limits-for-ai-verification), MIRI Technical Governance Team blog (SPAR project).",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI."
+      ]
+    },
+    {
+      "id": "metering",
+      "name": "Cloud workload metering",
+      "scores": {
+        "effectiveness": {
+          "score": 2,
+          "justification": "verifies computing power used in the cloud, so a limit on it partly closes the compute route, for cloud compute only; own data centres and the other routes stay open."
+        },
+        "coverage": {
+          "score": 3,
+          "justification": "all cloud customers above a threshold; blind to own data centres."
+        },
+        "verifiability": {
+          "score": 3,
+          "justification": "accurate records and easy account-level enforcement; cannot see what a workload does, or compute outside the cloud."
+        },
+        "burden": {
+          "score": 2,
+          "justification": "builds on billing and existing know-your-customer practice; rises if an international body is added."
+        },
+        "robustness": {
+          "score": 3,
+          "justification": "easy to update and to lift, but coverage erodes as training moves in-house."
+        },
+        "invasiveness": {
+          "score": 2,
+          "justification": "identity, compute volumes and project labels; no weights, code or data."
+        }
+      },
+      "dependsOn": [],
+      "dependsOnWhy": {},
+      "sources": [
+        "**Agenda:** Douglas et al. (2026), [*Pacing the Frontier: A Framework & Research Agenda*](https://pacing.tech/).",
+        "**Heim et al.:** Heim, Fist, Egan, Huang, Zekany, Trager, Osborne & Zilberman (2024), [*Governing Through the Cloud: The Intermediary Role of Compute Providers in AI Regulation*](https://arxiv.org/abs/2403.08501), arXiv:2403.08501.",
+        "**FMF:** Frontier Model Forum (2 May 2024), [issue brief on measuring training compute](https://www.frontiermodelforum.org/updates/issue-brief-measuring-training-compute/).",
+        "**Sastry:** Sastry et al. (2024), [*Computing Power and the Governance of Artificial Intelligence*](https://arxiv.org/abs/2402.08797).",
+        "**MIRI:** Scher, Abecassis, Barnett & Abeyta (2025, v3 May 2026), [*An International Agreement to Prevent the Premature Creation of Artificial Superintelligence*](https://arxiv.org/abs/2511.10783), arXiv:2511.10783.",
+        "**Amodei:** Amodei (September 2026), [*We Must Pace the Frontier*](https://darioamodei.com/post/we-must-pace-the-frontier).",
+        "**AI 2040:** Larsen et al. (AI Futures Project, 2026), [*AI 2040: Plan A*](https://www.ai-2040.com/); and Dean (2026), [*Verification plan*](https://ai-2040.com/supplements/verification-plan), supplement to *AI 2040: Plan A*.",
+        "**Pause Button:** Al Ramiah et al. (2025), [*Toward a Global Regime for Compute Governance: Building the Pause Button*](https://arxiv.org/abs/2506.20530), arXiv:2506.20530.",
+        "**Hardwired:** Working Group on AI Pause Feasibility (2026, v1.0.2), [*The Feasibility of a Hardwired Pause of Frontier AI Training*](https://hardwired-pause.ai/).",
+        "**S&T:** Scher & Thiergart (2024), [*Mechanisms to Verify International Agreements About AI Development*](https://intelligence.org/wp-content/uploads/2024/11/Mechanisms-to-Verify-International-Agreements-About-AI-Development-27-Nov-24.pdf), MIRI.",
+        "**BIS 2026:** US Bureau of Industry and Security (November 2026), interim final rule [\"Addressing Remote Access to Advanced Semiconductors\"](https://bis.gov/press-release/bis-issues-rule-addressing-remote-access-american-super-intelligence-technology) (checked 22 Nov 2026 via law-firm summaries)."
+      ]
+    }
+  ]
+}
