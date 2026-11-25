@@ -1,5 +1,5 @@
 // Pacing explorer: draws the main page (index.html) and the tool pages (tool.html#<id>).
-// Data comes from data/*.js, the package-builder rules from js/builder.js, the map from js/chart.js.
+// Data comes from data/*.js, the package-builder rules from js/builder.js.
 // No network calls, no storage, no tracking.
 
 (function () {
@@ -9,13 +9,12 @@
   var GLOSSARY = window.PACING_GLOSSARY;
   var METHOD = window.PACING_METHOD;
   var B = window.PacingBuilder;
-  var Chart = window.PacingChart;
 
   var view = document.getElementById("view");
   var tooltip = document.getElementById("tooltip");
   var page = document.body.getAttribute("data-page");
 
-  if (!DATA || !GLOSSARY || !METHOD || !B || !Chart) {
+  if (!DATA || !GLOSSARY || !METHOD || !B) {
     view.textContent = "The page could not load its data files. Check that the data and js folders sit next to this page.";
     return;
   }
@@ -327,35 +326,6 @@
     return s;
   }
 
-  var currentChart = null;
-
-  function renderMap(ctx) {
-    var cx = criterion("invasiveness");
-    var cy = criterion("verifiability");
-    var s = h("section", { id: "map", "aria-labelledby": "map-title" }, [sectionHead("map", T.map)]);
-    var chartBox = h("div", { class: "chart" });
-    s.appendChild(h("figure", { class: "map-figure" }, [
-      chartBox,
-      h("figcaption", null, rich(DATA.caption, ctx))
-    ]));
-    currentChart = Chart.create(chartBox, {
-      interventions: interventions,
-      xKey: "invasiveness",
-      yKey: "verifiability",
-      xTitle: L.xAxis,
-      yTitle: L.yAxis,
-      xWords: METHOD.words.cost,
-      yWords: METHOD.words.benefit,
-      label: L.yAxis + " against " + L.xAxis,
-      href: function (iv) { return toolHref(iv.id); },
-      ariaLabel: function (iv) {
-        return iv.name + ". " + L.xAxis + ": " + B.wordFor(cx, iv.scores.invasiveness.score, METHOD) +
-          ". " + L.yAxis + ": " + B.wordFor(cy, iv.scores.verifiability.score, METHOD) + ".";
-      }
-    });
-    return s;
-  }
-
   function renderAppendix(ctx) {
     var how = METHOD.howWeScore;
     var s = h("section", { id: "appendix", "aria-labelledby": "appendix-title" }, [sectionHead("appendix", T.appendix)]);
@@ -380,7 +350,7 @@
     view.appendChild(h("header", { class: "site-head" }, h("h1", { tabindex: "-1" }, DATA.siteTitle)));
     view.appendChild(h("div", { class: "intro" }, DATA.introduction.map(function (p) { return para(p, ctx); })));
 
-    var order = ["proposals", "ranking", "tools", "map", "builder", "appendix"];
+    var order = ["proposals", "ranking", "tools", "builder", "appendix"];
     view.appendChild(h("nav", { class: "toc", "aria-label": "Contents" }, h("ol", null, order.map(function (id) {
       return h("li", null, h("a", { href: "#" + id }, T[id]));
     }))));
@@ -388,8 +358,6 @@
     view.appendChild(renderProposals(ctx));
     view.appendChild(renderRanking(ctx));
     view.appendChild(renderCards(ctx));
-    view.appendChild(renderMap(ctx));
-    currentChart.render();
     view.appendChild(renderBuilder(ctx));
     view.appendChild(renderAppendix(ctx));
 
@@ -739,11 +707,6 @@
     });
   } else {
     renderHome();
-    var resizeTimer = null;
-    window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () { if (currentChart) { hideTip(); currentChart.update(); } }, 120);
-    });
   }
 
   document.querySelector(".skip-link").addEventListener("click", function (e) {

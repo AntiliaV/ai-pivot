@@ -132,31 +132,6 @@ button.term:hover { background: #e8eefb; }
 .card-text { font-size: .98rem; margin-bottom: .6rem; }
 .card-link { font-weight: 600; }
 
-/* ---------- trade-off map ---------- */
-
-.map-figure { margin: 0 0 1rem; max-width: 50rem; }
-.chart { width: 100%; }
-.map-svg { display: block; max-width: 100%; height: auto; overflow: visible; font-family: inherit; }
-.map-figure figcaption { margin-top: .8rem; max-width: var(--measure); }
-
-.plot-bg { fill: #fafbfc; }
-.plot-frame { fill: none; stroke: #9aa0a8; stroke-width: 1.2; }
-.grid { stroke: #e3e6ea; stroke-width: 1; }
-.grid.mid { stroke: #cdd2d8; }
-.tick { font-size: 12px; fill: var(--muted); }
-.axis-title { font-size: 14px; font-weight: 650; fill: var(--ink); }
-.dot-mark { fill: var(--c-benefit); stroke: #fff; stroke-width: 2; }
-.dot-hit { fill: transparent; }
-.dot-focus, .label-hit { fill: transparent; stroke: transparent; stroke-width: 2; }
-a.dot { cursor: pointer; text-decoration: none; }
-a.dot:focus { outline: none; }
-a.dot:focus-visible .dot-focus, a.dot:focus-visible .label-hit { stroke: var(--focus); stroke-width: 3; }
-a.dot:hover .label-hit { fill: #e8eefb; }
-a.dot:hover .dot-mark { stroke: var(--focus); }
-.dot-label { font-size: 14px; fill: var(--ink); font-weight: 600; }
-@media (max-width: 519px) { .dot-label { font-size: 13px; } }
-a.dot:hover .dot-label { text-decoration: underline; }
-
 /* ---------- builder ---------- */
 
 /* The choices sit in a bar across the top; the results follow below, at full width. */
@@ -322,7 +297,7 @@ details.sources { margin-top: 2.5rem; max-width: var(--measure); }
   .wrap { max-width: none; padding: 0; }
   h2 { break-after: avoid; margin-top: 1.6rem; }
   h3, h4 { break-after: avoid; }
-  .card, .layer, .proposal-list li, tr, figure, .meter-item { break-inside: avoid; }
+  .card, .layer, .proposal-list li, tr, .meter-item { break-inside: avoid; }
   .table-scroll { overflow: visible; }
   .ranking-table, .score-key, .sums { min-width: 0; }
   .sums td, .sums th { white-space: normal; }
