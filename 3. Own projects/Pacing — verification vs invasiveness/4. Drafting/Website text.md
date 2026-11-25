@@ -8,11 +8,17 @@ Verifying agreements to pace AI
 
 ## 1. Introduction
 
-Some researchers, governments and AI companies argue that frontier AI is advancing faster than our ability to understand and control it. Pacing refers to deliberately slowing parts of AI development, so that safety research, institutions and public debate have time to keep up.
+An agreement to slow frontier AI development faces a practical problem: how can participants gain enough confidence that others are exercising the same restraint? A company that delays training may lose ground to a competitor. A state that accepts limits may fear a rival's undisclosed programme. Verification can reduce these uncertainties, but it also requires access to commercially and strategically sensitive information, infrastructure or decisions.
 
-An agreement to pace AI, between companies or between states, only works if each side can check that the others are keeping to it. Therefore, having reliable verification tools in place is central to any such agreement. However, the more a verification tool can confirm, the more it usually has to see or control, which makes it harder to accept for those being verified. This implies there is a tradeoff between how accurate a verification tool is and how invasive it is for the actors involved. In turn, this tradeoff may lead to relevant actors changing their behaviour as a response to the invasiveness of verification procedures. A key policy question is therefore pinning down what these tradeoffs are and how potential actors might respond to them.
+Pacing means deliberately moderating the development, deployment or spread of AI capabilities. Its purpose may be to give safety research, institutions and public deliberation more time to respond to emerging risks. Agreements can take different forms: a limit on training compute, a temporary pause, or a requirement to demonstrate specified safeguards before developing or releasing a model. Each creates a different verification task.
 
-Our analysis compares five candidate verification tools prominently featured in recent pacing proposals. For each, we assess how much the rule it verifies would slow AI development, how reliably it detects violations, and what it costs governments and AI companies. The analysis is written for policymakers and assumes no background in AI safety.
+This note compares five tools: chip production ledgers, physical chip inspections, independent capability evaluations, interconnect bandwidth caps and cloud workload metering. It examines what each can establish, how that evidence could support pacing, and what compliance would require from governments, AI developers and infrastructure providers. Five recent proposals provide reference points for the comparison.
+
+The central finding is that a credible regime would need complementary tools. A ledger records where chips should be; inspections check those declarations; metering and network controls provide evidence about, or place limits on, their use; evaluations test selected model capabilities. None establishes, by itself, that frontier capability development has stopped.
+
+The design challenge is therefore to obtain enough assurance about a specified restriction while limiting unnecessary disclosure, disruption and external control. More access can improve assurance, but it can also make an agreement harder to negotiate and sustain. Better technical design and governance may reduce both problems.
+
+This is a comparison of verification options, rather than an assessment of whether any particular pause is justified. It develops one part of the research agenda in [*Pacing the Frontier*](https://pacing.tech/): understanding how verification requirements and the responses they induce affect the prospects for coordinated restraint.
 
 ## 3. Pacing proposals
 
@@ -56,6 +62,8 @@ The table below shows how much each proposal relies on each tool. Tools are rank
 
 ## 5. Verification interventions (short descriptions)
 
+The tools address different parts of the problem. The first two establish an inventory and check its physical counterpart. The remaining three examine capabilities, restrict communication or account for compute use.
+
 **Chip production ledger.** A register of every advanced AI chip, recording who made it, who holds it and where it is. It makes the world's AI computing power countable, so that limits on it can be checked.
 
 **Physical chip inspection.** Inspectors visit facilities to check that the chips there match what was declared. Inspection keeps the ledger honest and can confirm that chips are switched off or sealed.
@@ -66,18 +74,18 @@ The table below shows how much each proposal relies on each tool. Tools are rank
 
 **Cloud workload metering.** Cloud providers check who their customers are and report when a project's use of computing power nears a limit. It is quick to set up, but blind to labs' own data centres.
 
-## 6. Trade-off map (caption)
+## 7. What could a package include?
 
-Each marker represents one tool, or several tools with the same scores. Tools further right are more invasive for AI labs, while tools higher up are better at detecting violations; the most attractive tools therefore sit in the top left, combining high assurance with little intrusion.
+The package explorer uses the assessments in this note to illustrate how different priorities change the selection of tools. Choose up to three priorities and a preferred limit on invasiveness. The explanation shows which tools meet the scoring rule, which are added as supporting measures, and what trade-offs follow.
 
-## 7. Build a verification package (intro)
+The result is a starting point for discussion. It does not estimate the combined probability of detecting violations, the total cost of a regime or the likelihood that states would accept it. Several tools may share the same blind spot, and a package can require more access than any headline mechanism suggests.
 
-Given a set of priorities, the tool below suggests a combination of verification tools and explains the reasoning behind each choice.
+Supporting measures in the configuration assessed here:
 
-**Dependencies** (each reason is shown in the package's explanation when a tool is added as a foundation):
+- **Physical chip inspection is linked to the chip ledger.** The ledger supplies the declared inventory against which inspectors check a facility. Inspections can also use other records or investigate suspected sites, so this is a design choice for the explorer rather than a universal prerequisite for inspection.
+- **A physical interconnect cap is linked to inspection.** Inspectors check network layouts and physical restrictions. Seals, monitoring or other controls are needed to maintain confidence between visits; a visit alone cannot establish that cables will remain disconnected afterwards.
 
-- Physical chip inspection needs the chip production ledger: inspectors check the chips on site against the ledger's record of which chips should be there.
-- Interconnect bandwidth cap needs physical chip inspection: physical caps must be checked on site, so that cables are not reconnected after a visit.
+The explorer checks each tool together with all its required supporting measures. If any component exceeds the selected invasiveness ceiling, that candidate is omitted and the conflict is explained. Relaxing the ceiling reveals the alternative; supporting tools are never added above the limit automatically.
 
 ## Intervention pages
 
