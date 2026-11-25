@@ -60,7 +60,7 @@ h5 { font-size: 1rem; margin: 1rem 0 .3rem; }
 h1:focus { outline: none; }
 
 p, ul, ol, dl { margin: 0 0 1rem; }
-.intro p, section > p, .tool-head + section p, section ul.bullets, section ol.bullets, .proposal-list { max-width: var(--measure); }
+.intro p, section > p, .builder-text p, .tool-head + section p, section ul.bullets, section ol.bullets, .proposal-list { max-width: var(--measure); }
 .intro { margin-bottom: 1.5rem; }
 
 strong { font-weight: 650; }

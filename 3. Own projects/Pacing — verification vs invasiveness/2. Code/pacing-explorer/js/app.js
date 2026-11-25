@@ -314,8 +314,9 @@
     return s;
   }
 
-  function renderCards() {
+  function renderCards(ctx) {
     var s = h("section", { id: "tools", "aria-labelledby": "tools-title" }, [sectionHead("tools", T.tools)]);
+    s.appendChild(para(DATA.toolsIntro, ctx));
     s.appendChild(h("ul", { class: "cards" }, interventions.map(function (iv) {
       return h("li", { class: "card" }, [
         h("h3", null, iv.name),
@@ -386,7 +387,7 @@
 
     view.appendChild(renderProposals(ctx));
     view.appendChild(renderRanking(ctx));
-    view.appendChild(renderCards());
+    view.appendChild(renderCards(ctx));
     view.appendChild(renderMap(ctx));
     currentChart.render();
     view.appendChild(renderBuilder(ctx));
@@ -661,7 +662,13 @@
   function renderBuilder(pageCtx) {
     var formCtx = newCtx(pageCtx);
     var s = h("section", { id: "builder", "aria-labelledby": "builder-title" }, [sectionHead("builder", T.builder)]);
-    s.appendChild(para(DATA.builderIntro, pageCtx));
+    var bt = DATA.builder;
+    s.appendChild(h("div", { class: "builder-text" }, [
+      bt.intro.map(function (p) { return para(p, pageCtx); }),
+      para(bt.supportingLead, pageCtx),
+      h("ul", { class: "bullets" }, bt.supporting.map(function (it) { return h("li", null, rich(it, pageCtx)); })),
+      bt.closing.map(function (p) { return para(p, pageCtx); })
+    ]));
 
     var output = h("div", { class: "builder-output", "aria-label": "Suggested package" });
     var status = h("p", { class: "visually-hidden", role: "status" });

@@ -16,8 +16,7 @@ window.PACING_METHOD = {
     "proposals": "Pacing proposals",
     "ranking": "How central each tool is to the proposals",
     "tools": "Verification interventions",
-    "map": "Trade-off map",
-    "builder": "Build a verification package",
+    "builder": "What could a package include?",
     "appendix": "Appendix",
     "howWeScore": "How we score",
     "glossary": "Glossary"
@@ -38,9 +37,7 @@ window.PACING_METHOD = {
     "contribution": "Under ideal conditions, how does this contribute to pacing?",
     "failures": "Failure scenarios",
     "burden": "Regulatory burden",
-    "sources": "Sources",
-    "xAxis": "Invasiveness for AI labs",
-    "yAxis": "Detects violations"
+    "sources": "Sources"
   },
   "howWeScore": {
     "intro": "We score each tool on six criteria, shown on five-point meters (dots for what a tool achieves, squares for what it costs). A verification tool does not itself slow AI development; what matters is whether the rule it lets us check would slow it if fully respected. \"Relevance to pacing\" therefore asks how many routes to more capable AI the verified rule would close. We distinguish four routes: more computing power for training, better algorithms, more training after the main run, and better ways of drawing out what a model can already do.",
