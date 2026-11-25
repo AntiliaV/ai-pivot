@@ -6,6 +6,10 @@
 
 ------------------------------------------------------------------------
 
+### 2026-11-25 — Pacing explorer v2.4: site follows the new text and package rule
+
+Implemented the 25 November decisions in the site: new introduction, tools introduction and package section; trade-off map and `chart.js` removed (`chart.js` to `Archive/_to_delete/`). The invasiveness limit now covers each tool's whole chain of supporting measures, so at Medium and Low the bandwidth cap is left out (physical chip inspection is Heavy). "Foundation" renamed "supporting measure"; validator reads dependency reasons from the Supporting measures list. *Why:* to match `Website text.md`. Touched: `2. Code/pacing-explorer/` (four commits).
+
 ### 2026-11-22 — Pacing explorer website: version 2 built
 
 Rebuilt the pacing explorer for five tools (FlexHEGs removed): a main page, five tool pages, and a validator that fails if site text, scores, stances, readiness or sources differ from `Website text.md` and the mappings. *Why:* a short site for policymakers whose every word and score traces to a source. Touched: `3. Own projects/Pacing — verification vs invasiveness/2. Code/pacing-explorer/` (four commits, not yet pushed). Open questions are in the session summary.
