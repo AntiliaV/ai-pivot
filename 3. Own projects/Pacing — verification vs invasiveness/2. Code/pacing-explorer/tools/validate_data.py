@@ -14,8 +14,11 @@ Sources it compares against (both in "4. Drafting", next to the site's folder tr
 What it checks
   (a) Site text. Every piece of wording in data/interventions.js, data/method.js and
       data/glossary.js that comes from "Website text.md" is identical to it. That covers
-      the one-line reason for each dependency (dependsOnWhy, from the "Dependencies" list in
-      section 7, with its first letter capitalised) and every glossary definition. Exempt:
+      the introduction above the tool boxes (section 5), the package section (section 7:
+      its paragraphs, the line before the list of supporting measures, that list and the
+      closing paragraph), the one-line reason for each dependency (dependsOnWhy: the second
+      sentence of the matching bullet in section 7's "Supporting measures" list) and every
+      glossary definition. Exempt:
       only the interface labels set in the build brief (section titles on tool pages, meter
       labels, Low/Medium/High and Light/Moderate/Heavy, stance names,
       "Learn more →", "← All tools", "Sources", "Glossary"). Links are part of the text:
@@ -64,6 +67,14 @@ ACTOR_WEBSITE = {"labs": "AI labs", "chipCloudFirms": "Chip and cloud firms",
 ACTOR_MAPPING = {"labs": "Labs", "chipCloudFirms": "Chip and cloud firms",
                  "leadingState": "Leading state", "trailingState": "Trailing state"}
 STANCES = ["cooperate", "circumvent", "undermine"]
+# Words in a "Supporting measures" bullet's bold lead-in that identify each tool, e.g.
+# "**Physical chip inspection is linked to the chip ledger.**" -> inspections depends on ledger.
+TOOL_KEYWORDS = {"ledger": ["ledger"], "inspections": ["inspection"], "evaluations": ["evaluation"],
+                 "bandwidth": ["interconnect", "bandwidth"], "metering": ["metering"]}
+# Top-level fields of data/interventions.js (anything else is left over from an older version).
+DATA_KEYS = ["siteTitle", "introduction", "proposals", "ranking", "toolsIntro", "builder", "interventions"]
+# Section titles in data/method.js.
+TITLE_KEYS = ["proposals", "ranking", "tools", "builder", "appendix", "howWeScore", "glossary"]
 # Wording the site must not show (the mappings still contain it).
 FORBIDDEN = ["(our inference)", "Atlas"]
 INFERENCE = re.compile(r"\s*\(our inference\)")
@@ -224,12 +235,10 @@ def parse_website(path):
         elif h2.startswith("4."):
             web["ranking"] = {"intro": paras[0], "table": [b[1] for b in blocks if b[0] == "table"][0], "legend": paras[1]}
         elif h2.startswith("5."):
+            web["tools_intro"] = [p for p in paras if not p.startswith("**")]
             web["tool_descriptions"] = paras
-        elif h2.startswith("6."):
-            web["caption"] = paras[0]
         elif h2.startswith("7."):
-            web["builder_intro"] = paras[0]
-            web["dependencies"] = [b[1] for b in blocks if b[0] == "li"]
+            web["builder"] = parse_builder(blocks)
         elif h2 == "Intervention pages" and h3:
             web["tools"][h3] = parse_tool(blocks)
         elif h2.startswith("8.") and h3 == "How we score":
@@ -242,6 +251,41 @@ def parse_website(path):
                     terms.append((m.group(1), m.group(2)))
             web["glossary"] = terms
     return web
+
+
+def parse_builder(blocks):
+    """Section 7: paragraphs, the line that introduces the list of supporting measures,
+    the list itself (one bullet per dependency), and the paragraphs after it."""
+    first_li = next(i for i, (kind, _) in enumerate(blocks) if kind == "li")
+    before = [text for kind, text in blocks[:first_li] if kind == "p"]
+    items = [text for kind, text in blocks[first_li:] if kind == "li"]
+    after = [text for kind, text in blocks[first_li:] if kind == "p"]
+    return {"intro": before[:-1], "supportingLead": before[-1], "supporting": items, "closing": after}
+
+
+def tool_in(phrase):
+    """The one tool id whose keywords appear in a phrase, or None."""
+    hits = [tid for tid, words in TOOL_KEYWORDS.items() if any(w in phrase.lower() for w in words)]
+    return hits[0] if len(hits) == 1 else None
+
+
+def dependency_reasons(items):
+    """{(dependent id, supporting id): reason} from the "Supporting measures" bullets.
+    Each bullet reads "**<dependent> is linked to <supporting measure>.** <reason>. <more>";
+    the reason is the sentence right after the bold lead-in."""
+    out = {}
+    for item in items:
+        m = re.fullmatch(r"\*\*(.+?) is linked to (.+?)\.\*\* (.+)", item)
+        if not m:
+            error("Website text.md: cannot read the supporting-measure bullet %r" % item[:70])
+            continue
+        dependent, supporting = tool_in(m.group(1)), tool_in(m.group(2))
+        if not dependent or not supporting:
+            error("Website text.md: cannot tell which tools the bullet %r links (see TOOL_KEYWORDS)" % item[:70])
+            continue
+        reason = re.match(r"(.+?\.)(?=\s|$)", m.group(3)).group(1)
+        out[(dependent, supporting)] = reason
+    return out
 
 
 def rich_blocks(blocks):
@@ -434,10 +478,21 @@ def check_structure(data, method, glossary):
     if not isinstance(items, list) or not items:
         error("'interventions' must be a non-empty list")
         return []
-    for key in ("siteTitle", "caption", "builderIntro"):
+    for key in ("siteTitle", "toolsIntro"):
         present("data." + key, data.get(key))
     for key in ("introduction",):
         present("data." + key, data.get(key), list)
+    for key in data:
+        if key not in DATA_KEYS:
+            error("data.%s: not used by the site (left over from an older version?)" % key)
+    bd = data.get("builder")
+    if present("data.builder", bd, dict):
+        for key in ("intro", "supporting", "closing"):
+            present("data.builder." + key, bd.get(key), list)
+        present("data.builder.supportingLead", bd.get("supportingLead"))
+    titles = method.get("sectionTitles", {})
+    if sorted(titles) != sorted(TITLE_KEYS):
+        error("method.js sectionTitles has %s; expected %s" % (sorted(titles), sorted(TITLE_KEYS)))
     ids = [iv.get("id") for iv in items]
     for dup in {i for i in ids if ids.count(i) > 1}:
         error("id %r is used more than once" % dup)
@@ -544,34 +599,25 @@ def check_site_text(data, method, glossary, web):
     eq("ranking: table rows", rk.get("rows"), web["ranking"]["table"][1:])
     eq("ranking: legend", rk.get("legend"), web["ranking"]["legend"])
 
-    eq("trade-off map caption", data.get("caption"), web["caption"])
-    eq("builder intro", data.get("builderIntro"), web["builder_intro"])
+    eq("tools section: introduction (section 5)", [data.get("toolsIntro")], web["tools_intro"])
+    bd, wb = data.get("builder", {}), web["builder"]
+    eq("package section: paragraphs before the list", bd.get("intro"), wb["intro"])
+    eq("package section: line before the list", bd.get("supportingLead"), wb["supportingLead"])
+    eq("package section: supporting measures list", bd.get("supporting"), wb["supporting"])
+    eq("package section: closing paragraph(s)", bd.get("closing"), wb["closing"])
 
-    # Reasons for dependencies: the list in section 7 ("X needs the Y: reason."), first letter capitalised.
-    by_name = {iv.get("name"): iv for iv in data["interventions"]}
-    expected_reasons = {}
-    for line in web.get("dependencies", []):
-        m = re.fullmatch(r"(.+?) needs (?:the )?(.+?): (.+)", line)
-        if not m:
-            error("Website text.md: cannot read the dependency line %r" % line)
-            continue
-        dependent = next((iv for iv in data["interventions"] if iv.get("name") == m.group(1)), None)
-        dep = next((iv for iv in data["interventions"] if iv.get("name", "").lower() == m.group(2).lower()), None)
-        if not dependent or not dep:
-            error("Website text.md: the dependency line %r names a tool that is not on the site" % line)
-            continue
-        reason = m.group(3)
-        expected_reasons[(dependent["id"], dep["id"])] = reason[:1].upper() + reason[1:]
+    # Reasons for dependencies: the sentence after each bullet's bold lead-in in section 7.
+    expected_reasons = dependency_reasons(wb["supporting"])
     for iv in data["interventions"]:
         for d in iv.get("dependsOn", []):
             if (iv["id"], d) not in expected_reasons:
-                error("%s depends on %s, but section 7 of Website text.md has no line for it" % (iv["id"], d))
+                error("%s depends on %s, but section 7 of Website text.md has no supporting-measure bullet for it" % (iv["id"], d))
             else:
                 eq("%s: reason for needing %s (dependsOnWhy)" % (iv["id"], d),
                    iv.get("dependsOnWhy", {}).get(d), expected_reasons[(iv["id"], d)])
     for (a, b) in expected_reasons:
         if b not in next(iv for iv in data["interventions"] if iv["id"] == a).get("dependsOn", []):
-            error("section 7 of Website text.md says %s needs %s, but dependsOn does not list it" % (a, b))
+            error("section 7 of Website text.md links %s to %s, but dependsOn does not list it" % (a, b))
 
     descriptions = tool_descriptions(web)
     names = [iv.get("name") for iv in data["interventions"]]
@@ -606,7 +652,6 @@ def check_site_text(data, method, glossary, web):
         "proposals": next(v for k, v in wanted.items() if k.startswith("3.")),
         "ranking": next(v for k, v in wanted.items() if k.startswith("4.")),
         "tools": next(v for k, v in wanted.items() if k.startswith("5.")),
-        "map": next(v for k, v in wanted.items() if k.startswith("6.")),
         "builder": next(v for k, v in wanted.items() if k.startswith("7.")),
         "appendix": next(v for k, v in wanted.items() if k.startswith("8.")),
         "howWeScore": "How we score",
@@ -654,7 +699,8 @@ def check_glossary(glossary, web):
     # Which terms appear in the site's text? A term nobody can see is only a warning.
     corpus = " ".join(
         [web["site_title"]] + web["introduction"] + [web["proposals"]["intro"]] + [flatten_text(g) for g in web["proposals"]["items"]] + [web["ranking"]["intro"], web["ranking"]["legend"]]
-        + web["tool_descriptions"] + [web["caption"], web["builder_intro"]]
+        + web["tool_descriptions"] + web["tools_intro"]
+        + web["builder"]["intro"] + [web["builder"]["supportingLead"]] + web["builder"]["supporting"] + web["builder"]["closing"]
         + [b[1] for b in web["how_we_score"]["blocks"] if b[0] == "p"]
         + [" ".join(str(v) for v in json.dumps(web["tools"], ensure_ascii=False).split())]
     )
