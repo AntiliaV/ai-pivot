@@ -7,12 +7,16 @@
 //   1. Weights      every criterion counts 1; each criterion the user picked counts 3.
 //   2. Orientation  burden and invasiveness are used as 6 - score, so higher is always better.
 //   3. Fit          fit = sum(weight x oriented score) / sum(weights), on a 1 to 5 scale.
-//   4. Constraints  tools above the user's invasiveness limit are removed.
+//   4. Constraints  the invasiveness ceiling applies to each candidate together with its
+//                   full chain of supporting measures (dependsOn, followed recursively).
+//                   If any tool in that chain is above the ceiling, the candidate is left
+//                   out, and the explanation names the supporting measure that caused it.
 //   5. Selection    every remaining tool with fit >= 3.0 is included. If none
-//                   qualifies, the single best is included, with a note that it falls short.
-//   6. Dependencies anything an included tool depends on is added as a foundation,
-//                   even if a constraint had removed it (and that is said explicitly).
-//   7. Layout       layers are ordered with foundations first, then in card order.
+//                   qualifies, the single best remaining tool is included, with a note
+//                   that it falls short. If no tool remains, there is no package.
+//   6. Dependencies anything an included tool depends on is added as a supporting
+//                   measure. By rule 4, it is never above the ceiling.
+//   7. Layout       layers are ordered with supporting measures first, then in card order.
 //   8. Other side   for each tool in the package, the trailing state's expected stance
 //                   and reason are listed (always, whatever the other choices).
 //   9. Wording      the explanation is generated from templates and the scores only.
@@ -94,6 +98,20 @@
     return intervention.scores.invasiveness.score <= limit;
   }
 
+  // Every supporting measure a tool requires, directly or through another supporting
+  // measure (dependsOn, followed recursively), nearest first. The tool itself is not included.
+  function supportChain(id, map) {
+    var chain = [];
+    var queue = ((map[id] && map[id].dependsOn) || []).slice();
+    while (queue.length) {
+      var dep = queue.shift();
+      if (dep === id || chain.indexOf(dep) !== -1 || !map[dep]) { continue; }
+      chain.push(dep);
+      (map[dep].dependsOn || []).forEach(function (next) { queue.push(next); });
+    }
+    return chain;
+  }
+
   // ---------- rule 6: dependencies ----------
 
   // Returns every id in the package (the selected ids plus everything they
@@ -101,7 +119,7 @@
   function resolveDependencies(selectedIds, interventions) {
     var map = byId(interventions);
     var ids = [];
-    var foundationFor = {};
+    var supportFor = {};
     var queue = selectedIds.slice();
     while (queue.length) {
       var id = queue.shift();
@@ -109,17 +127,17 @@
       ids.push(id);
       (map[id].dependsOn || []).forEach(function (dep) { queue.push(dep); });
     }
-    ids.forEach(function (id) { foundationFor[id] = []; });
+    ids.forEach(function (id) { supportFor[id] = []; });
     ids.forEach(function (id) {
       (map[id].dependsOn || []).forEach(function (dep) {
-        if (foundationFor[dep] && foundationFor[dep].indexOf(id) === -1) { foundationFor[dep].push(id); }
+        if (supportFor[dep] && supportFor[dep].indexOf(id) === -1) { supportFor[dep].push(id); }
       });
     });
-    return { ids: ids, foundationFor: foundationFor };
+    return { ids: ids, supportFor: supportFor };
   }
 
   // 0 for a tool that depends on nothing, 1 for a tool that depends only on
-  // such tools, and so on. Used to put foundations first.
+  // such tools, and so on. Used to put supporting measures first.
   function dependencyDepth(id, map, seen) {
     seen = seen || [];
     if (seen.indexOf(id) !== -1 || !map[id]) { return 0; }
@@ -155,12 +173,19 @@
     var map = byId(interventions);
     var weights = computeWeights(choices.priorities, method);
 
-    // One row per tool: its fit and whether it passes each test.
+    // One row per tool: its fit and whether it passes each test. Rule 4 looks at the
+    // tool and at its whole chain of supporting measures.
     var rows = interventions.map(function (iv) {
       var fit = computeFit(iv, weights, method);
       var withinLimit = withinInvasivenessLimit(iv, choices.maxInvasiveness, method);
+      var chain = supportChain(iv.id, map);
+      var blockedBy = chain.filter(function (dep) { return !withinInvasivenessLimit(map[dep], choices.maxInvasiveness, method); });
+      var feasible = withinLimit && blockedBy.length === 0;
       var meets = meetsThreshold(fit, method);
-      return { id: iv.id, fit: fit, withinLimit: withinLimit, meetsThreshold: meets, qualifies: withinLimit && meets };
+      return {
+        id: iv.id, fit: fit, withinLimit: withinLimit, supportChain: chain, blockedBy: blockedBy,
+        feasible: feasible, meetsThreshold: meets, qualifies: feasible && meets
+      };
     });
     var rowById = {};
     rows.forEach(function (r) { rowById[r.id] = r; });
@@ -170,7 +195,7 @@
     var noneQualify = false;
     var noneWithinLimit = false;
     if (!selected.length) {
-      var candidates = rows.filter(function (r) { return r.withinLimit; });
+      var candidates = rows.filter(function (r) { return r.feasible; });
       if (candidates.length) {
         var best = candidates[0];
         candidates.forEach(function (r) { if (r.fit.value > best.fit.value) { best = r; } });
@@ -190,8 +215,8 @@
       var isSelected = selected.indexOf(id) !== -1;
       return {
         id: id,
-        role: isSelected ? (noneQualify ? "closest" : "fit") : "foundation",
-        foundationFor: resolved.foundationFor[id],
+        role: isSelected ? (noneQualify ? "closest" : "fit") : "supporting",
+        supportFor: resolved.supportFor[id],
         withinLimit: rowById[id].withinLimit,
         fit: rowById[id].fit,
         steps: { first: (iv.firstSteps || []).slice() }
@@ -205,7 +230,8 @@
     });
 
     var excluded = rows.filter(function (r) { return resolved.ids.indexOf(r.id) === -1; }).map(function (r) {
-      return { id: r.id, reason: r.withinLimit ? "fit" : "invasiveness", fit: r.fit };
+      var reason = !r.withinLimit ? "invasiveness" : r.blockedBy.length ? "supportingMeasure" : "fit";
+      return { id: r.id, reason: reason, blockedBy: r.blockedBy.slice(), meetsThreshold: r.meetsThreshold, fit: r.fit };
     });
 
     // Rule 8: the trailing state's stance and reason, for each tool in the package.
@@ -226,11 +252,11 @@
     };
   }
 
-  // ---------- the one-line chain ("Foundation: chip ledger -> ...") ----------
+  // ---------- the one-line chain ("Supporting measure: chip ledger -> ...") ----------
 
   function layerLabel(layer, map) {
     var hasDeps = (map[layer.id].dependsOn || []).length > 0;
-    if (layer.role === "foundation" || (layer.foundationFor.length && !hasDeps)) { return "Foundation"; }
+    if (layer.role === "supporting" || (layer.supportFor.length && !hasDeps)) { return "Supporting measure"; }
     return layer.role === "closest" ? "Closest fit" : "Selected";
   }
 
@@ -262,7 +288,7 @@
     }
 
     if (result.noneWithinLimit) {
-      out.why.push("No tool is within the limit on invasiveness for AI labs, so there is no package to show. A higher limit shows more options.");
+      out.why.push("No tool, together with its supporting measures, is within the limit on invasiveness for AI labs, so there is no package to show. A higher limit shows more options.");
       return out;
     }
 
@@ -273,7 +299,7 @@
         " out of 5. The closest is " + inText(closest) + ", shown here.");
     } else if (!choices.priorities.length) {
       out.why.push("Each tool shown either has an overall fit of at least " + threshold +
-        " out of 5, or is needed as a foundation for one that does.");
+        " out of 5, or is needed as a supporting measure for one that does.");
     } else {
       // Group the picked priorities by the part of the package that is best on each.
       var groups = [];
@@ -354,24 +380,31 @@
     // Notes: one per tool that needs a word of explanation.
     result.layers.forEach(function (layer) {
       var iv = map[layer.id];
-      if (layer.role === "foundation") {
-        var reasons = layer.foundationFor.map(function (depId) {
+      if (layer.role === "supporting") {
+        var reasons = layer.supportFor.map(function (depId) {
           var dependent = map[depId];
           return (dependent.dependsOnWhy && dependent.dependsOnWhy[layer.id]) ||
             (dependent.name + " cannot work without it.");
         });
-        out.notes.push(iv.name + ": " +
-          (layer.withinLimit ? "not selected on fit, but needed as a foundation. "
-            : "above the limit on invasiveness for AI labs, but still needed as a foundation. ") +
-          reasons.join(" "));
+        out.notes.push(iv.name + ": not selected on fit, but needed as a supporting measure. " + reasons.join(" "));
       }
     });
+    var inv = criterionById(method, "invasiveness");
     result.excluded.forEach(function (ex) {
       var iv = map[ex.id];
       if (ex.reason === "invasiveness") {
-        var c = criterionById(method, "invasiveness");
         out.notes.push(iv.name + ": left out. Invasiveness for AI labs (" +
-          wordFor(c, iv.scores.invasiveness.score, method) + ") is above the limit.");
+          wordFor(inv, iv.scores.invasiveness.score, method) + ") is above the limit.");
+      } else if (ex.reason === "supportingMeasure") {
+        var named = ex.blockedBy.map(function (id) {
+          return map[id].name + " (" + wordFor(inv, map[id].scores.invasiveness.score, method) + ")";
+        });
+        var sentence = ex.blockedBy.length === 1
+          ? iv.name + " is left out: its supporting measure, " + map[ex.blockedBy[0]].name +
+            ", is above the invasiveness limit (" + wordFor(inv, map[ex.blockedBy[0]].scores.invasiveness.score, method) + ")."
+          : iv.name + " is left out: its supporting measures, " + joinList(named) + ", are above the invasiveness limit.";
+        if (!ex.meetsThreshold) { sentence += " Its overall fit with the priorities is also below " + threshold + " out of 5."; }
+        out.notes.push(sentence);
       } else {
         out.notes.push(iv.name + ": left out. Overall fit with the priorities is below " + threshold + " out of 5.");
       }
@@ -387,6 +420,7 @@
     computeFit: computeFit,
     meetsThreshold: meetsThreshold,
     withinInvasivenessLimit: withinInvasivenessLimit,
+    supportChain: supportChain,
     resolveDependencies: resolveDependencies,
     dependencyDepth: dependencyDepth,
     normaliseChoices: normaliseChoices,

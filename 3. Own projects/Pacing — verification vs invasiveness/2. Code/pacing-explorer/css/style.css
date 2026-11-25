@@ -165,7 +165,7 @@ button.term:hover { background: #e8eefb; }
   border: 1px solid var(--line); border-left: 5px solid var(--c-benefit); border-radius: 8px;
   padding: .6rem .8rem; display: flex; flex-direction: column; gap: .25rem; align-items: flex-start;
 }
-.layer-foundation { border-left-color: var(--c-empty); }
+.layer-supporting { border-left-color: var(--c-empty); }
 .layer-role { font-size: .8rem; color: var(--muted); }
 .layer-name { font-weight: 650; }
 .layer-supports { font-size: .88rem; color: var(--muted); }

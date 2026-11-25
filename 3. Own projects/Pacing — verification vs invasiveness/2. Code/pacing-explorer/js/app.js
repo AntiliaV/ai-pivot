@@ -483,14 +483,14 @@
 
   function layerCard(layer, result) {
     var iv = byId[layer.id];
-    var roleText = layer.role === "foundation" ? "Needed as a foundation"
+    var roleText = layer.role === "supporting" ? "Needed as a supporting measure"
       : layer.role === "closest" ? "Closest fit"
       : (result.choices.priorities.length ? "Fits the priorities" : "Fits overall");
     return h("li", { class: "layer layer-" + layer.role }, [
       h("span", { class: "layer-role" }, roleText),
       h("a", { class: "layer-name", href: toolHref(iv.id) }, iv.name),
-      layer.foundationFor.length ? h("span", { class: "layer-supports" },
-        "Foundation for: " + B.joinList(layer.foundationFor.map(function (d) { return byId[d].name; }))) : null
+      layer.supportFor.length ? h("span", { class: "layer-supports" },
+        "Supporting measure for: " + B.joinList(layer.supportFor.map(function (d) { return byId[d].name; }))) : null
     ]);
   }
 
@@ -503,8 +503,8 @@
     function outcome(row) {
       var layer = layerById[row.id];
       if (!layer) { return "Left out"; }
-      return layer.role === "foundation"
-        ? "Included as a foundation for " + B.joinList(layer.foundationFor.map(function (d) { return byId[d].name; }))
+      return layer.role === "supporting"
+        ? "Included as a supporting measure for " + B.joinList(layer.supportFor.map(function (d) { return byId[d].name; }))
         : layer.role === "closest" ? "Included as the closest fit" : "Included";
     }
 
@@ -544,6 +544,16 @@
           h("td", null, ""),
           result.rows.map(function (row) { return h("td", null, row.withinLimit ? "Yes" : "No"); })
         ]),
+        h("tr", null, [
+          h("th", { scope: "row" }, "Supporting measures within the invasiveness limit?"),
+          h("td", null, ""),
+          result.rows.map(function (row) {
+            if (!row.supportChain.length) { return h("td", null, "None needed"); }
+            return h("td", null, row.blockedBy.length
+              ? "No: " + B.joinList(row.blockedBy.map(function (d) { return byId[d].name; }))
+              : "Yes");
+          })
+        ]),
         h("tr", { class: "sum-row" }, [
           h("th", { scope: "row" }, "Outcome"),
           h("td", null, ""),
@@ -559,10 +569,12 @@
           h("li", null, "Every criterion counts " + METHOD.builder.baseWeight + ". Each criterion picked as a priority counts " + METHOD.builder.pickedWeight + "."),
           h("li", null, "Scores run from 1 to 5. For the two cost criteria (burden on government, invasiveness for AI labs), the score is turned round as 6 minus the score, so that a higher number is always better."),
           h("li", null, "Fit is the sum of score × weight, divided by the sum of the weights. It stays on the 1 to 5 scale."),
-          h("li", null, "A tool is included if its fit is at least " + threshold + " and its invasiveness score is within the limit (" +
-            (limit >= 5 ? "no limit was set" : "scores up to " + limit + " out of 5 were allowed") + ")."),
-          h("li", null, "If no tool qualifies, the single best is shown, with a note that it falls short."),
-          h("li", null, "Anything an included tool depends on is added as a foundation, even if it did not qualify by itself.")
+          h("li", null, "The invasiveness limit (" +
+            (limit >= 5 ? "no limit was set" : "scores up to " + limit + " out of 5 were allowed") +
+            ") applies to each tool together with every supporting measure it requires, directly or through another supporting measure. If any of them is above the limit, the tool is left out, and the explanation names the supporting measure that caused this."),
+          h("li", null, "A tool that passes this check is included if its fit is at least " + threshold + "."),
+          h("li", null, "If no tool qualifies, the single best tool that passes the check is shown, with a note that it falls short. If no tool passes the check, there is no package."),
+          h("li", null, "The supporting measures of each included tool are added, even if they did not qualify on fit by themselves. Supporting measures are never added above the invasiveness limit.")
         ]),
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Fit arithmetic" }, tbl)
       ])
@@ -579,7 +591,7 @@
 
     if (result.noneWithinLimit) {
       box.appendChild(h("p", { class: "why" }, text.priorities + " " + text.why.join(" ")));
-      status.textContent = "No tool is within the invasiveness limit.";
+      status.textContent = "No tool, together with its supporting measures, is within the invasiveness limit.";
       box.appendChild(workedOut(result));
       return;
     }
@@ -592,7 +604,7 @@
     });
     box.appendChild(chainNode);
 
-    // The tools in the package, foundations first.
+    // The tools in the package, supporting measures first.
     box.appendChild(h("ol", { class: "layers" }, result.layers.map(function (l) { return layerCard(l, result); })));
 
     // Why this package, and what it gives up.

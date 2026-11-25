@@ -66,12 +66,12 @@
     });
     check("(a) no priorities: ledger, bandwidth cap and metering are selected on fit (the cap at exactly 3.0)",
       r.selected.join(",") === "ledger,bandwidth,metering" && row(r, "bandwidth").meetsThreshold, r.selected.join(","));
-    check("(a) no priorities: inspections come in as a foundation only", layer(r, "inspections") && layer(r, "inspections").role === "foundation");
+    check("(a) no priorities: inspections come in as a supporting measure only", layer(r, "inspections") && layer(r, "inspections").role === "supporting");
     check("(a) no priorities: evaluations are left out on fit",
       !layer(r, "evaluations") && r.excluded.filter(function (e) { return e.id === "evaluations" && e.reason === "fit"; }).length === 1);
     check("(a) no priorities: layers run ledger, metering, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,metering,inspections,bandwidth", ids(r.layers).join(","));
     var labels = B.describeChain(r, DATA).map(function (c) { return c.label; }).join(",");
-    check("(a) no priorities: the chain labels run Foundation, Selected, Foundation, Selected", labels === "Foundation,Selected,Foundation,Selected", labels);
+    check("(a) no priorities: the chain labels run Supporting measure, Selected, Supporting measure, Selected", labels === "Supporting measure,Selected,Supporting measure,Selected", labels);
     var text = B.explain(r, DATA, METHOD);
     check("(a) no priorities: the explanation says every criterion counts equally", /every criterion counts equally/.test(text.priorities), text.priorities);
   })();
@@ -80,18 +80,21 @@
   (function () {
     var r = B.buildPackage(DATA, METHOD, { priorities: ["invasiveness"], maxInvasiveness: "low" });
     check("(b) light on labs + low limit: invasiveness has weight 3", r.weights.invasiveness === 3);
-    check("(b) light on labs + low limit: ledger, bandwidth cap and metering are selected", r.selected.join(",") === "ledger,bandwidth,metering", r.selected.join(","));
+    check("(b) light on labs + low limit: ledger and metering are selected", r.selected.join(",") === "ledger,metering", r.selected.join(","));
     var ev = r.excluded.filter(function (e) { return e.id === "evaluations"; })[0];
     check("(b) light on labs + low limit: evaluations are excluded for invasiveness", ev && ev.reason === "invasiveness" && ids(r.layers).indexOf("evaluations") === -1);
-    var insp = layer(r, "inspections");
-    check("(b) light on labs + low limit: inspections exceed the limit but return as a foundation for the bandwidth cap",
-      insp && insp.role === "foundation" && insp.withinLimit === false && insp.foundationFor.join(",") === "bandwidth");
-    check("(b) light on labs + low limit: layers run ledger, metering, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,metering,inspections,bandwidth", ids(r.layers).join(","));
+    var insp = r.excluded.filter(function (e) { return e.id === "inspections"; })[0];
+    check("(b) light on labs + low limit: inspections are excluded for invasiveness and not brought back as a supporting measure",
+      insp && insp.reason === "invasiveness" && !layer(r, "inspections"));
+    var bw = r.excluded.filter(function (e) { return e.id === "bandwidth"; })[0];
+    check("(b) light on labs + low limit: the bandwidth cap is left out because its supporting measure (inspections) is above the limit",
+      bw && bw.reason === "supportingMeasure" && bw.blockedBy.join(",") === "inspections" && row(r, "bandwidth").withinLimit, bw && bw.blockedBy.join(","));
+    check("(b) light on labs + low limit: layers run ledger, metering", ids(r.layers).join(",") === "ledger,metering", ids(r.layers).join(","));
     var f = row(r, "ledger").fit;
     check("(b) light on labs + low limit: ledger fit is 29/8 = 3.625", f.num === 29 && f.den === 8 && approx(f.value, 3.625));
     var notes = B.explain(r, DATA, METHOD).notes.join(" ");
-    check("(b) light on labs + low limit: the explanation says inspections are above the limit but still needed",
-      /Physical chip inspection: above the limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
+    check("(b) light on labs + low limit: the explanation names the supporting measure and its invasiveness word",
+      notes.indexOf("Interconnect bandwidth cap is left out: its supporting measure, Physical chip inspection, is above the invasiveness limit (Heavy).") !== -1, notes);
   })();
 
   // ---------- (c) "Relevance to pacing" as the priority ----------
@@ -112,27 +115,32 @@
     var resolved = B.resolveDependencies(["bandwidth"], DATA.interventions);
     check("(d) the bandwidth cap alone pulls in inspections", resolved.ids.indexOf("inspections") !== -1, resolved.ids.join(","));
     check("(d) the bandwidth cap alone pulls in the ledger too (through inspections)", resolved.ids.indexOf("ledger") !== -1);
-    check("(d) the ledger is recorded as a foundation for inspections", resolved.foundationFor.ledger.indexOf("inspections") !== -1);
-    check("(d) inspections are recorded as a foundation for the bandwidth cap", resolved.foundationFor.inspections.indexOf("bandwidth") !== -1);
+    check("(d) the ledger is recorded as a supporting measure for inspections", resolved.supportFor.ledger.indexOf("inspections") !== -1);
+    check("(d) inspections are recorded as a supporting measure for the bandwidth cap", resolved.supportFor.inspections.indexOf("bandwidth") !== -1);
+    var mapAll = byTool(DATA);
+    check("(d) the bandwidth cap's chain of supporting measures is inspections, then the ledger (followed recursively)",
+      B.supportChain("bandwidth", mapAll).join(",") === "inspections,ledger", B.supportChain("bandwidth", mapAll).join(","));
+    check("(d) the ledger, evaluations and metering need no supporting measure",
+      ["ledger", "evaluations", "metering"].every(function (id) { return B.supportChain(id, mapAll).length === 0; }));
     var alone = B.resolveDependencies(["metering", "evaluations"], DATA.interventions);
     check("(d) metering and evaluations pull in nothing", alone.ids.join(",") === "metering,evaluations", alone.ids.join(","));
 
-    // Real data, full package: the foundations come first.
+    // Real data, full package: the supporting measures come first.
     var r = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness", "verifiability"] });
     check("(d) a package with the bandwidth cap runs ledger, inspections, bandwidth cap", ids(r.layers).join(",") === "ledger,inspections,bandwidth", ids(r.layers).join(","));
-    check("(d) the ledger layer lists inspections among what it supports", layer(r, "ledger").foundationFor.indexOf("inspections") !== -1);
-    check("(d) the chain labels the ledger 'Foundation'", B.describeChain(r, DATA)[0].label === "Foundation");
+    check("(d) the ledger layer lists inspections among what it supports", layer(r, "ledger").supportFor.indexOf("inspections") !== -1);
+    check("(d) the chain labels the ledger 'Supporting measure'", B.describeChain(r, DATA)[0].label === "Supporting measure");
 
     // Synthetic: lower the ledger's scores so that it no longer qualifies on fit.
-    // It must still come in, with the role "foundation" and a note saying why.
+    // It must still come in, with the role "supporting" and a note saying why.
     var altered = clone(DATA);
     var ledger = tool(altered, "ledger");
     ["effectiveness", "coverage", "verifiability", "robustness"].forEach(function (k) { ledger.scores[k].score = 1; });
     var s = B.buildPackage(altered, METHOD, { priorities: ["effectiveness"] });
-    check("(d) synthetic: a ledger that fails on fit is still added, as a foundation",
-      layer(s, "ledger") && layer(s, "ledger").role === "foundation" && s.selected.indexOf("ledger") === -1);
+    check("(d) synthetic: a ledger that fails on fit is still added, as a supporting measure",
+      layer(s, "ledger") && layer(s, "ledger").role === "supporting" && s.selected.indexOf("ledger") === -1);
     var notes = B.explain(s, altered, METHOD).notes.join(" ");
-    check("(d) synthetic: the note says the ledger is needed as a foundation", /Chip production ledger: not selected on fit, but needed as a foundation/.test(notes), notes);
+    check("(d) synthetic: the note says the ledger is needed as a supporting measure", /Chip production ledger: not selected on fit, but needed as a supporting measure/.test(notes), notes);
     check("(d) synthetic: the note gives the reason from the data", notes.indexOf(tool(DATA, "inspections").dependsOnWhy.ledger) !== -1, notes);
   })();
 
@@ -141,13 +149,17 @@
   // A constraint excludes a tool that another tool needs. Real data.
   (function () {
     var r = B.buildPackage(DATA, METHOD, { priorities: ["effectiveness"], maxInvasiveness: "medium" });
-    var insp = layer(r, "inspections");
-    check("(e) medium limit: inspections exceed the limit but return as a foundation for the bandwidth cap",
-      insp && insp.role === "foundation" && insp.withinLimit === false);
+    check("(e) medium limit: inspections are above the limit and are not added as a supporting measure", !layer(r, "inspections"));
+    var bw = r.excluded.filter(function (e) { return e.id === "bandwidth"; })[0];
+    check("(e) medium limit: the bandwidth cap (fit exactly 3.0, invasiveness within the limit) is omitted because of inspections",
+      bw && bw.reason === "supportingMeasure" && bw.meetsThreshold && row(r, "bandwidth").withinLimit && !layer(r, "bandwidth"));
     check("(e) medium limit: evaluations are left out for invasiveness",
       r.excluded.filter(function (e) { return e.id === "evaluations" && e.reason === "invasiveness"; }).length === 1);
+    check("(e) medium limit: the package is the ledger alone", ids(r.layers).join(",") === "ledger", ids(r.layers).join(","));
     var notes = B.explain(r, DATA, METHOD).notes.join(" ");
-    check("(e) medium limit: the explanation says so explicitly", /above the limit on invasiveness for AI labs, but still needed as a foundation/.test(notes), notes);
+    check("(e) medium limit: the conflict is reported, naming the supporting measure and its invasiveness word",
+      notes.indexOf("Interconnect bandwidth cap is left out: its supporting measure, Physical chip inspection, is above the invasiveness limit (Heavy).") !== -1, notes);
+    check("(e) medium limit: no note says a tool above the limit is still needed", !/still needed/.test(notes), notes);
   })();
 
   // The other side's stance: one trailing-state note per tool in the package, whatever the choices.
@@ -192,7 +204,7 @@
     check("(h) synthetic: the explanation says no option fits well", /No option fits the priorities well/.test(B.explain(r, altered, METHOD).why.join(" ")));
     var none = B.buildPackage(altered, METHOD, { maxInvasiveness: "low" });
     check("(h) synthetic: when every tool exceeds the limit, the package is empty and says why",
-      none.noneWithinLimit && none.layers.length === 0 && /No tool is within the limit/.test(B.explain(none, altered, METHOD).why.join(" ")));
+      none.noneWithinLimit && none.layers.length === 0 && /No tool, together with its supporting measures, is within the limit/.test(B.explain(none, altered, METHOD).why.join(" ")));
   })();
 
   // Real data: every combination of inputs gives a consistent package.
@@ -223,18 +235,101 @@
               iv.dependsOn.forEach(function (dep) {
                 if (present.indexOf(dep) === -1) { problems.push(JSON.stringify(choices) + ": " + l.id + " is missing " + dep); }
               });
-              if (!l.withinLimit && l.role !== "foundation") { problems.push(JSON.stringify(choices) + ": " + l.id + " exceeds the limit but is not a foundation"); }
+              if (!B.withinInvasivenessLimit(iv, limit, METHOD)) { problems.push(JSON.stringify(choices) + ": " + l.id + " is above the limit but was added"); }
               if (i > 0 && B.dependencyDepth(r.layers[i - 1].id, byTool(DATA)) > B.dependencyDepth(l.id, byTool(DATA))) {
-                problems.push(JSON.stringify(choices) + ": layers are not ordered with foundations first");
+                problems.push(JSON.stringify(choices) + ": layers are not ordered with supporting measures first");
               }
             });
             if (present.length + r.excluded.length !== DATA.interventions.length) { problems.push(JSON.stringify(choices) + ": a tool is neither included nor excluded"); }
             if (!text.priorities || !text.why.length) { problems.push(JSON.stringify(choices) + ": empty explanation"); }
+            r.excluded.forEach(function (ex) {
+              if (ex.reason !== "supportingMeasure") { return; }
+              var name = DATA.interventions.filter(function (x) { return x.id === ex.id; })[0].name;
+              if (!text.notes.some(function (n) { return n.indexOf(name + " is left out: its supporting measure") === 0; })) {
+                problems.push(JSON.stringify(choices) + ": the conflict for " + ex.id + " is not explained");
+              }
+            });
             if (r.rivalNotes.length !== r.layers.length) { problems.push(JSON.stringify(choices) + ": a tool has no note on the other side"); }
           }
       });
     });
-    check("(i) all " + count + " input combinations give a consistent package and explanation", problems.length === 0, problems.slice(0, 3).join(" / "));
+    check("(i) all " + count + " input combinations give a consistent package and explanation, and nothing above the limit is ever added",
+      problems.length === 0, problems.slice(0, 3).join(" / "));
+  })();
+
+  // ---------- (j) the ceiling applies to supporting measures too ----------
+
+  // Synthetic: the conflict is found through an indirect supporting measure.
+  // Inspections are made light (within a medium limit), the ledger heavy (5).
+  // The bandwidth cap's direct supporting measure is fine, but its chain reaches the ledger.
+  (function () {
+    var altered = clone(DATA);
+    tool(altered, "inspections").scores.invasiveness.score = 3;
+    tool(altered, "ledger").scores.invasiveness.score = 5;
+    var r = B.buildPackage(altered, METHOD, { maxInvasiveness: "medium" });
+    var bw = r.excluded.filter(function (e) { return e.id === "bandwidth"; })[0];
+    var insp = r.excluded.filter(function (e) { return e.id === "inspections"; })[0];
+    check("(j) synthetic: a candidate whose indirect supporting measure exceeds the ceiling is omitted",
+      bw && bw.reason === "supportingMeasure" && bw.blockedBy.join(",") === "ledger" && !layer(r, "bandwidth"), bw && JSON.stringify(bw.blockedBy));
+    check("(j) synthetic: so is the tool in between (inspections need the ledger)",
+      insp && insp.reason === "supportingMeasure" && insp.blockedBy.join(",") === "ledger");
+    check("(j) synthetic: the heavy ledger is not added", !layer(r, "ledger"));
+    var notes = B.explain(r, altered, METHOD).notes.join(" ");
+    check("(j) synthetic: the conflict names the indirect supporting measure and its word",
+      notes.indexOf("Interconnect bandwidth cap is left out: its supporting measure, Chip production ledger, is above the invasiveness limit (Heavy).") !== -1, notes);
+  })();
+
+  // Synthetic: two supporting measures above the ceiling are both named.
+  (function () {
+    var altered = clone(DATA);
+    tool(altered, "ledger").scores.invasiveness.score = 5;
+    var r = B.buildPackage(altered, METHOD, { maxInvasiveness: "medium" });
+    var notes = B.explain(r, altered, METHOD).notes.join(" ");
+    check("(j) synthetic: with two supporting measures above the ceiling, both are named",
+      notes.indexOf("Interconnect bandwidth cap is left out: its supporting measures, Physical chip inspection (Heavy) and Chip production ledger (Heavy), are above the invasiveness limit.") !== -1, notes);
+  })();
+
+  // Synthetic: a blocked candidate that also falls short on fit says both.
+  (function () {
+    var altered = clone(DATA);
+    var bw = tool(altered, "bandwidth");
+    ["effectiveness", "coverage", "verifiability", "robustness"].forEach(function (k) { bw.scores[k].score = 1; });
+    var r = B.buildPackage(altered, METHOD, { maxInvasiveness: "low" });
+    var notes = B.explain(r, altered, METHOD).notes.join(" ");
+    check("(j) synthetic: a blocked candidate below the fit threshold is reported with both reasons",
+      /Interconnect bandwidth cap is left out: its supporting measure, Physical chip inspection, is above the invasiveness limit \(Heavy\)\. Its overall fit with the priorities is also below 3\.0 out of 5\./.test(notes), notes);
+  })();
+
+  // Synthetic: no candidate remains, because every tool is light but needs a heavy one.
+  (function () {
+    var altered = clone(DATA);
+    altered.interventions.forEach(function (iv) { iv.dependsOn = iv.id === "inspections" ? [] : ["inspections"]; iv.dependsOnWhy = {}; });
+    var r = B.buildPackage(altered, METHOD, { maxInvasiveness: "low" });
+    var text = B.explain(r, altered, METHOD);
+    check("(j) synthetic: when no candidate remains, the package is empty",
+      r.noneWithinLimit && r.layers.length === 0 && r.selected.length === 0, ids(r.layers).join(","));
+    check("(j) synthetic: and the explanation says so plainly",
+      text.why.join(" ") === "No tool, together with its supporting measures, is within the limit on invasiveness for AI labs, so there is no package to show. A higher limit shows more options.", text.why.join(" "));
+  })();
+
+  // Real data: whatever the choices, no tool in a package is above the ceiling,
+  // and every tool in a package has its whole chain of supporting measures in it.
+  (function () {
+    var problems = [];
+    var map = byTool(DATA);
+    ["any", "medium", "low"].forEach(function (limit) {
+      METHOD.criteria.forEach(function (c) {
+        var r = B.buildPackage(DATA, METHOD, { priorities: [c.id], maxInvasiveness: limit });
+        var present = ids(r.layers);
+        r.layers.forEach(function (l) {
+          if (!B.withinInvasivenessLimit(map[l.id], limit, METHOD)) { problems.push(limit + "/" + c.id + ": " + l.id + " is above the ceiling"); }
+          B.supportChain(l.id, map).forEach(function (dep) {
+            if (present.indexOf(dep) === -1) { problems.push(limit + "/" + c.id + ": " + l.id + " lacks " + dep); }
+          });
+        });
+      });
+    });
+    check("(j) real data: nothing above the ceiling is ever added, and every chain is complete", problems.length === 0, problems.slice(0, 3).join(" / "));
   })();
 
   // ---------- report ----------
