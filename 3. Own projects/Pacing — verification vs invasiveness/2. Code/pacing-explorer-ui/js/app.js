@@ -151,7 +151,7 @@
       h("thead", null, h("tr", null, header.map(function (c) { return h("th", { scope: "col" }, c); }))),
       h("tbody", null, rows.map(function (r) {
         return h("tr", null, r.map(function (c, i) {
-          return i === 0 && firstColHeader ? h("th", { scope: "row" }, c) : h("td", null, c);
+          return i === 0 && firstColHeader ? h("th", { scope: "row", "data-label": header[i] }, c) : h("td", { "data-label": header[i] }, c);
         }));
       }))
     ]));
@@ -261,7 +261,7 @@
     return box;
   }
 
-  // One row: label, five marks, word. Clicking or focusing the row shows the justification.
+  // One row: label, five marks, word. Activate with a click, Enter, or Space to read the justification.
   function meterRow(c, scoreObj, id) {
     var score = scoreObj.score;
     var pinned = false;
@@ -279,8 +279,6 @@
       note.hidden = !open;
       row.setAttribute("aria-expanded", open ? "true" : "false");
     }
-    row.addEventListener("focus", function () { show(true); });
-    row.addEventListener("blur", function () { if (!pinned) { show(false); } });
     row.addEventListener("click", function () {
       pinned = !pinned;
       show(pinned);
@@ -292,17 +290,79 @@
   // THE MAIN PAGE
   // =====================================================================
 
+  var homeOrder = ["introduction", "proposals", "ranking", "tools", "builder", "appendix"];
+  var homeLabels = { introduction: L.introduction, proposals: T.proposals, ranking: T.ranking,
+    tools: T.tools, builder: T.builder, appendix: T.appendix };
+
   function sectionHead(id, title) {
-    return h("h2", { id: id + "-title" }, title);
+    var index = homeOrder.indexOf(id);
+    return h("div", { class: "section-heading" }, [
+      h("span", { class: "section-index", "aria-hidden": "true" }, "0" + index),
+      h("h2", { id: id + "-title" }, title)
+    ]);
+  }
+
+  function contents(entries, extra) {
+    return h("nav", { class: "toc", "aria-label": "On this page" }, [
+      h("p", { class: "toc-heading" }, "On this page"),
+      h("button", { type: "button", class: "toc-toggle", "aria-expanded": "false", "aria-controls": "contents-list" }, [
+        h("span", { class: "toc-mobile-prefix" }, "Contents"),
+        h("span", { class: "toc-current" }, "On this page"),
+        h("span", { class: "menu-icon", "aria-hidden": "true" })
+      ]),
+      h("ol", { id: "contents-list" }, entries.map(function (entry, i) {
+        return h("li", null, h("a", { href: entry.href || "#" + entry.id, "data-section": entry.id }, [
+          h("span", { class: "toc-number", "aria-hidden": "true" }, "0" + (i + 1)),
+          h("span", null, entry.label)
+        ]));
+      })),
+      extra || null,
+      h("a", { class: "back-top", href: "#", "data-top": true }, "Back to top ↑")
+    ]);
+  }
+
+  function renderMasthead() {
+    document.body.insertBefore(h("header", { class: "masthead" },
+      h("div", { class: "masthead-inner" }, [
+        h("a", { class: "brand", href: "index.html", "aria-label": "Pacing explorer home" }, [
+          h("span", { class: "brand-mark", "aria-hidden": "true" }), "Pacing explorer"
+        ]),
+        h("nav", { "aria-label": "Main navigation" }, [
+          h("a", { href: "index.html#tools" }, "Explore the tools"),
+          h("a", { href: "index.html#builder" }, "Package explorer"),
+          h("a", { href: "index.html#appendix" }, T.appendix)
+        ])
+      ])
+    ), document.getElementById("main"));
   }
 
   function renderProposals(ctx) {
-    var s = h("section", { id: "proposals", "aria-labelledby": "proposals-title" }, [sectionHead("proposals", T.proposals)]);
-    s.appendChild(para(DATA.proposals.intro, ctx));
-    s.appendChild(h("ul", { class: "proposal-list" }, DATA.proposals.items.map(function (blocks) {
-      return h("li", null, richBlocks(blocks, ctx));
-    })));
-    return s;
+    var list = h("ul", { class: "proposal-list" }, DATA.proposals.items.map(function (blocks, i) {
+      var match = /^\[\*\*([^*]+)\*\*\]/.exec(blocks[0].text);
+      return h("li", null, h("details", { class: "proposal" }, [
+        h("summary", null, [
+          h("span", { class: "proposal-number", "aria-hidden": "true" }, "0" + (i + 1)),
+          h("span", null, match ? match[1] : "Proposal " + (i + 1)),
+          h("span", { class: "disclosure-icon", "aria-hidden": "true" })
+        ]),
+        h("div", { class: "proposal-body" }, richBlocks(blocks, ctx))
+      ]));
+    }));
+    var expand = h("button", { type: "button", class: "text-button", onclick: function () {
+      var open = expand.getAttribute("aria-expanded") !== "true";
+      Array.prototype.forEach.call(list.querySelectorAll("details"), function (d) { d.open = open; });
+      expand.setAttribute("aria-expanded", String(open));
+      expand.textContent = open ? "Collapse all" : "Expand all";
+    }, "aria-expanded": "false" }, "Expand all");
+    list.addEventListener("toggle", function () {
+      var allOpen = Array.prototype.every.call(list.querySelectorAll("details"), function (d) { return d.open; });
+      expand.setAttribute("aria-expanded", String(allOpen));
+      expand.textContent = allOpen ? "Collapse all" : "Expand all";
+    }, true);
+    return h("section", { id: "proposals", "aria-labelledby": "proposals-title" }, [
+      sectionHead("proposals", T.proposals), para(DATA.proposals.intro, ctx),
+      h("div", { class: "section-actions" }, expand), list
+    ]);
   }
 
   function renderRanking(ctx) {
@@ -334,9 +394,10 @@
     s.appendChild(para(DATA.toolsIntro, ctx));
     s.appendChild(h("ul", { class: "cards" }, interventions.map(function (iv) {
       return h("li", { class: "card" }, [
+        h("span", { class: "card-number", "aria-hidden": "true" }, "0" + (interventions.indexOf(iv) + 1)),
         h("h3", null, iv.name),
         h("p", { class: "card-text" }, iv.description),
-        h("a", { class: "card-link", href: toolHref(iv.id) }, L.learnMore)
+        h("a", { class: "card-link", href: toolHref(iv.id), "aria-label": "Learn more: " + iv.name }, L.learnMore)
       ]);
     })));
     return s;
@@ -345,45 +406,56 @@
   function renderAppendix(ctx) {
     var how = METHOD.howWeScore;
     var s = h("section", { id: "appendix", "aria-labelledby": "appendix-title" }, [sectionHead("appendix", T.appendix)]);
-
-    s.appendChild(h("h3", null, T.howWeScore));
-    s.appendChild(para(how.intro, ctx));
-    s.appendChild(table(how.table.header, how.table.rows, "score-key", true, T.howWeScore));
-    s.appendChild(para(how.expected, ctx));
-    s.appendChild(para(how.closing, ctx));
-
-    s.appendChild(h("h3", null, T.glossary));
+    s.appendChild(h("details", { class: "reference", id: "how-we-score" }, [
+      h("summary", null, [T.howWeScore, h("span", { class: "disclosure-icon", "aria-hidden": "true" })]),
+      h("div", { class: "reference-body" }, [
+        para(how.intro, ctx), table(how.table.header, how.table.rows, "score-key", true, T.howWeScore),
+        para(how.expected, ctx), para(how.closing, ctx)
+      ])
+    ]));
     var sorted = GLOSSARY.slice().sort(function (a, b) { return a.term.toLowerCase() < b.term.toLowerCase() ? -1 : 1; });
-    s.appendChild(h("dl", { class: "glossary" }, sorted.map(function (entry) {
-      return [h("dt", null, entry.term), h("dd", null, entry.definition)];
-    })));
+    var entries = sorted.map(function (entry) {
+      return h("div", { class: "glossary-entry" }, [h("dt", null, entry.term), h("dd", null, entry.definition)]);
+    });
+    var count = h("p", { class: "field-hint glossary-count", role: "status" }, sorted.length + " terms");
+    var empty = h("p", { class: "empty-search", hidden: true }, "No matching terms. Try another search.");
+    var search = h("input", { type: "search", class: "glossary-search", placeholder: "Search terms and definitions", "aria-label": "Search glossary" });
+    search.addEventListener("input", function () {
+      var query = search.value.toLowerCase().trim();
+      var total = 0;
+      entries.forEach(function (entry) {
+        entry.hidden = entry.textContent.toLowerCase().indexOf(query) === -1;
+        if (!entry.hidden) { total++; }
+      });
+      count.textContent = query ? total + " of " + sorted.length + " terms" : sorted.length + " terms";
+      empty.hidden = total !== 0;
+    });
+    s.appendChild(h("details", { class: "reference", id: "glossary" }, [
+      h("summary", null, [T.glossary, h("span", { class: "disclosure-icon", "aria-hidden": "true" })]),
+      h("div", { class: "reference-body" }, [search, count, empty, h("dl", { class: "glossary" }, entries)])
+    ]));
     return s;
   }
 
   function renderHome() {
     var ctx = newCtx();
     document.title = DATA.siteTitle;
-    view.appendChild(h("header", { class: "site-head" }, h("h1", { tabindex: "-1" }, DATA.siteTitle)));
-    view.appendChild(h("div", { class: "intro" }, DATA.introduction.map(function (p) { return para(p, ctx); })));
-
-    var order = ["proposals", "ranking", "tools", "builder", "appendix"];
-    view.appendChild(h("nav", { class: "toc", "aria-label": "Contents" }, [
-      h("button", { type: "button", class: "toc-toggle", "aria-label": "Contents", "aria-expanded": "false", "aria-controls": "contents-list" }),
-      h("ol", { id: "contents-list" }, order.map(function (id) {
-        return h("li", null, h("a", { href: "#" + id }, T[id]));
-      }))
+    view.appendChild(h("header", { class: "site-head", id: "introduction" }, [
+      h("p", { class: "eyebrow" }, "Pacing explorer"),
+      h("h1", { tabindex: "-1" }, DATA.siteTitle),
+      h("div", { class: "hero-actions" }, [
+        h("a", { class: "button-primary", href: "#tools" }, "Explore the tools ↓"),
+        h("a", { class: "button-secondary", href: "#builder" }, "Build a package →")
+      ])
     ]));
-
+    view.appendChild(h("div", { class: "intro" }, DATA.introduction.map(function (p) { return para(p, ctx); })));
+    view.appendChild(contents(homeOrder.map(function (id) { return { id: id, label: homeLabels[id] }; })));
     view.appendChild(renderProposals(ctx));
     view.appendChild(renderRanking(ctx));
     view.appendChild(renderCards(ctx));
     view.appendChild(renderBuilder(ctx));
     view.appendChild(renderAppendix(ctx));
-
-    if (location.hash) {
-      var target = document.getElementById(location.hash.slice(1));
-      if (target) { target.scrollIntoView(); }
-    }
+    if (location.hash) { window.requestAnimationFrame(function () { scrollToSection(location.hash.slice(1)); }); }
   }
 
   // =====================================================================
@@ -391,7 +463,7 @@
   // =====================================================================
 
   function renderTool() {
-    var id = location.hash.replace(/^#/, "");
+    var id = location.hash.replace(/^#/, "").split("/")[0];
     var index = 0;
     interventions.forEach(function (iv, i) { if (iv.id === id) { index = i; } });
     var iv = interventions[index];
@@ -402,11 +474,28 @@
     var benefits = METHOD.criteria.filter(function (c) { return c.kind === "benefit"; });
     var costs = METHOD.criteria.filter(function (c) { return c.kind === "cost"; });
 
-    view.appendChild(h("p", { class: "crumbs" }, h("a", { href: "index.html#tools" }, L.allTools)));
-    view.appendChild(h("header", { class: "tool-head" }, h("h1", { tabindex: "-1" }, iv.name)));
+    var crumbs = h("p", { class: "crumbs" }, h("a", { href: "index.html#tools" }, L.allTools));
+    var switcher = h("select", { id: "tool-switcher", "aria-label": "Choose a verification tool", onchange: function (e) {
+      location.hash = e.target.value;
+    } }, interventions.map(function (item) { return h("option", { value: item.id, selected: item.id === iv.id }, item.name); }));
+    view.appendChild(h("div", { class: "tool-toolbar" }, [crumbs,
+      h("div", { class: "tool-switch" }, [h("label", { for: "tool-switcher" }, "Verification interventions"), switcher])
+    ]));
+    view.appendChild(h("header", { class: "tool-head" }, [
+      h("p", { class: "eyebrow" }, "Tool " + (index + 1) + " of " + interventions.length),
+      h("h1", { tabindex: "-1" }, iv.name)
+    ]));
+    var sections = [
+      { key: "introduction", label: L.introduction }, { key: "overview", label: L.overview },
+      { key: "contribution", label: "Contribution to pacing" }, { key: "failures", label: L.failures },
+      { key: "burden", label: L.burden }, { key: "sources", label: L.sources }
+    ];
+    view.appendChild(contents(sections.map(function (item) {
+      return { id: "tool-" + item.key, label: item.label, href: "#" + iv.id + "/" + item.key };
+    }), h("a", { class: "toc-method", href: "index.html#how-we-score" }, T.howWeScore + " ↗")));
 
     // Introduction
-    view.appendChild(h("section", { "aria-labelledby": "t-intro" }, [
+    view.appendChild(h("section", { id: "tool-introduction", "aria-labelledby": "t-intro" }, [
       h("h2", { id: "t-intro" }, L.introduction),
       para(iv.introduction, ctx)
     ]));
@@ -418,12 +507,12 @@
         h("tbody", null, Object.keys(METHOD.actors).map(function (actor) {
           return h("tr", null, [
             h("th", { scope: "row" }, METHOD.actors[actor]),
-            h("td", null, stanceBadges(iv.stances[actor])),
-            h("td", null, rich(iv.why[actor], ctx))
+            h("td", { "data-label": L.stance }, stanceBadges(iv.stances[actor])),
+            h("td", { "data-label": L.why }, rich(iv.why[actor], ctx))
           ]);
         }))
       ]));
-    view.appendChild(h("section", { class: "overview", "aria-labelledby": "t-overview" }, [
+    view.appendChild(h("section", { id: "tool-overview", class: "overview", "aria-labelledby": "t-overview" }, [
       h("h2", { id: "t-overview" }, L.overview),
       h("div", { class: "overview-grid" }, [
         h("div", { class: "ov ov-achieves" }, [
@@ -439,7 +528,7 @@
     ]));
 
     // Under ideal conditions
-    view.appendChild(h("section", { "aria-labelledby": "t-ideal" }, [
+    view.appendChild(h("section", { id: "tool-contribution", "aria-labelledby": "t-ideal" }, [
       h("h2", { id: "t-ideal" }, L.contribution),
       iv.contribution.map(function (block) {
         return [
@@ -450,7 +539,7 @@
     ]));
 
     // Failure scenarios
-    view.appendChild(h("section", { "aria-labelledby": "t-fail" }, [
+    view.appendChild(h("section", { id: "tool-failures", "aria-labelledby": "t-fail" }, [
       h("h2", { id: "t-fail" }, L.failures),
       para(iv.failures.intro, ctx),
       h("ul", { class: "bullets" }, iv.failures.items.map(function (it) {
@@ -460,14 +549,14 @@
     ]));
 
     // Regulatory burden
-    view.appendChild(h("section", { "aria-labelledby": "t-burden" }, [
+    view.appendChild(h("section", { id: "tool-burden", "aria-labelledby": "t-burden" }, [
       h("h2", { id: "t-burden" }, L.burden),
       para(iv.burden, ctx)
     ]));
 
     // Sources
-    view.appendChild(h("details", { class: "sources" }, [
-      h("summary", null, L.sources),
+    view.appendChild(h("details", { class: "sources", id: "tool-sources" }, [
+      h("summary", null, [L.sources, h("span", { class: "disclosure-icon", "aria-hidden": "true" })]),
       h("ul", { class: "source-list" }, iv.sources.map(function (s) { return h("li", null, rich(s, null)); }))
     ]));
 
@@ -485,8 +574,24 @@
   // THE PACKAGE BUILDER
   // =====================================================================
 
-  var builderState = { priorities: [], maxInvasiveness: "any" };
-  var builderBox = null;
+  function readBuilderChoices() {
+    var params = new URLSearchParams(location.search);
+    return B.normaliseChoices({
+      priorities: (params.get("priorities") || "").split(",").filter(Boolean),
+      maxInvasiveness: params.get("limit")
+    }, METHOD);
+  }
+
+  var builderState = readBuilderChoices();
+
+  function choicesQuery() {
+    var params = new URLSearchParams();
+    if (builderState.priorities.length) { params.set("priorities", builderState.priorities.join(",")); }
+    params.set("limit", builderState.maxInvasiveness);
+    return "?" + params.toString();
+  }
+
+  function packageHref() { return "package.html" + choicesQuery(); }
 
   function radioGroup(legend, name, options, current, onChange) {
     return h("fieldset", { class: "field" }, [
@@ -581,7 +686,7 @@
       ])
     ]);
 
-    return h("details", { class: "worked" }, [
+    return h("details", { class: "worked", id: "package-method" }, [
       h("summary", null, "How this was worked out"),
       h("div", { class: "worked-body" }, [
         h("ol", { class: "plain-list" }, [
@@ -600,14 +705,14 @@
     ]);
   }
 
-  function renderOutput(box, formCtx, status) {
+  function renderOutput(box, formCtx, status, hideHeading) {
     var ctx = newCtx(formCtx);
     var result = B.buildPackage(DATA, METHOD, builderState);
     var text = B.explain(result, DATA, METHOD);
     var chain = B.describeChain(result, DATA);
     box.textContent = "";
     box.classList.toggle("is-empty", result.noneWithinLimit);
-    box.appendChild(h("h3", null, "Suggested package"));
+    if (!hideHeading) { box.appendChild(h("h3", null, "Suggested package")); }
 
     if (result.noneWithinLimit) {
       box.appendChild(h("p", { class: "why" }, text.priorities + " " + text.why.join(" ")));
@@ -628,7 +733,7 @@
     box.appendChild(h("ol", { class: "layers" }, result.layers.map(function (l) { return layerCard(l, result); })));
 
     // Why this package, and what it gives up.
-    box.appendChild(h("h4", null, "Why this package"));
+    box.appendChild(h(page === "package" ? "h2" : "h4", { id: "why-package" }, "Why this package"));
     box.appendChild(h("p", { class: "why" }, rich(text.priorities + " " + text.why.join(" "), ctx)));
     box.appendChild(h("p", { class: "why" }, rich(text.givesUp, ctx)));
     if (text.notes.length) {
@@ -644,14 +749,14 @@
     result.layers.forEach(function (layer) {
       if (!layer.steps.first.length) { return; }
       box.appendChild(h("section", { class: "steps-block" }, [
-        h("h5", null, [h("a", { href: toolHref(layer.id) }, byId[layer.id].name)]),
+        h(page === "package" ? "h3" : "h5", null, [h("a", { href: toolHref(layer.id) }, byId[layer.id].name)]),
         h("p", { class: "field-hint" }, "First steps"),
         h("ol", { class: "plain-list" }, layer.steps.first.map(function (item) { return h("li", null, rich(item, ctx)); }))
       ]));
     });
 
     if (result.rivalNotes.length) {
-      box.appendChild(h("h4", null, "What to expect from the other side"));
+      box.appendChild(h(page === "package" ? "h2" : "h4", { id: "expected-response" }, "What to expect from the other side"));
       box.appendChild(h("p", null, "How a trailing state is expected to respond to each tool:"));
       box.appendChild(h("ul", { class: "notes" }, result.rivalNotes.map(function (n) {
         return h("li", null, [
@@ -667,20 +772,26 @@
   }
 
   function renderBuilder(pageCtx) {
-    var formCtx = newCtx(pageCtx);
     var s = h("section", { id: "builder", "aria-labelledby": "builder-title" }, [sectionHead("builder", T.builder)]);
     var bt = DATA.builder;
     s.appendChild(h("div", { class: "builder-text" }, [
       bt.intro.map(function (p) { return para(p, pageCtx); }),
-      para(bt.supportingLead, pageCtx),
-      h("ul", { class: "bullets" }, bt.supporting.map(function (it) { return h("li", null, rich(it, pageCtx)); })),
-      bt.closing.map(function (p) { return para(p, pageCtx); })
+      h("details", { class: "supporting-details" }, [
+        h("summary", null, ["Supporting measures", h("span", { class: "disclosure-icon", "aria-hidden": "true" })]),
+        h("div", { class: "reference-body" }, [
+          para(bt.supportingLead, pageCtx),
+          h("ul", { class: "bullets" }, bt.supporting.map(function (it) { return h("li", null, rich(it, pageCtx)); })),
+          bt.closing.map(function (p) { return para(p, pageCtx); })
+        ])
+      ])
     ]));
 
-    var output = h("div", { class: "builder-output", "aria-label": "Suggested package" });
-    var status = h("p", { class: "visually-hidden", role: "status" });
-    var pickStatus = h("p", { class: "field-hint", role: "status" });
-    function refresh() { renderOutput(output, formCtx, status); }
+    var resultsLink = h("a", {
+      class: "view-results", href: packageHref(), target: "_blank", rel: "noopener",
+      "aria-label": "View suggested package (opens in a new tab)"
+    }, ["View suggested package", h("span", { "aria-hidden": "true" }, " ↗")]);
+    var pickStatus = h("p", { class: "field-hint pick-status", id: "pick-status", role: "status" });
+    function refresh() { resultsLink.href = packageHref(); }
 
     var max = METHOD.builder.maxPicks;
     function pickText() { return builderState.priorities.length + " of " + max + " picked."; }
@@ -692,7 +803,7 @@
       h("p", { class: "field-hint" }, "Pick up to " + max + "."),
       h("div", { class: "choices" }, order.map(function (id) {
         var c = criterion(id);
-        var input = h("input", { type: "checkbox", name: "priority", value: id });
+        var input = h("input", { type: "checkbox", name: "priority", value: id, "aria-describedby": "pick-status" });
         input.checked = builderState.priorities.indexOf(id) !== -1;
         input.addEventListener("change", function () {
           if (input.checked) {
@@ -720,24 +831,74 @@
         builderState.maxInvasiveness, function (v) { builderState.maxInvasiveness = v; refresh(); }),
       h("button", { type: "button", class: "btn", onclick: function () {
         builderState = { priorities: [], maxInvasiveness: "any" };
-        var fresh = renderBuilder(pageCtx);
-        s.parentNode.replaceChild(fresh, s);
+        Array.prototype.forEach.call(form.querySelectorAll("input"), function (input) {
+          input.checked = input.name === "limit" && input.value === "any";
+        });
+        pickStatus.textContent = pickText();
+        refresh();
       } }, "Reset choices")
     ]);
 
+    form.appendChild(resultsLink);
     s.appendChild(form);
-    s.appendChild(h("div", { class: "builder-results" }, [status, output]));
     refresh();
     return s;
   }
 
+  function renderPackage() {
+    var ctx = newCtx();
+    var editHref = "index.html" + choicesQuery() + "#builder";
+    document.title = "Suggested package | " + DATA.siteTitle;
+    view.textContent = "";
+    view.appendChild(h("p", { class: "package-toolbar crumbs" }, h("a", { href: editHref }, "← Back to package explorer")));
+    view.appendChild(h("header", { class: "package-head" }, [
+      h("p", { class: "eyebrow" }, "Package explorer"),
+      h("h1", { tabindex: "-1" }, "Suggested package")
+    ]));
+    var limitLabels = { any: "Any", medium: "Medium", low: "Low" };
+    view.appendChild(h("dl", { class: "package-choices" }, [
+      h("div", null, [h("dt", null, "What matters most?"),
+        h("dd", null, builderState.priorities.length
+          ? builderState.priorities.map(function (id) { return criterion(id).priorityLabel; }).join(", ")
+          : "All criteria equally")]),
+      h("div", null, [h("dt", null, "Maximum acceptable invasiveness for AI labs"),
+        h("dd", null, limitLabels[builderState.maxInvasiveness])])
+    ]));
+    var output = h("article", { class: "builder-output package-output", id: "package-report", "aria-label": "Suggested package" });
+    var status = h("p", { class: "visually-hidden", role: "status" });
+    renderOutput(output, ctx, status, true);
+    view.appendChild(status);
+    view.appendChild(output);
+    var sections = [
+      { id: "package-report", label: "Suggested package" },
+      { id: "why-package", label: "Why this package" },
+      { id: "expected-response", label: "What to expect from the other side" },
+      { id: "package-method", label: "How this was worked out" }
+    ].filter(function (entry) { return document.getElementById(entry.id); });
+    view.appendChild(contents(sections, h("a", { class: "toc-method", href: editHref }, "Edit choices →")));
+    if (location.hash) { window.requestAnimationFrame(function () { scrollToSection(location.hash.slice(1)); }); }
+  }
+
   // ---------- presentation: compact contents, reading position and scroll cues ----------
 
+  var contentsCleanup = function () {};
+
+  function scrollToSection(id, focus) {
+    var section = document.getElementById(id);
+    if (!section) { return; }
+    var parent = section.parentElement;
+    while (parent) { if (parent.tagName === "DETAILS") { parent.open = true; } parent = parent.parentElement; }
+    if (section.tagName === "DETAILS") { section.open = true; }
+    section.scrollIntoView({ block: "start" });
+    if (focus) { section.setAttribute("tabindex", "-1"); section.focus({ preventScroll: true }); }
+  }
+
   function setupContents() {
+    contentsCleanup();
     var nav = document.querySelector(".toc");
     if (!nav) { return; }
     var toggle = nav.querySelector(".toc-toggle");
-    var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
+    var links = Array.prototype.slice.call(nav.querySelectorAll("a[data-section]"));
     function closeMenu() {
       nav.classList.remove("is-open");
       toggle.setAttribute("aria-expanded", "false");
@@ -747,44 +908,45 @@
       toggle.setAttribute("aria-expanded", String(open));
     });
     nav.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && nav.classList.contains("is-open")) {
-        closeMenu();
-        toggle.focus();
-      }
+      if (e.key === "Escape" && nav.classList.contains("is-open")) { closeMenu(); toggle.focus(); }
     });
     links.forEach(function (link) {
       link.addEventListener("click", function () {
         closeMenu();
-        var section = document.getElementById(link.hash.slice(1));
-        if (section) {
-          section.setAttribute("tabindex", "-1");
-          section.focus({ preventScroll: true });
-        }
+        scrollToSection(link.getAttribute("data-section"), true);
       });
     });
-    document.addEventListener("click", function (e) {
-      if (!nav.contains(e.target)) { closeMenu(); }
+    nav.querySelector("[data-top]").addEventListener("click", function (e) {
+      e.preventDefault(); closeMenu();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      var heading = view.querySelector("h1");
+      if (heading) { heading.focus({ preventScroll: true }); }
     });
+    function outsideClick(e) { if (!nav.contains(e.target)) { closeMenu(); } }
+    document.addEventListener("click", outsideClick);
     var queued = false;
     function markCurrent() {
       queued = false;
-      var current = null;
+      var current = links[0];
       links.forEach(function (link) {
-        var section = document.getElementById(link.hash.slice(1));
-        if (section && section.getBoundingClientRect().top <= Math.min(180, window.innerHeight * .25)) { current = link; }
+        var section = document.getElementById(link.getAttribute("data-section"));
+        if (section && section.getBoundingClientRect().top <= Math.min(200, window.innerHeight * .3)) { current = link; }
       });
-      // The final section remains current when its end is reached.
       if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) { current = links[links.length - 1]; }
       links.forEach(function (link) {
         if (link === current) { link.setAttribute("aria-current", "location"); }
         else { link.removeAttribute("aria-current"); }
       });
+      nav.querySelector(".toc-current").textContent = current.lastChild.textContent;
     }
-    function queueCurrent() {
-      if (!queued) { queued = true; window.requestAnimationFrame(markCurrent); }
-    }
+    function queueCurrent() { if (!queued) { queued = true; window.requestAnimationFrame(markCurrent); } }
     window.addEventListener("scroll", queueCurrent, { passive: true });
     window.addEventListener("resize", queueCurrent);
+    contentsCleanup = function () {
+      document.removeEventListener("click", outsideClick);
+      window.removeEventListener("scroll", queueCurrent);
+      window.removeEventListener("resize", queueCurrent);
+    };
     markCurrent();
   }
 
@@ -810,17 +972,27 @@
   // Start-up
   // =====================================================================
 
+  renderMasthead();
   if (page === "tool") {
     renderTool();
-    window.addEventListener("hashchange", function () {
-      hideTip();
-      renderTool();
-      window.scrollTo(0, 0);
-      var heading = view.querySelector("h1");
-      if (heading) { heading.focus({ preventScroll: true }); }
-    });
+    var currentTool = location.hash.split("/")[0];
+    function handleToolRoute() {
+      var tool = location.hash.split("/")[0];
+      if (tool !== currentTool) {
+        hideTip(); renderTool(); setupContents(); currentTool = tool;
+        window.scrollTo(0, 0);
+        var heading = view.querySelector("h1");
+        if (heading) { heading.focus({ preventScroll: true }); }
+      }
+      var section = location.hash.split("/")[1];
+      if (section) { scrollToSection("tool-" + section, true); }
+    }
+    window.addEventListener("hashchange", handleToolRoute);
+    window.requestAnimationFrame(handleToolRoute);
   } else {
-    renderHome();
+    if (page === "package") { renderPackage(); }
+    else { renderHome(); }
+    window.addEventListener("hashchange", function () { scrollToSection(location.hash.slice(1)); });
   }
 
   setupContents();
@@ -833,14 +1005,19 @@
 
   // Printing: open every closed <details> for the print, then put them back as they were.
   var reopened = [];
+  var filteredForPrint = [];
   window.addEventListener("beforeprint", function () {
     reopened = Array.prototype.filter.call(document.querySelectorAll("details"), function (d) { return !d.open; });
     reopened.forEach(function (d) { d.open = true; });
+    filteredForPrint = Array.prototype.slice.call(document.querySelectorAll(".glossary-entry[hidden]"));
+    filteredForPrint.forEach(function (entry) { entry.hidden = false; });
     Array.prototype.forEach.call(document.querySelectorAll(".justification"), function (n) { n.hidden = false; });
   });
   window.addEventListener("afterprint", function () {
     reopened.forEach(function (d) { d.open = false; });
     reopened = [];
+    filteredForPrint.forEach(function (entry) { entry.hidden = true; });
+    filteredForPrint = [];
     Array.prototype.forEach.call(document.querySelectorAll(".meter-row"), function (r) {
       var n = document.getElementById(r.getAttribute("aria-controls"));
       if (n) { n.hidden = r.getAttribute("aria-expanded") !== "true"; }

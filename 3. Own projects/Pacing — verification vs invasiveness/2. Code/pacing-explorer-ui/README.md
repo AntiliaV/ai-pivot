@@ -8,8 +8,9 @@ Double-click `index.html`. It opens in a browser. There is no server to start, n
 
 ## What is in it
 
-- `index.html`: the main page. Introduction, contents, the five pacing proposals, the ranking, one card per tool, the package section ("What could a package include?") with its builder, and the appendix (how we score, glossary).
+- `index.html`: the main page. Introduction, contents, the five pacing proposals, the ranking, one card per tool, the package section ("What could a verification package include") with its builder, and the appendix (how we score, glossary).
 - `tool.html`: one page for every tool, chosen by the part after `#` in the address.
+- `package.html`: the suggested package, opened in a new tab from the homepage form. Priorities and the invasiveness limit travel in the URL, with no browser storage.
 - `data/interventions.js`: all the wording, scores, stances, justifications and sources for the five tools.
 - `data/method.js`: the appendix text, section titles, the six criteria and their display labels, the words (Low … High, Light … Heavy), the colours and the package builder's numbers.
 - `data/interventions.js` also holds the text above the tool cards (`toolsIntro`) and the package section's text (`builder`: paragraphs, the supporting-measures list and the closing paragraph).
@@ -52,6 +53,15 @@ Change it in the tool's background mapping first (the "Step 1" scores table, and
 
 - Supporting measures (dependencies between tools) are set in `data/interventions.js` (`dependsOn`): inspections need the ledger, and the bandwidth cap needs inspections. Each one needs a bullet in the "Supporting measures" list of `Website text.md` whose bold lead-in reads "<tool> is linked to <supporting measure>."; the validator recognises the tools in it by keyword (`TOOL_KEYWORDS` in `tools/validate_data.py`).
 - The invasiveness limit in the builder applies to each tool together with its whole chain of supporting measures. If any of them is above the limit, the tool is left out and the explanation names the supporting measure that caused this (for example, at Medium or Low the bandwidth cap is left out because physical chip inspection is Heavy). Supporting measures are never added above the limit.
-- Clicking or focusing a score row on a tool page shows its justification.
+- Clicking a score row, or pressing Enter or Space when it is focused, shows its justification.
 - Printing opens every closed section first, so the sources are printed too.
 - Everything is plain HTML, CSS and JavaScript, with no external libraries or fonts.
+
+
+## Presentation and navigation
+
+The interface uses a shared header and section navigation on the homepage and every tool report. On phones, the labelled Contents menu provides the same links. Each report has a tool selector; section links such as `tool.html#ledger/overview` can be bookmarked, while all existing `tool.html#ledger` links still work.
+
+The homepage links directly to the tools and package explorer. The complete original introduction is visible, in its original order. The five proposals, supporting-measure explanations and appendix sections are expandable. All original content is retained. The glossary can be searched by term or definition. Phone comparison tables show all ratings as labelled cards. “View suggested package” opens a separate report in a new tab with the selected priorities and invasiveness limit. Its back/edit links restore those choices in the package explorer. Reset keeps keyboard focus in place. Printing expands disclosures and includes glossary entries hidden by a search.
+
+The redesign changes only presentation and interface behaviour. The three `data/` files and `js/builder.js` are unchanged. It still works directly from `index.html`, without a server, dependencies, external fonts, network requests or browser storage.

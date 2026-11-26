@@ -74,7 +74,7 @@ The tools address different parts of the problem. The first two establish an inv
 
 **Cloud workload metering.** Cloud providers check who their customers are and report when a project's use of computing power nears a limit. It is quick to set up, but blind to labs' own data centres.
 
-## 7. What could a package include?
+## 7. What could a verification package include
 
 The package explorer uses the assessments in this note to illustrate how different priorities change the selection of tools. Up to three priorities and a preferred limit on invasiveness can be selected. The explanation shows which tools meet the scoring rule, which are added as supporting measures, and what trade-offs follow.
 

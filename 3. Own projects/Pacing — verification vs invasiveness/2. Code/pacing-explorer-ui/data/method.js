@@ -16,7 +16,7 @@ window.PACING_METHOD = {
     "proposals": "Pacing proposals",
     "ranking": "How central each tool is to the proposals",
     "tools": "Verification interventions",
-    "builder": "What could a package include?",
+    "builder": "What could a verification package include",
     "appendix": "Appendix",
     "howWeScore": "How we score",
     "glossary": "Glossary"
