@@ -6,6 +6,10 @@
 
 ------------------------------------------------------------------------
 
+### 2026-11-26 — Pacing explorer: redesign committed; shared as a public site
+
+Committed the interface redesign made with ChatGPT (presentation only, plus a separate suggested-package page; package section retitled "What could a verification package include"). Decided to share the explorer as a public GitHub Pages site from its own repository, `AntiliaV/verifying-pacing-agreements` (in `~/Developer/`), holding only the site files; notes, tests, validator and screenshots stay private. *Why:* so Ernest and Charles can open it from a link; both are happy for it to be public. The public copy is refreshed by copying the site files across after changes. Touched: `2. Code/pacing-explorer-ui/`, `Website text.md`, the new repository.
+
 ### 2026-11-25 — Pacing explorer v2.4: site follows the new text and package rule
 
 Implemented the 25 November decisions in the site: new introduction, tools introduction and package section; trade-off map and `chart.js` removed (`chart.js` to `Archive/_to_delete/`). The invasiveness limit now covers each tool's whole chain of supporting measures, so at Medium and Low the bandwidth cap is left out (physical chip inspection is Heavy). "Foundation" renamed "supporting measure"; validator reads dependency reasons from the Supporting measures list. *Why:* to match `Website text.md`. Touched: `2. Code/pacing-explorer/` (four commits).
